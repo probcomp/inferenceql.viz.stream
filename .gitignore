@@ -1,0 +1,9 @@
+/.cpcache/ # Clojure cache
+
+/node_modules/
+/out/
+/out-worker/
+
+/figwheel-target/
+/resources/
+

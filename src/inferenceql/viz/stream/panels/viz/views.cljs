@@ -5,12 +5,15 @@
             [re-frame.core :as rf]
             [clojure.data :refer [diff]]
             [clojure.math.combinatorics :refer [combinations]]
+            [inferenceql.inference.gpm.column :refer [crosscat-simulate]]
             [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
-            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments]]
+            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
+                                                            xcat-view-id-map xcat-cluster-id-map]]
             [inferenceql.viz.panels.viz.views :refer [log-level-default default-vega-embed-options]]
             [inferenceql.viz.stream.store :refer [schema xcat-models col-ordering
-                                                  all-samples observed-samples virtual-samples]]))
+                                                  all-samples observed-samples virtual-samples]]
+            [medley.core :as medley]))
 
 (defn vega-lite
   "Simplified Reagent component for displaying vega-lite specs."
@@ -117,10 +120,29 @@
         marginal-types @(rf/subscribe [:control/marginal-types])
 
         xcat-model (nth xcat-models iteration)
+
         ;; Merge in the view-cluster information only when we have to.
         all-samples (if cluster-selected
-                      (let [view-cluster-assignments (concat (all-row-assignments xcat-model)
-                                                             (repeat {}))]
+                      (let [row-assignments (all-row-assignments xcat-model)
+
+                            view-key (keyword (str "view_" (:view-id cluster-selected)))
+                            num-rows (count (filter #(= (get % view-key)
+                                                        (:cluster-id cluster-selected))
+                                                    row-assignments))
+
+                            view-map (xcat-view-id-map xcat-model)
+                            view-id (view-map (:view-id cluster-selected))
+                            cluster-map (xcat-cluster-id-map xcat-model view-id)
+                            cluster-id (cluster-map (:cluster-id cluster-selected))
+
+                            column-gpms (-> xcat-model :views view-id :columns)
+                            simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
+                                                             column-gpms))
+
+                            virtual-samples (->> (repeatedly num-rows simulate)
+                                                 (map #(assoc % :collection "virtual" :iter 0)))
+
+                            view-cluster-assignments (concat row-assignments (repeat {}))]
                         (concat (map merge observed-samples view-cluster-assignments)
                                 virtual-samples))
                       all-samples)

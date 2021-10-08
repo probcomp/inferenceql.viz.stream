@@ -100,8 +100,9 @@
                                                 :range [obs-data-color virtual-data-color]}
                                         :legend {:orient "top"
                                                  :title nil}}}}
-                    {:transform [{:filter {:and ["datum[view] == cluster"
-                                                 (format "indexof(view_columns, '%s') != -1" (name col))]}}]
+                    {:transform [{:filter {:or [{:field "collection" :equal "virtual"}
+                                                {:and ["datum[view] == cluster"
+                                                       (format "indexof(view_columns, '%s') != -1" (name col))]}]}}]
                      :mark {:type "bar"}
                      :encoding {:x {:bin bin-config
                                     :field col
@@ -109,7 +110,11 @@
                                 :y {:aggregate "count"
                                     :type "quantitative"
                                     :scale {:domain [0, max-bin-count]}}
-                                :color {:value cluster-selected-color}}}]}}))
+                                :color {:field "collection"
+                                        :scale {:domain ["observed", "virtual"]
+                                                :range [obs-data-color virtual-data-color]}
+                                        :legend {:orient "top"
+                                                 :title nil}}}}]}}))
 
 
 (defn histogram-nom

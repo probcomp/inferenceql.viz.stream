@@ -242,8 +242,8 @@
   [col-1 col-2 vega-type correlation samples counter]
   (let [zoom-control-name (str "zoom-control-" counter) ; Random id so pan/zoom is independent.
         f-sum (filtering-summary [col-1 col-2] vega-type nil samples)]
-    {:width 400
-     :height 400
+    {:width 250
+     :height 250
      :layer [{:transform [{:window [{:op "row_number", :as "row_number_subplot"}]
                            :groupby ["collection"]}
                           {:filter {:or [{:and [{:field "collection" :equal "observed"}
@@ -277,19 +277,19 @@
                              :scale {:zero false}
                              :axis {:minExtent 40
                                     :title col-2}}
-                         :order {:condition [{:test {:and ["datum[view] == cluster"
-                                                           (format "indexof(view_columns, '%s') != -1" (name col-1))
-                                                           (format "indexof(view_columns, '%s') != -1" (name col-2))]}
+                         :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                           "cluster != null"
+                                                           "datum[view] == cluster"]}
                                               :value 10}
                                              {:test {:and [{:field "collection" :equal "observed"}
                                                            {:param "brush-all"}
                                                            "cluster == null"]}
-                                              :value 1}
+                                              :value 2}
                                              ;; Show the virtual data colored even
                                              ;; when a particular cluster is selected.
                                              {:test {:and [{:field "collection" :equal "virtual"}
                                                            {:param "brush-all"}]}
-                                              :value 2}
+                                              :value 1}
                                              {:test "true"
                                               :value 0}]
                                  :value 0}
@@ -297,17 +297,16 @@
                                    :scale {:domain ["observed", "virtual"]
                                            :range [{:expr "splomAlphaObserved"} {:expr "splomAlphaVirtual"}]}
                                    :legend nil}
-                         :color {:condition [{:test {:and ["datum[view] == cluster"
-                                                           (format "indexof(view_columns, '%s') != -1" (name col-1))
-                                                           (format "indexof(view_columns, '%s') != -1" (name col-2))]}
-                                              :value cluster-selected-color}
+                         :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                           "cluster != null"
+                                                           "datum[view] == cluster"]}
+                                              :value obs-data-color}
                                              {:test {:and [{:field "collection" :equal "observed"}
                                                            {:param "brush-all"}
                                                            "cluster == null"]}
                                               :value obs-data-color}
                                              {:test {:and [{:field "collection" :equal "virtual"}
-                                                           {:param "brush-all"}
-                                                           "cluster == null"]}
+                                                           {:param "brush-all"}]}
                                               :value virtual-data-color}
                                              {:test "true"
                                               :value unselected-color}]
@@ -622,7 +621,8 @@
                         (keys schema))
                  (map keyword)
                  (take 8) ; Either way we will visualize at most 8 columns.
-                 (filter vega-type)) ; Only keep the columns that we can determine a vega-type for.
+                 (filter vega-type) ; Only keep the columns that we can determine a vega-type for.
+                 (sort))
 
           cols-by-type (group-by vega-type cols)
 

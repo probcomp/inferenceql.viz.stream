@@ -1,9 +1,8 @@
 /* Views */
 
 {{#views}}
-function view_{{num}}_model () {
-  var cluster_id = categorical([{{cluster-probs}}]) + 1;
-  var ret_val;
+function view_{{num}} () {
+  let cluster_id = categorical([{{cluster-probs}}]) + 1;
 {{#clusters}}
 {{#first}}
   if (cluster_id == {{num}}) {
@@ -11,14 +10,12 @@ function view_{{num}}_model () {
 {{^first}}
   } else if (cluster_id == {{num}}) {
 {{/first}}
-    ret_val = {
+    return {
 {{#parameters}}
-     "{{name}}": {{#gaussian}}gaussian({{mu}}, {{sigma}}){{/gaussian}}{{#categorical}}{{name}}_categories(categorical([{{weights}}])){{/categorical}}{{^last}},{{/last}}
+     "{{name}}": {{#gaussian}}gaussian({{mu}}, {{sigma}}){{/gaussian}}{{#categorical}}categorical([{{weights}}]){{/categorical}}{{^last}},{{/last}}
 {{/parameters}}
     };{{/clusters}}
   }
-
-  return ret_val;
 }
 
 {{/views}}
@@ -26,10 +23,12 @@ function view_{{num}}_model () {
 
 {{#model}}
 function model() {
-  {{#view-fn-nums}}
-  var view_{{.}} = view_{{.}}_model();
-  {{/view-fn-nums}}
+  let row = {{{#splats}}{{^last}}...view_{{num}}(), {{/last}}{{#last}}...view_{{num}}(){{/last}}{{/splats}}};
 
-  return {{{#splats}}{{^last}}...view_{{num}}, {{/last}}{{#last}}...view_{{num}}{{/last}}{{/splats}}};
+  /*
+   * map_categorical() maps integer values in categorical columns
+   * to actual category values for each categorical column.
+   */
+  return map_categorical(row);
 }
 {{/model}}

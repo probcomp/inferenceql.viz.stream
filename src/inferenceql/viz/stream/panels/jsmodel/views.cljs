@@ -54,7 +54,7 @@
                                           zip/down zip/right
                                           zip/right zip/down
                                           zip/node)]
-                        (-> (re-matches #"view_(\d+)_model" func-name)
+                        (-> (re-matches #"view_(\d+)" func-name)
                             second
                             edn/read-string))
 
@@ -70,7 +70,7 @@
                                        (= r1 " (cluster_id == ")
                                        (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
                                        (number? (edn/read-string r2-content))
-                                       (= r3 ") {\n    ret_val = {\n     "))))
+                                       (= r3 ") {\n    "))))
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]

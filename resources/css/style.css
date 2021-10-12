@@ -1,0 +1,81 @@
+/* --------------- global settings --------------- */
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #333;
+  height: 5000px
+}
+
+div {
+  margin: 0px
+}
+
+
+/* --------------- styling for vega-vizualization --------------- */
+
+#viz-container {
+  display: flex;
+}
+
+#vg-tooltip-element.vg-tooltip.custom-theme table {
+  font-size: .75rem;
+}
+
+/* --------------- styling for handsontables --------------- */
+
+#table-container {
+  display: table;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.ht_master tr td {
+  font-size: 13px;
+}
+
+.handsontable th {
+  font-size: 13px;
+}
+
+/* --------------- styling for js-model code view --------------- */
+
+#program-display {
+  min-width: 700px;
+  padding: 8px;
+  font-size: .875rem;
+  background-color: #f8f8f8;
+}
+
+#program-display code {
+  display: block;
+  min-width: 1000px;
+  background-color: #f8f8f8;
+  border: none;
+  padding: 0px;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+
+/* --------------- js-model program cluster selection --------------- */
+
+.cluster-clickable {
+  cursor: pointer;
+  background-color: lightyellow;
+}
+
+.cluster-clickable:not(.cluster-selected):hover {
+  background-color: #dbe4f0;
+}
+
+.cluster-selected {
+  background-color: lightsteelblue;
+}
+
+.handsontable .blue-highlight {
+  background-color: lightsteelblue;
+}

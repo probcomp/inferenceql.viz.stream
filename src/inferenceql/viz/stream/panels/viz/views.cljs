@@ -115,7 +115,7 @@
 
 (defn select-vs-simulate-plot
   "Reagent component for select-vs-simulate plot."
-  [cluster-selected iteration]
+  [cluster-selected _click-count iteration]
   (let [viz-cols @(rf/subscribe [:control/col-selection])
         marginal-types @(rf/subscribe [:control/marginal-types])
 

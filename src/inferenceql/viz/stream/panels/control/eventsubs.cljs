@@ -62,22 +62,24 @@
   (fn [db _]
     (get-in db [:control-panel :cluster-selected])))
 
+(rf/reg-sub
+  :control/cluster-selected-click-count
+  (fn [db _]
+    (get-in db [:control-panel :cluster-selected-click-count])))
+
 (rf/reg-event-db
   :control/select-cluster
   event-interceptors
   (fn [db [_ new-selection]]
-    (assoc-in db [:control-panel :cluster-selected] new-selection)))
-;; TODO: add cluster-selected-click-count -- add this to the db with initial state 0.
+    (-> db
+        (assoc-in [:control-panel :cluster-selected] new-selection)
+        (update-in [:control-panel :cluster-selected-click-count] fnil inc 1))))
 
 (rf/reg-event-db
   :control/clear-cluster-selection
   event-interceptors
   (fn [db [_]]
     (update db :control-panel dissoc :cluster-selected)))
-
-;; TODO: add a counter that gets incremented everytime a cluster is selected.
-;; TODO: add a sub for the value of this counter. Subscribe in the select-vs-simulate componennt.
-
 
 ;; Show plot options.
 

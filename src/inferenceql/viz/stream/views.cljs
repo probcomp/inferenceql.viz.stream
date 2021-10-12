@@ -11,7 +11,8 @@
   []
   (let [iteration @(rf/subscribe [:control/iteration])
         plot-type @(rf/subscribe [:control/plot-type])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])]
+        cluster-selected @(rf/subscribe [:control/cluster-selected])
+        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
     [v-box
      :children [[control/panel]
                 [v-box
@@ -29,5 +30,5 @@
                                                         [mi-plot mi iteration])]
 
                                           :select-vs-simulate
-                                          [select-vs-simulate-plot
-                                           cluster-selected iteration])]]]]]]))
+                                          [select-vs-simulate-plot cluster-selected
+                                           cluster-selected-click-count iteration])]]]]]]))

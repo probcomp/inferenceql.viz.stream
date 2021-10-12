@@ -21,7 +21,8 @@
                                         ::marginal-types
                                         ::show-plot-options
                                         ::mi-threshold]
-                               :opt-un [::cluster-selected]))
+                               :opt-un [::cluster-selected
+                                        ::cluster-selected-click-count]))
 
 (s/def ::iteration integer?)
 (s/def ::col-selection set?)
@@ -32,5 +33,6 @@
 (s/def ::mi-threshold number?)
 
 (s/def ::cluster-selected (s/keys :req-un [::cluster-id ::view-id]))
+(s/def ::cluster-selected-click-count integer?)
 (s/def ::cluster-id integer?)
 (s/def ::view-id integer?)

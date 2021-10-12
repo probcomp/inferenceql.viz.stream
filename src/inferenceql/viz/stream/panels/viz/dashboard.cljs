@@ -143,7 +143,7 @@
      :layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
-                     :size 70
+                     :size 50
                      :strokeWidth 2
                      :tooltip {:content "data"}
                      :opacity 0.85}
@@ -169,13 +169,13 @@
                                          :range [1 0]}}
                          :opacity {:condition [{:test {:and [{:field "collection" :equal "observed"}
                                                              {:param "brush-all"}]}
-                                                :value 0.85}
+                                                :value 0.75}
                                                {:test {:and [{:field "collection" :equal "virtual"}
                                                              {:param "brush-all"}
                                                              ;; Only color the virtual points when
                                                              ;; a view-cluster is not selected.
                                                              "cluster == null"]}
-                                                :value 0.85}
+                                                :value 0.75}
                                                {:test "true"
                                                 :value 0}]}
                          :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
@@ -203,6 +203,7 @@
                      :color obs-data-color
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "observed"}
+                                          "cluster != null"
                                           "datum[view] == cluster"]}}]
               :encoding {:y {:bin bin-flag
                              :field col
@@ -219,7 +220,7 @@
                      :filled true
                      :size 40
                      :color virtual-data-color
-                     :opacity 0.8}
+                     :opacity 0.65}
               :transform [{:filter {:and [{:field "collection" :equal "virtual"}
                                           "cluster != null"]}}]
 

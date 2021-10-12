@@ -27,6 +27,7 @@
                    :nominal "nominal"}]
       (get mapping (get schema (name col-name))))))
 
+;; TODO: remove this function.
 (defn should-bin?
   "Returns whether data for a certain column should be binned in a vega-lite spec.
 

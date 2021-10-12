@@ -141,7 +141,10 @@
                                        {:field "row_number_subplot" :lte (:num-valid f-sum)}
                                        {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
      :layer [{:mark {:type "point"
+                     :shape "circle"
                      :color unselected-color
+                     :size 70
+                     :strokeWidth 2
                      :tooltip {:content "data"}
                      :opacity 0.85}
               :params [{:name "brush-all"
@@ -164,14 +167,19 @@
                          :order {:field "collection"
                                  :scale {:domain ["observed", "virtual"]
                                          :range [1 0]}}
+                         :opacity {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                             {:param "brush-all"}]}
+                                                :value 0.85}
+                                               {:test {:and [{:field "collection" :equal "virtual"}
+                                                             {:param "brush-all"}
+                                                             ;; Only color the virtual points when
+                                                             ;; a view-cluster is not selected.
+                                                             "cluster == null"]}
+                                                :value 0.85}
+                                               {:test "true"
+                                                :value 0}]}
                          :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                           {:param "brush-all"}
-                                                           ;; Only color the observed points when
-                                                           ;; a view-cluster is not selected or when
-                                                           ;; the column for this plot is in the
-                                                           ;; view selected.
-                                                           {:or ["cluster == null"
-                                                                 (format "indexof(view_columns, '%s') != -1" (name col))]}]}
+                                                           {:param "brush-all"}]}
                                               :value obs-data-color}
                                              {:test {:and [{:field "collection" :equal "virtual"}
                                                            {:param "brush-all"}
@@ -187,12 +195,34 @@
                                  :legend {:orient "top"
                                           :title nil
                                           :offset 10}}}}
+             ;; Observed data ticks.
              {:mark {:type "point"
-                     :shape "stroke"
-                     :color cluster-selected-color
-                     :opacity 0.9}
-              :transform [{:filter {:and ["datum[view] == cluster"
-                                          (format "indexof(view_columns, '%s') != -1" (name col))]}}]
+                     :shape "circle"
+                     :filled true
+                     :size 40
+                     :color obs-data-color
+                     :opacity 0.8}
+              :transform [{:filter {:and [{:field "collection" :equal "observed"}
+                                          "datum[view] == cluster"]}}]
+              :encoding {:y {:bin bin-flag
+                             :field col
+                             :type col-type
+                             :axis {:titleAnchor "start" :titleAlign "right" :titlePadding 1}
+                             :scale {:domain col-vals}}
+                         :x {:aggregate "count"
+                             :type "quantitative"
+                             :axis {:orient "top"}
+                             :scale {:domain [0 cat-max-count]}}}}
+             ;; Virtual data ticks.
+             {:mark {:type "point"
+                     :shape "circle"
+                     :filled true
+                     :size 40
+                     :color virtual-data-color
+                     :opacity 0.8}
+              :transform [{:filter {:and [{:field "collection" :equal "virtual"}
+                                          "cluster != null"]}}]
+
               :encoding {:y {:bin bin-flag
                              :field col
                              :type col-type
@@ -202,6 +232,7 @@
                              :type "quantitative"
                              :axis {:orient "top"}
                              :scale {:domain [0 cat-max-count]}}}}]}))
+
 
 
 (defn- scatter-plot

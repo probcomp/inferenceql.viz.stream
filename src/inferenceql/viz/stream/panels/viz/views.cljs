@@ -146,8 +146,9 @@
                         (concat (map merge observed-samples view-cluster-assignments)
                                 virtual-samples))
                       all-samples)
-        qc-spec (dashboard/spec all-samples schema nil viz-cols 10 marginal-types)
-        cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))]
+        cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
+        cols (or (seq cols-in-view) viz-cols)
+        qc-spec (dashboard/spec all-samples schema nil cols 10 marginal-types)]
     [vega-lite qc-spec {:actions false} nil nil all-samples
      {:iter iteration
       :cluster (:cluster-id cluster-selected)

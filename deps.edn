@@ -26,7 +26,7 @@
                                     :sha "0241ee57e059f618ae55b2ae8822986d778b0d68"}
         ;; This is branch: htella/20211008-harishtella-table-general
         probcomp/inferenceql.viz {:git/url "git@github.com:probcomp/inferenceql.viz.git"
-                                  :sha "a146dac6b17cb14a13adf6f699a64a87cf60e854"}
+                                  :sha "6aaa9d5bf468f5b8676f6d8c5aa919c871d93d3b"}
         probcomp/metaprob {:git/url "https://github.com/probcomp/metaprob.git"
                            :sha "8dc9d09f747c1e29886bb9628a0110c6f6bc6f5a"}}
  :paths ["src"

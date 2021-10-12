@@ -402,17 +402,16 @@
                 :order {:condition {:param "brush-all"
                                     :value 1}
                         :value 0}
-                :color {:condition [{:test {:and ["datum[view] == cluster"
-                                                  (format "indexof(view_columns, '%s') != -1" (name x-field))
-                                                  (format "indexof(view_columns, '%s') != -1" (name y-field))]}
-                                     :value cluster-selected-color}
+                :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                  "cluster != null"
+                                                  "datum[view] == cluster"]}
+                                     :value obs-data-color}
                                     {:test {:and [{:field "collection" :equal "observed"}
                                                   {:param "brush-all"}
                                                   "cluster == null"]}
                                      :value obs-data-color}
                                     {:test {:and [{:field "collection" :equal "virtual"}
-                                                  {:param "brush-all"}
-                                                  "cluster == null"]}
+                                                  {:param "brush-all"}]}
                                      :value virtual-data-color}
                                     {:test "true"
                                      :value unselected-color}]
@@ -449,6 +448,7 @@
                                        {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
      :width {:step 20}
      :height {:step 20}
+     :resolve {:scale {:size "shared"}}
      :facet {:column {:field "collection"
                       :type "nominal"
                       :header {:title nil
@@ -495,11 +495,11 @@
                                         :legend {:orient "top"
                                                  :title nil
                                                  :offset 10}}}}
-                    {:mark {:type "circle"
-                            :color cluster-selected-color}
-                     :transform [{:filter {:and ["datum[view] == cluster"
-                                                 (format "indexof(view_columns, '%s') != -1" (name x-field))
-                                                 (format "indexof(view_columns, '%s') != -1" (name y-field))]}}]
+                    {:mark {:type "circle"}
+                     :transform [{:filter {:or [{:field "collection" :equal "virtual"}
+                                                {:and [{:field "collection" :equal "observed"}
+                                                       "cluster != null"
+                                                       "datum[view] == cluster"]}]}}]
                      :encoding {:y {:field y-field
                                     :type "nominal"
                                     :axis {:titleOrient "left"
@@ -513,7 +513,10 @@
                                     :scale {:domain x-cats}}
                                 :size {:aggregate "count"
                                        :type "quantitative"
-                                       :legend nil}}}]}}))
+                                       :legend nil}
+                                :color {:field "collection"
+                                        :scale {:domain ["observed", "virtual"]
+                                                :range [obs-data-color virtual-data-color]}}}}]}}))
 
 (defn histogram-quant-section [cols vega-type samples]
   (when (seq cols)

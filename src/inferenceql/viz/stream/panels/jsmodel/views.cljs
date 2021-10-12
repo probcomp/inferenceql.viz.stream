@@ -41,6 +41,8 @@
                        (= n 1) (recur (zip/remove l) (dec n))
                        (= n 0) l)))
 
+        ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
+        ;; if-statement.
         view-id (fn [loc]
                   (loop [l loc]
                     (cond
@@ -59,6 +61,7 @@
                       :else
                       (recur (zip/left l)))))
 
+        ;; Returns true if `loc` represents the start of an if-statement for a cluster.
         cluster-if-statement? (fn [loc]
                                 (let [node (zip/node loc)
                                       [r1 r2 r3] (take 3 (zip/rights loc))
@@ -69,11 +72,14 @@
                                        (number? (edn/read-string r2-content))
                                        (= r3 ") {\n    ret_val = {\n     "))))
 
+        ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
                      (let [[_ r2 _] (take 3 (zip/rights loc))
                            [_ _ r2-content] r2]
                        (edn/read-string r2-content)))
 
+        ;; This function edits the current zipper `loc` if needed otherwise it returns
+        ;; the current `loc` un-edited.
         fix-node (fn [loc]
                    (let [node (zip/node loc)]
                      (cond

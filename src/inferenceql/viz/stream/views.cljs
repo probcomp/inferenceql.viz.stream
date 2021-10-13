@@ -22,8 +22,8 @@
                             (case plot-type
                               :mutual-information
                               [h-box
-                               :width "1500px"
-                               :style {:flex-wrap "wrap"}
+                               :width "3700px"
+                               :style {:flex-flow "row wrap"}
                                ;; Create a mi-plot for mi-info from each CrossCat sample.
                                :children (for [mi mutual-info]
                                            [mi-plot mi iteration])]

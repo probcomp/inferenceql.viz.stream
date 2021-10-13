@@ -2,7 +2,8 @@
   "Defs for extracting information from XCat records."
   (:require [medley.core :as medley]
             [clojure.edn :as edn]
-            [inferenceql.inference.gpm :as gpm]))
+            [inferenceql.inference.gpm :as gpm]
+            [inferenceql.inference.gpm.column :refer [crosscat-simulate]]))
 
 (def range-1 (drop 1 (range)))
 
@@ -78,14 +79,38 @@
            (vals view-cluster-assignemnts))))
 
 (defn row-has-negatives?
+  "Returns true if `row` has any negative values for :gaussian columns.
+  Otherwise, returns nil. `xcat` model is used to determine which columns
+  are numerical columns."
   [xcat row]
-  (some neg? (filter number? (vals row))))
+  (let [col-gpms (->> xcat :views vals (map :columns) (apply merge))
+        col-types (medley/map-vals :stattype col-gpms)
+        numer-cols (keys (medley/filter-vals #{:gaussian} col-types))
+        numer-vals (vals (select-keys row numer-cols))]
+    (some neg? numer-vals)))
+
+(defn simulate-n
+  "Runs `simulate` to produce `n` samples."
+  [xcat simulate n remove-neg]
+  (let [samples (cond->> (repeatedly simulate)
+                  remove-neg (remove #(row-has-negatives? xcat %)))]
+    (take n samples)))
 
 (defn sample-xcat
-  "Samples all targets from an XCat gpm."
-  [model sample-count remove-negative]
-  (let [targets (gpm/variables model)
-        samples (cond->> (repeatedly #(gpm/simulate model targets {}))
-                  remove-negative
-                  (remove #(row-has-negatives? model %)))]
-    (take sample-count samples)))
+  "Samples all targets from an XCat gpm. `n` is the number of samples."
+  ([xcat n]
+   (sample-xcat xcat n {}))
+  ([xcat n {:keys [remove-neg]}]
+   (let [targets (gpm/variables xcat)
+         simulate #(gpm/simulate xcat targets {})]
+     (simulate-n xcat simulate n remove-neg))))
+
+(defn sample-xcat-cluster
+  "Samples all targets from a cluster in an XCat gpm. `n` is the number of samples."
+  ([xcat view-id cluster-id n]
+   (sample-xcat-cluster xcat view-id cluster-id n {}))
+  ([xcat view-id cluster-id n {:keys [remove-neg]}]
+   (let [column-gpms (-> xcat :views view-id :columns)
+         simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
+                                          column-gpms))]
+     (simulate-n xcat simulate n remove-neg))))

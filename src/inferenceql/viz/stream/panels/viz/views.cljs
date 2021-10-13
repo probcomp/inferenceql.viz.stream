@@ -5,15 +5,14 @@
             [re-frame.core :as rf]
             [clojure.data :refer [diff]]
             [clojure.math.combinatorics :refer [combinations]]
-            [inferenceql.inference.gpm.column :refer [crosscat-simulate]]
             [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
-                                                            xcat-view-id-map xcat-cluster-id-map]]
+                                                            xcat-view-id-map xcat-cluster-id-map
+                                                            sample-xcat-cluster]]
             [inferenceql.viz.panels.viz.views :refer [log-level-default default-vega-embed-options]]
             [inferenceql.viz.stream.store :refer [schema xcat-models col-ordering
-                                                  all-samples observed-samples virtual-samples]]
-            [medley.core :as medley]))
+                                                  all-samples observed-samples virtual-samples]]))
 
 (defn vega-lite
   "Simplified Reagent component for displaying vega-lite specs."
@@ -124,39 +123,22 @@
         ;; Merge in the view-cluster information only when we have to.
         all-samples (if cluster-selected
                       (let [row-assignments (all-row-assignments xcat-model)
-
                             view-key (keyword (str "view_" (:view-id cluster-selected)))
                             num-rows (count (filter #(= (get % view-key)
                                                         (:cluster-id cluster-selected))
                                                     row-assignments))
+                            view-cluster-assignments (concat row-assignments (repeat {}))
+                            observed-samples (map merge observed-samples view-cluster-assignments)
 
                             view-map (xcat-view-id-map xcat-model)
                             view-id (view-map (:view-id cluster-selected))
                             cluster-map (xcat-cluster-id-map xcat-model view-id)
                             cluster-id (cluster-map (:cluster-id cluster-selected))
 
-                            column-gpms (-> xcat-model :views view-id :columns)
-                            simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
-                                                             column-gpms))
-
-                            ;; Returns true if row has numerical columns with negative values.
-                            ;; Else returns nil.
-                            row-has-negatives? (fn [row]
-                                                 (let [numer-cols
-                                                       (-> (medley/filter-vals #{:numerical} schema)
-                                                           (keys))
-                                                       numer-vals
-                                                       (-> (select-keys row numer-cols) vals)]
-                                                   (some neg? numer-vals)))
-
-                            virtual-samples (->> (repeatedly simulate)
-                                                 (remove row-has-negatives?)
-                                                 (take num-rows)
-                                                 (map #(assoc % :collection "virtual" :iter 0)))
-
-                            view-cluster-assignments (concat row-assignments (repeat {}))]
-                        (concat (map merge observed-samples view-cluster-assignments)
-                                virtual-samples))
+                            virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
+                                                                      num-rows {:remove-neg true})
+                                                 (map #(assoc % :collection "virtual" :iter 0)))]
+                        (concat observed-samples virtual-samples))
                       all-samples)
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)

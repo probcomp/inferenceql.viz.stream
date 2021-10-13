@@ -77,9 +77,9 @@
     (apply map (fn [& a] (zipmap (keys view-cluster-assignemnts) a))
            (vals view-cluster-assignemnts))))
 
-(defn row-has-negative?
+(defn row-has-negatives?
   [xcat row]
-  (some neg? (vals row)))
+  (some neg? (filter number? (vals row))))
 
 (defn sample-xcat
   "Samples all targets from an XCat gpm."
@@ -87,5 +87,5 @@
   (let [targets (gpm/variables model)
         samples (cond->> (repeatedly #(gpm/simulate model targets {}))
                   remove-negative
-                  (remove #(row-has-negative? model %)))]
+                  (remove #(row-has-negatives? model %)))]
     (take sample-count samples)))

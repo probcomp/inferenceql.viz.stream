@@ -139,7 +139,19 @@
                             simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
                                                              column-gpms))
 
-                            virtual-samples (->> (repeatedly num-rows simulate)
+                            ;; Returns true if row has numerical columns with negative values.
+                            ;; Else returns nil.
+                            row-has-negatives? (fn [row]
+                                                 (let [numer-cols
+                                                       (-> (medley/filter-vals #{:numerical} schema)
+                                                           (keys))
+                                                       numer-vals
+                                                       (-> (select-keys row numer-cols) vals)]
+                                                   (some neg? numer-vals)))
+
+                            virtual-samples (->> (repeatedly simulate)
+                                                 (remove row-has-negatives?)
+                                                 (take num-rows)
                                                  (map #(assoc % :collection "virtual" :iter 0)))
 
                             view-cluster-assignments (concat row-assignments (repeat {}))]

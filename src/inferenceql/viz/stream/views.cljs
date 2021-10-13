@@ -19,16 +19,18 @@
                  :margin "20px"
                  :children [[data-table iteration cluster-selected]
                             [gap :size "30px"]
-                            [h-box
-                             :children [[js-model iteration cluster-selected]
-                                        [gap :size "20px"]
-                                        (case plot-type
-                                          :mutual-information
-                                          [v-box
-                                           ;; Create a mi-plot for mi-info from each CrossCat sample.
-                                           :children (for [mi mutual-info]
-                                                        [mi-plot mi iteration])]
+                            (case plot-type
+                              :mutual-information
+                              [h-box
+                               :width "1500px"
+                               :style {:flex-wrap "wrap"}
+                               ;; Create a mi-plot for mi-info from each CrossCat sample.
+                               :children (for [mi mutual-info]
+                                           [mi-plot mi iteration])]
 
-                                          :select-vs-simulate
+                              :select-vs-simulate
+                              [h-box
+                               :children [[js-model iteration cluster-selected]
+                                          [gap :size "20px"]
                                           [select-vs-simulate-plot cluster-selected
-                                           cluster-selected-click-count iteration])]]]]]]))
+                                           cluster-selected-click-count iteration]]])]]]]))

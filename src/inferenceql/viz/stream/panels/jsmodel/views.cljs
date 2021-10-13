@@ -27,19 +27,16 @@
   "Takes html of highlighted js-program and returns hiccup with cluster if-statements clickable."
   [highlighted-js-text cluster-selected]
   (let [highlighted-js-text (str "<span>" highlighted-js-text "</span>")
-
         hiccup (->> (hickory.core/parse-fragment highlighted-js-text)
                     (map hickory.core/as-hiccup)
                     (first))
         hiccup-zipper (hickory.zip/hiccup-zip hiccup)
 
-        ;; Removes n nodes. Returns position before all removals (depth-first).
-        remove-n (fn [loc num-to-remove]
-                   (loop [l loc n num-to-remove]
-                     (cond
-                       (> n 1) (recur (zip/next (zip/remove l)) (dec n))
-                       (= n 1) (recur (zip/remove l) (dec n))
-                       (= n 0) l)))
+        _ (.log js/console :tree (zip/node hiccup-zipper))
+        _ (.log js/console :tree (zip/node (zip/down hiccup-zipper)))
+        _ (.log js/console :tree (zip/node (zip/right (zip/down hiccup-zipper))))
+        _ (.log js/console :tree (zip/rights (zip/down hiccup-zipper)))
+        _ (.log js/console :tree (zip/children hiccup-zipper))
 
         ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
         ;; if-statement.
@@ -64,13 +61,17 @@
         ;; Returns true if `loc` represents the start of an if-statement for a cluster.
         cluster-if-statement? (fn [loc]
                                 (let [node (zip/node loc)
+                                      parent (zip/node (zip/up loc))
+                                      [p1 p2] parent
                                       [r1 r2 r3] (take 3 (zip/rights loc))
                                       [r2-tag r2-attr r2-content] r2]
+                                  (.log js/console :parent p1 p2)
                                   (and (= node [:span {:class "hljs-keyword"} "if"])
                                        (= r1 " (cluster_id == ")
                                        (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
                                        (number? (edn/read-string r2-content))
-                                       (= r3 ") {\n    "))))
+                                       (= r3 ") {\n    ")
+                                       (not= (:class p2) ["cluster-clickable" nil]))))
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
@@ -78,9 +79,20 @@
                            [_ _ r2-content] r2]
                        (edn/read-string r2-content)))
 
+        remove-until (fn [loc endings]
+                       (loop [l loc acc []]
+                         (let [n (zip/node l)]
+                           ;(.log js/console :n n)
+                           ;(.log js/console :n (endings n))
+                           (if (endings n)
+                             [(zip/remove l) (conj acc n)]
+                             (recur (zip/next (zip/remove l))
+                                    (conj acc n))))))
+
         ;; This function edits the current zipper `loc` if needed otherwise it returns
         ;; the current `loc` un-edited.
         fix-node (fn [loc]
+                   ;(.log js/console :loc-node (zip/node loc))
                    (let [node (zip/node loc)]
                      (cond
                        (cluster-if-statement? loc)
@@ -88,29 +100,36 @@
                              view-id (view-id loc)
                              current {:cluster-id cluster-id :view-id view-id}
                              current-selected (= current cluster-selected)
-                             [r1 r2 r3] (take 3 (zip/rights loc))]
-                         (-> loc
-                             (remove-n 4) ; Remove all the nodes we are going to re-insert with edits.
-                             (zip/insert-right [:span {:class ["cluster-clickable"
-                                                               (when current-selected "cluster-selected")]
-                                                       :onClick #(rf/dispatch [:control/select-cluster current])}
-                                                [:span {:class "hljs-keyword"} "if"]
-                                                r1
-                                                r2
-                                                ")"])
-                             (zip/right)
-                             (zip/insert-right (subs r3 1))))
+
+                             cluster-endings #{"])\n    };\n  }\n}\n\n"
+                                               "])\n    };\n  } "}
+                             [new-loc targets] (remove-until loc cluster-endings)]
+                         #_(.log js/console :a targets)
+                         #_(zip/next loc)
+                         (-> new-loc
+                             (zip/insert-right (into [:span {:class ["cluster-clickable"
+                                                                     (when current-selected "cluster-selected")]
+                                                             :onClick #(rf/dispatch [:control/select-cluster current])}]
+                                                     targets))
+                             (zip/next)))
 
                        (string? node)
-                       (zip/edit loc gstring/unescapeEntities)
-
+                       (-> (zip/edit loc gstring/unescapeEntities)
+                           (zip/next))
 
                        :else
-                       loc)))]
-    (loop [loc hiccup-zipper]
-      (if (not (zip/end? loc))
-        (recur (zip/next (fix-node loc)))
-        (zip/root loc)))))
+                       (zip/next loc))))]
+    (loop [loc (zip/down hiccup-zipper)]
+      (if (zip/end? (zip/next loc))
+        ;; Fix current node, move, return root.
+        (zip/root (fix-node loc))
+        ;; Fix current node, move.
+        (recur (fix-node loc))))))
+
+;(.log js/console :node (zip/node loc))
+;(.log js/console :loc-next (zip/right loc))
+;(.log js/console :node-next (zip/node (zip/right loc)))
+;(.log js/console :node-next-check (zip/end? (zip/right loc)))
 
 (defn highlight
   "Returns html of js-text highlighted with highlight.js"

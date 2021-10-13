@@ -97,9 +97,8 @@ $(figwheel-resource-dir): $(figwheel-public-dir) $(hot-css-resource) $(transitio
 
 # Deletes the entire figwheel build directory.
 .PHONY: figwheel-clean
-figwheel-clean:
+figwheel-clean: clean
 	rm -Rf $(figwheel-build-dir)
-	rm -Rf $(node-modules-dir)
 
 # Deletes the static files in the figwheel build directory.
 .PHONY: figwheel-clean-static

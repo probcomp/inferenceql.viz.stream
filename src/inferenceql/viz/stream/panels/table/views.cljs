@@ -36,10 +36,9 @@
                          ;; from col-ordering.
                          (keep col-ordering))]
     [:div {:style {:overflow "hidden"
-                   :border "1px solid #ccc"
                    :border-radius "4px"
                    :width "1390px"}}
-     [:div {:style {:margin-left "-1px" :margin-top "-1px"}}
+     [:div
       [handsontable :reagent {} (take num-points rows)
        {:height "400px"
         :width "1390px"

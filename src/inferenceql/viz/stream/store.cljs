@@ -80,7 +80,7 @@
        (map merge iteration-tags)))
 
 (def virtual-samples
-  (->> (mapcat sample-xcat xcat-models num-rows-required)
+  (->> (mapcat sample-xcat xcat-models num-rows-required (repeat true))
        (map #(assoc % :collection "virtual"))
        (map add-null-columns)
        (map merge iteration-tags)))

@@ -51,7 +51,6 @@
                       :else
                       (recur (z/left l)))))
 
-
         cluster-parent-ok? (fn [loc]
                              (when loc
                                (let [;; Get aspects of our parent node for checking.
@@ -84,17 +83,6 @@
                                        (cluster-context-ok? (some-> loc z/right))
                                        (cluster-parent-ok? loc))))
 
-        cluster-else-if-statement? (fn [loc]
-                                     (let [node (z/node loc)
-                                           [r1 r2] (take 2 (z/rights loc))]
-                                       (and (= node [:span {:class "hljs-keyword"} "else"])
-                                            (= r1 " ")
-                                            (= r2 [:span {:class "hljs-keyword"} "if"])
-                                            (cluster-context-ok? (some-> loc z/right
-                                                                         z/right z/right))
-                                            (cluster-parent-ok? loc))))
-
-
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
                      (let [[_ r2 _] (take 3 (z/rights loc))
@@ -103,37 +91,18 @@
 
         remove-until (fn [loc endings]
                        (loop [l loc acc []]
-                         (.log js/console :acc acc)
                          (let [n (z/node l)]
                            (if (endings n)
-                             (do
-                               (.log js/console :acc-next-loc-done (-> l z/remove))
-                               [(z/remove l) (conj acc n)])
-                             (do
-                               (.log js/console :acc-next-loc (-> l z/remove z/node))
-                               (recur (z/right (z/remove l))
-                                      (conj acc n)))))))
-
-        remove-until (fn [loc endings]
-                       (let [[final-loc acc] (loop [l loc acc []]
-                                               (let [n (z/node l)]
-                                                 (.log js/console :node-pre n)
-                                                 (if (endings n)
-                                                   [l (conj acc n)]
-                                                   (recur (z/right l) (conj acc n)))))]
-                         (.log js/console :acc acc)
-                         (loop [l final-loc iters-rem (range (count acc))]
-                           (.log js/console :node-post (z/node l))
-                           (if (seq iters-rem)
-                             (recur (z/remove l) (rest iters-rem))
-                             [l acc]))))
+                             [(z/remove l) (conj acc n)]
+                             (recur (z/next (z/remove l))
+                                    (conj acc n))))))
 
 
         ;; This functions wraps all nodes that correstpond to a cluster into a span that
         ;; can be clicked.
         wrap-cluster-nodes
         (fn [loc]
-          (if (or (cluster-if-statement? loc) (cluster-else-if-statement? loc))
+          (if (cluster-if-statement? loc)
             (let [cluster-id (cluster-id loc)
                   view-id (view-id loc)
                   current {:cluster-id cluster-id :view-id view-id}
@@ -171,9 +140,6 @@
                         (z/root (f loc))
                         ;; Recur case.
                         (recur (z/right (f loc))))))
-
-
-        _ (.log js/console :foo (-> hiccup hickory.zip/hiccup-zip z/node))
 
         s-1 (map-right (hickory.zip/hiccup-zip hiccup) fix-hljs-string-nodes)
         s-2 (map-right (hickory.zip/hiccup-zip s-1) wrap-cluster-nodes)]

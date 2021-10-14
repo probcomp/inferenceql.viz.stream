@@ -32,12 +32,6 @@
                     (first))
         hiccup-zipper (hickory.zip/hiccup-zip hiccup)
 
-        _ (.log js/console :tree (zip/node hiccup-zipper))
-        _ (.log js/console :tree (zip/node (zip/down hiccup-zipper)))
-        _ (.log js/console :tree (zip/node (zip/right (zip/down hiccup-zipper))))
-        _ (.log js/console :tree (zip/rights (zip/down hiccup-zipper)))
-        _ (.log js/console :tree (zip/children hiccup-zipper))
-
         ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
         ;; if-statement.
         view-id (fn [loc]
@@ -91,8 +85,6 @@
         remove-until (fn [loc endings]
                        (loop [l loc acc []]
                          (let [n (zip/node l)]
-                           ;(.log js/console :n n)
-                           ;(.log js/console :n (endings n))
                            (if (endings n)
                              [(zip/remove l) (conj acc n)]
                              (recur (zip/next (zip/remove l))
@@ -112,7 +104,6 @@
                              cluster-endings #{"])\n    };\n  }\n}\n\n"
                                                "])\n    };\n  } "}
                              [new-loc targets] (remove-until loc cluster-endings)]
-                         (.log js/console :targets targets)
                          (-> new-loc
                              (zip/insert-right (into [:span {:class ["cluster-clickable"
                                                                      (when current-selected "cluster-selected")]
@@ -129,11 +120,6 @@
       (if (zip/end? loc)
         (zip/root loc)
         (recur (zip/next (fix-node loc)))))))
-
-;(.log js/console :node (zip/node loc))
-;(.log js/console :loc-next (zip/right loc))
-;(.log js/console :node-next (zip/node (zip/right loc)))
-;(.log js/console :node-next-check (zip/end? (zip/right loc)))
 
 (defn highlight
   "Returns html of js-text highlighted with highlight.js"

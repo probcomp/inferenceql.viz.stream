@@ -68,7 +68,7 @@
                                       [r2-tag r2-attr r2-content] r2
 
                                       ;; Get aspects of our parent node for checking.
-                                      parent (zip/node (zip/up loc))
+                                      parent (some-> loc zip/up zip/node)
                                       [_p-tag p-attrs] parent
                                       p-classes (:class p-attrs)
                                       ;; Ensure p-classes is a seq of strings (class names).
@@ -101,7 +101,6 @@
         ;; This function edits the current zipper `loc` if needed otherwise it returns
         ;; the current `loc` un-edited.
         fix-node (fn [loc]
-                   ;(.log js/console :loc-node (zip/node loc))
                    (let [node (zip/node loc)]
                      (cond
                        (cluster-if-statement? loc)
@@ -113,27 +112,23 @@
                              cluster-endings #{"])\n    };\n  }\n}\n\n"
                                                "])\n    };\n  } "}
                              [new-loc targets] (remove-until loc cluster-endings)]
-                         #_(.log js/console :a targets)
-                         #_(zip/next loc)
+                         (.log js/console :targets targets)
                          (-> new-loc
                              (zip/insert-right (into [:span {:class ["cluster-clickable"
                                                                      (when current-selected "cluster-selected")]
                                                              :onClick #(rf/dispatch [:control/select-cluster current])}]
-                                                     targets))
-                             (zip/next)))
+                                                     targets))))
 
                        (string? node)
-                       (-> (zip/edit loc gstring/unescapeEntities)
-                           (zip/next))
+                       (-> (zip/edit loc gstring/unescapeEntities))
 
                        :else
-                       (zip/next loc))))]
-    (loop [loc (zip/down hiccup-zipper)]
-      (if (zip/end? (zip/next loc))
-        ;; Fix current node, move, return root.
-        (zip/root (fix-node loc))
-        ;; Fix current node, move.
-        (recur (fix-node loc))))))
+                       loc)))]
+    ;; Loop through all nodes, fixing as needed.
+    (loop [loc hiccup-zipper]
+      (if (zip/end? loc)
+        (zip/root loc)
+        (recur (zip/next (fix-node loc)))))))
 
 ;(.log js/console :node (zip/node loc))
 ;(.log js/console :loc-next (zip/right loc))

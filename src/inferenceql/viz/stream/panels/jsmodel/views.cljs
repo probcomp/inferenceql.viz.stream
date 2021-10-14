@@ -59,19 +59,28 @@
                       (recur (zip/left l)))))
 
         ;; Returns true if `loc` represents the start of an if-statement for a cluster.
+        ;; We also check that this if-statement in not nested in a span with class
+        ;; "cluster-clickable". This would mean we have edited it before.
         cluster-if-statement? (fn [loc]
                                 (let [node (zip/node loc)
-                                      parent (zip/node (zip/up loc))
-                                      [p1 p2] parent
+                                      ;; Get aspects of the left 3 nodes for checking.
                                       [r1 r2 r3] (take 3 (zip/rights loc))
-                                      [r2-tag r2-attr r2-content] r2]
-                                  (.log js/console :parent p1 p2)
-                                  (and (= node [:span {:class "hljs-keyword"} "if"])
+                                      [r2-tag r2-attr r2-content] r2
+
+                                      ;; Get aspects of our parent node for checking.
+                                      parent (zip/node (zip/up loc))
+                                      [_p-tag p-attrs] parent
+                                      p-classes (:class p-attrs)
+                                      ;; Ensure p-classes is a seq of strings (class names).
+                                      p-classes (if (string? p-classes) [p-classes] p-classes)]
+                                  (and (not-any? #{"cluster-clickable"} p-classes)
+                                       (= node [:span {:class "hljs-keyword"} "if"])
                                        (= r1 " (cluster_id == ")
                                        (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
                                        (number? (edn/read-string r2-content))
-                                       (= r3 ") {\n    ")
-                                       (not= (:class p2) ["cluster-clickable" nil]))))
+                                       (= r3 ") {\n    "))))
+                                       ;; Checks that our parent does not have class
+                                       ;; "cluster-clickable".
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]

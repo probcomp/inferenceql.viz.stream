@@ -30,10 +30,6 @@
         hiccup (->> (hickory.core/parse-fragment highlighted-js-text)
                  (map hickory.core/as-hiccup)
                  (first))
-        hiccup-zipper (hickory.zip/hiccup-zip hiccup)
-
-        _ (.log js/console :foo (-> hiccup-zipper z/node))
-
 
         ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
         ;; if-statement.
@@ -148,21 +144,17 @@
               (z/edit loc update 2 gstring/unescapeEntities)
               loc)))
 
-        ;; Iterate through all nodes by moving right at each step.
-        s-1 (loop [loc (z/down hiccup-zipper)]
-              (if (nil? (z/right loc))
-                ;; We are at the right-most already. Fix current node and return root.
-                (z/root (fix-hljs-string-nodes loc))
-                ;; Recur case.
-                (recur (z/right (fix-hljs-string-nodes loc)))))
+        map-right (fn [zip f]
+                    ;; Iterate through all nodes by moving right at each step.
+                    (loop [loc (z/down zip)]
+                      (if (nil? (z/right loc))
+                        ;; We are at the right-most already. Fix current node and return root.
+                        (z/root (f loc))
+                        ;; Recur case.
+                        (recur (z/right (f loc))))))
 
-        s-2 (loop [loc (z/down (hickory.zip/hiccup-zip s-1))]
-              (if (nil? (z/right loc))
-                ;; We are at the right-most already. Fix current node and return root.
-                (z/root (wrap-cluster-nodes loc))
-                ;; Recur case.
-                (recur (z/right (wrap-cluster-nodes loc)))))]
-
+        s-1 (map-right (hickory.zip/hiccup-zip hiccup) fix-hljs-string-nodes)
+        s-2 (map-right (hickory.zip/hiccup-zip s-1) wrap-cluster-nodes)]
     s-2))
 
 (defn highlight

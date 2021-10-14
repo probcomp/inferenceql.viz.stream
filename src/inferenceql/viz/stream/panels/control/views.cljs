@@ -30,8 +30,6 @@
     [v-box
      :padding "20px 20px 10px 20px"
      :margin "0px 0px 20px 0px"
-     :style {:background-color "#f5f5f5"
-             :border-bottom "1px solid #ececec"}
      :children [[h-box
                  :children [[label :label "Iteration:"]
                             [gap :size "10px"]

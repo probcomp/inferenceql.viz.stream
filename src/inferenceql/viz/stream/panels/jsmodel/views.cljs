@@ -103,17 +103,37 @@
 
         remove-until (fn [loc endings]
                        (loop [l loc acc []]
+                         (.log js/console :acc acc)
                          (let [n (z/node l)]
                            (if (endings n)
-                             [(z/remove l) (conj acc n)]
-                             (recur (z/right (z/remove l))
-                                    (conj acc n))))))
+                             (do
+                               (.log js/console :acc-next-loc-done (-> l z/remove))
+                               [(z/remove l) (conj acc n)])
+                             (do
+                               (.log js/console :acc-next-loc (-> l z/remove z/node))
+                               (recur (z/right (z/remove l))
+                                      (conj acc n)))))))
+
+        remove-until (fn [loc endings]
+                       (let [[final-loc acc] (loop [l loc acc []]
+                                               (let [n (z/node l)]
+                                                 (.log js/console :node-pre n)
+                                                 (if (endings n)
+                                                   [l (conj acc n)]
+                                                   (recur (z/right l) (conj acc n)))))]
+                         (.log js/console :acc acc)
+                         (loop [l final-loc iters-rem (range (count acc))]
+                           (.log js/console :node-post (z/node l))
+                           (if (seq iters-rem)
+                             (recur (z/remove l) (rest iters-rem))
+                             [l acc]))))
+
 
         ;; This functions wraps all nodes that correstpond to a cluster into a span that
         ;; can be clicked.
         wrap-cluster-nodes
         (fn [loc]
-          (if (or (cluster-if-statement? loc) #_(cluster-else-if-statement? loc))
+          (if (or (cluster-if-statement? loc) (cluster-else-if-statement? loc))
             (let [cluster-id (cluster-id loc)
                   view-id (view-id loc)
                   current {:cluster-id cluster-id :view-id view-id}
@@ -135,14 +155,13 @@
                                         targets))))
             loc))
 
-        fix-hljs-string-nodes
-        (fn [loc]
-          (let [node (z/node loc)
-                class (get-in node [1 :class])]
-            (if (= class "hljs-string")
-              ;; Unescapes the string portion of the hljs-string vector.
-              (z/edit loc update 2 gstring/unescapeEntities)
-              loc)))
+        fix-hljs-string-nodes (fn [loc]
+                                (let [node (z/node loc)
+                                      class (get-in node [1 :class])]
+                                  (if (= class "hljs-string")
+                                    ;; Unescapes the string portion of the hljs-string vector.
+                                    (z/edit loc update 2 gstring/unescapeEntities)
+                                    loc)))
 
         map-right (fn [zip f]
                     ;; Iterate through all nodes by moving right at each step.
@@ -152,6 +171,9 @@
                         (z/root (f loc))
                         ;; Recur case.
                         (recur (z/right (f loc))))))
+
+
+        _ (.log js/console :foo (-> hiccup hickory.zip/hiccup-zip z/node))
 
         s-1 (map-right (hickory.zip/hiccup-zip hiccup) fix-hljs-string-nodes)
         s-2 (map-right (hickory.zip/hiccup-zip s-1) wrap-cluster-nodes)]

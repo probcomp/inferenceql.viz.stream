@@ -67,14 +67,14 @@
                                       p-classes (:class p-attrs)
                                       ;; Ensure p-classes is a seq of strings (class names).
                                       p-classes (if (string? p-classes) [p-classes] p-classes)]
-                                  (and (not-any? #{"cluster-clickable"} p-classes)
-                                       (= node [:span {:class "hljs-keyword"} "if"])
+                                  (and (= node [:span {:class "hljs-keyword"} "if"])
                                        (= r1 " (cluster_id == ")
                                        (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
                                        (number? (edn/read-string r2-content))
-                                       (= r3 ") {\n    "))))
+                                       (= r3 ") {\n    ")
                                        ;; Checks that our parent does not have class
                                        ;; "cluster-clickable".
+                                       (not-any? #{"cluster-clickable"} p-classes))))
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]

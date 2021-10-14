@@ -11,7 +11,7 @@
             [hickory.select :as s]
             [hickory.zip]
             [hickory.render]
-            [clojure.zip :as zip]
+            [clojure.zip :as z]
             [clojure.string :as string]
             [clojure.edn :as edn]
             [cljstache.core :refer [render]]
@@ -28,11 +28,11 @@
   [highlighted-js-text cluster-selected]
   (let [highlighted-js-text (str "<span>" highlighted-js-text "</span>")
         hiccup (->> (hickory.core/parse-fragment highlighted-js-text)
-                    (map hickory.core/as-hiccup)
-                    (first))
+                 (map hickory.core/as-hiccup)
+                 (first))
         hiccup-zipper (hickory.zip/hiccup-zip hiccup)
 
-        _ (.log js/console :foo (-> hiccup-zipper zip/node))
+        _ (.log js/console :foo (-> hiccup-zipper z/node))
 
 
         ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
@@ -43,36 +43,36 @@
                       (nil? l)
                       nil
 
-                      (= (take 2 (zip/node l)) [:span {:class "hljs-function"}])
+                      (= (take 2 (z/node l)) [:span {:class "hljs-function"}])
                       (let [func-name (-> l
-                                          zip/down zip/right
-                                          zip/right zip/down
-                                          zip/node)]
+                                          z/down z/right
+                                          z/right z/down
+                                          z/node)]
                         (-> (re-matches #"view_(\d+)" func-name)
                             second
                             edn/read-string))
 
                       :else
-                      (recur (zip/left l)))))
+                      (recur (z/left l)))))
 
 
         cluster-parent-ok? (fn [loc]
                              (when loc
                                (let [;; Get aspects of our parent node for checking.
-                                     parent (some-> loc zip/up zip/node)
+                                     parent (some-> loc z/up z/node)
                                      [_p-tag p-attrs] parent
                                      p-classes (:class p-attrs)
                                      ;; Ensure p-classes is a seq of strings (class names).
                                      p-classes (if (string? p-classes) [p-classes] p-classes)]
-                                ;; Checks that our parent does not have class
-                                ;; "cluster-clickable".
-                                (not-any? #{"cluster-clickable"} p-classes))))
+                                 ;; Checks that our parent does not have class
+                                 ;; "cluster-clickable".
+                                 (not-any? #{"cluster-clickable"} p-classes))))
 
         cluster-context-ok? (fn [loc]
                               (when loc
-                                (let [node (zip/node loc)
+                                (let [node (z/node loc)
                                       ;; Get aspects of the right 2 nodes for checking.
-                                      [r1 r2] (zip/rights loc)
+                                      [r1 r2] (z/rights loc)
                                       [r1-tag r1-attr r1-content] r1]
                                   (and (= node " (cluster_id == ")
                                        (= [:span {:class "hljs-number"}] [r1-tag r1-attr])
@@ -83,93 +83,85 @@
         ;; We also check that this if-statement in not nested in a span with class
         ;; "cluster-clickable". This would mean we have edited it before.
         cluster-if-statement? (fn [loc]
-                                (let [node (zip/node loc)]
+                                (let [node (z/node loc)]
                                   (and (= node [:span {:class "hljs-keyword"} "if"])
-                                       (cluster-context-ok? (some-> loc zip/right))
+                                       (cluster-context-ok? (some-> loc z/right))
                                        (cluster-parent-ok? loc))))
 
         cluster-else-if-statement? (fn [loc]
-                                     (let [node (zip/node loc)
-                                           [r1 r2] (take 2 (zip/rights loc))]
+                                     (let [node (z/node loc)
+                                           [r1 r2] (take 2 (z/rights loc))]
                                        (and (= node [:span {:class "hljs-keyword"} "else"])
                                             (= r1 " ")
                                             (= r2 [:span {:class "hljs-keyword"} "if"])
-                                            (cluster-context-ok? (some-> loc zip/right
-                                                                         zip/right zip/right))
+                                            (cluster-context-ok? (some-> loc z/right
+                                                                         z/right z/right))
                                             (cluster-parent-ok? loc))))
 
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
-                     (let [[_ r2 _] (take 3 (zip/rights loc))
+                     (let [[_ r2 _] (take 3 (z/rights loc))
                            [_ _ r2-content] r2]
                        (edn/read-string r2-content)))
 
         remove-until (fn [loc endings]
                        (loop [l loc acc []]
-                         (let [n (zip/node l)]
+                         (let [n (z/node l)]
                            (if (endings n)
-                             [(zip/remove l) (conj acc n)]
-                             (recur (zip/right (zip/remove l))
+                             [(z/remove l) (conj acc n)]
+                             (recur (z/right (z/remove l))
                                     (conj acc n))))))
 
-        hljs-string? (fn [loc]
-                       (let [node (zip/node loc)
-                             class (get-in node [1 :class])]
-                         (.log js/console :class class)
-                         (= class "hljs-string")))
+        ;; This functions wraps all nodes that correstpond to a cluster into a span that
+        ;; can be clicked.
+        wrap-cluster-nodes
+        (fn [loc]
+          (if (or (cluster-if-statement? loc) #_(cluster-else-if-statement? loc))
+            (let [cluster-id (cluster-id loc)
+                  view-id (view-id loc)
+                  current {:cluster-id cluster-id :view-id view-id}
+                  current-selected (= current cluster-selected)
 
-        fix-hljs-string (fn [loc]
-                          (.log js/console :here (zip/node loc)))
+                  cluster-endings #{;; After intermediate cluster, last var categorical.
+                                    "])\n    };\n  }\n}\n\n"
+                                    ;; After intermediate cluster, last var gaussian.
+                                    ")\n    };\n  }\n}\n\n"
+                                    ;; After last cluster, last var categorical.
+                                    "])\n    };\n  } "
+                                    ;; After last cluster, last var gaussian.
+                                    ")\n    };\n  } "}
+                  [new-loc targets] (remove-until loc cluster-endings)]
+              (-> new-loc
+                  (z/insert-right (into [:span {:class ["cluster-clickable"
+                                                        (when current-selected "cluster-selected")]
+                                                :onClick #(rf/dispatch [:control/select-cluster current])}]
+                                        targets))))
+            loc))
 
-        ;; This function edits the current zipper `loc` if needed otherwise it returns
-        ;; the current `loc` un-edited.
-        fix-node (fn [loc]
-                   (if (or (cluster-if-statement? loc) #_(cluster-else-if-statement? loc))
-                     (let [cluster-id (cluster-id loc)
-                           view-id (view-id loc)
-                           current {:cluster-id cluster-id :view-id view-id}
-                           current-selected (= current cluster-selected)
-
-                           cluster-endings #{;; After intermediate cluster, last var categorical.
-                                             "])\n    };\n  }\n}\n\n"
-                                             ;; After intermediate cluster, last var gaussian.
-                                             ")\n    };\n  }\n}\n\n"
-                                             ;; After last cluster, last var categorical.
-                                             "])\n    };\n  } "
-                                             ;; After last cluster, last var gaussian.
-                                             ")\n    };\n  } "}
-                           [new-loc targets] (remove-until loc cluster-endings)]
-                       (-> new-loc
-                           (zip/insert-right (into [:span {:class ["cluster-clickable"
-                                                                   (when current-selected "cluster-selected")]
-                                                           :onClick #(rf/dispatch [:control/select-cluster current])}]
-                                                   targets))))
-                     loc))
-
-        fix-hljs-strings (fn [loc]
-                           (let [node (zip/node loc)
-                                 class (get-in node [1 :class])]
-                             (if (= class "hljs-string")
-                               ;; Unescapes the string portion of the hljs-string vector.
-                               (zip/edit loc update 2 gstring/unescapeEntities)
-                               loc)))
-
+        fix-hljs-string-nodes
+        (fn [loc]
+          (let [node (z/node loc)
+                class (get-in node [1 :class])]
+            (if (= class "hljs-string")
+              ;; Unescapes the string portion of the hljs-string vector.
+              (z/edit loc update 2 gstring/unescapeEntities)
+              loc)))
 
         ;; Iterate through all nodes by moving right at each step.
-        s-1 (loop [loc (zip/down hiccup-zipper)]
-              (if (nil? (zip/right loc))
+        s-1 (loop [loc (z/down hiccup-zipper)]
+              (if (nil? (z/right loc))
                 ;; We are at the right-most already. Fix current node and return root.
-                (zip/root (fix-hljs-strings loc))
+                (z/root (fix-hljs-string-nodes loc))
                 ;; Recur case.
-                (recur (zip/right (fix-hljs-strings loc)))))
+                (recur (z/right (fix-hljs-string-nodes loc)))))
 
-        s-2 (loop [loc (zip/down (hickory.zip/hiccup-zip s-1))]
-              (if (nil? (zip/right loc))
+        s-2 (loop [loc (z/down (hickory.zip/hiccup-zip s-1))]
+              (if (nil? (z/right loc))
                 ;; We are at the right-most already. Fix current node and return root.
-                (zip/root (fix-node loc))
+                (z/root (wrap-cluster-nodes loc))
                 ;; Recur case.
-                (recur (zip/right (fix-node loc)))))]
+                (recur (z/right (wrap-cluster-nodes loc)))))]
 
     s-2))
 

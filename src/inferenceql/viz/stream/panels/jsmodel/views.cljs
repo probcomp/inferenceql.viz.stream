@@ -32,6 +32,8 @@
                     (first))
         hiccup-zipper (hickory.zip/hiccup-zip hiccup)
 
+        ;_ (.log js/console :foo (zip/node hiccup-zipper))
+
         ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
         ;; if-statement.
         view-id (fn [loc]
@@ -52,29 +54,49 @@
                       :else
                       (recur (zip/left l)))))
 
+
+        cluster-parent-ok? (fn [loc]
+                             (when loc
+                               (let [;; Get aspects of our parent node for checking.
+                                     parent (some-> loc zip/up zip/node)
+                                     [_p-tag p-attrs] parent
+                                     p-classes (:class p-attrs)
+                                     ;; Ensure p-classes is a seq of strings (class names).
+                                     p-classes (if (string? p-classes) [p-classes] p-classes)]
+                                ;; Checks that our parent does not have class
+                                ;; "cluster-clickable".
+                                (not-any? #{"cluster-clickable"} p-classes))))
+
+        cluster-context-ok? (fn [loc]
+                              (when loc
+                                (let [node (zip/node loc)
+                                      ;; Get aspects of the right 2 nodes for checking.
+                                      [r1 r2] (zip/rights loc)
+                                      [r1-tag r1-attr r1-content] r1]
+                                  (and (= node " (cluster_id == ")
+                                       (= [:span {:class "hljs-number"}] [r1-tag r1-attr])
+                                       (number? (edn/read-string r1-content))
+                                       (= r2 ") {\n    ")))))
+
         ;; Returns true if `loc` represents the start of an if-statement for a cluster.
         ;; We also check that this if-statement in not nested in a span with class
         ;; "cluster-clickable". This would mean we have edited it before.
         cluster-if-statement? (fn [loc]
-                                (let [node (zip/node loc)
-                                      ;; Get aspects of the left 3 nodes for checking.
-                                      [r1 r2 r3] (take 3 (zip/rights loc))
-                                      [r2-tag r2-attr r2-content] r2
-
-                                      ;; Get aspects of our parent node for checking.
-                                      parent (some-> loc zip/up zip/node)
-                                      [_p-tag p-attrs] parent
-                                      p-classes (:class p-attrs)
-                                      ;; Ensure p-classes is a seq of strings (class names).
-                                      p-classes (if (string? p-classes) [p-classes] p-classes)]
+                                (let [node (zip/node loc)]
                                   (and (= node [:span {:class "hljs-keyword"} "if"])
-                                       (= r1 " (cluster_id == ")
-                                       (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
-                                       (number? (edn/read-string r2-content))
-                                       (= r3 ") {\n    ")
-                                       ;; Checks that our parent does not have class
-                                       ;; "cluster-clickable".
-                                       (not-any? #{"cluster-clickable"} p-classes))))
+                                       (cluster-context-ok? (some-> loc zip/right))
+                                       (cluster-parent-ok? loc))))
+
+        cluster-else-if-statement? (fn [loc]
+                                     (let [node (zip/node loc)
+                                           [r1 r2] (take 2 (zip/rights loc))]
+                                       (and (= node [:span {:class "hljs-keyword"} "else"])
+                                            (= r1 " ")
+                                            (= r2 [:span {:class "hljs-keyword"} "if"])
+                                            (cluster-context-ok? (some-> loc zip/right
+                                                                         zip/right zip/right))
+                                            (cluster-parent-ok? loc))))
+
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
@@ -95,7 +117,7 @@
         fix-node (fn [loc]
                    (let [node (zip/node loc)]
                      (cond
-                       (cluster-if-statement? loc)
+                       (or (cluster-if-statement? loc) #_(cluster-else-if-statement? loc))
                        (let [cluster-id (cluster-id loc)
                              view-id (view-id loc)
                              current {:cluster-id cluster-id :view-id view-id}

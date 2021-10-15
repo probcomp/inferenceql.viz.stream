@@ -90,15 +90,16 @@
                            [_ _ r2-content] r2]
                        (edn/read-string r2-content)))
 
+        ;; Remove nodes starting from `loc` until reaching one of the nodes in set `endings`.
+        ;; Returns `[loc acc]` where `loc` is the position of the first node encountered in
+        ;; `endings` and `acc` is the list of nodes removed to reach the ending and also the
+        ;; ending node itself, which does not get removed.
         remove-until (fn [loc endings]
                        (loop [l loc acc []]
                          (let [n (z/node l)]
                            (if (endings n)
-                             ;; TODO ouch, better way?
-                             [(-> l z/remove z/next z/left) (conj acc n)]
-                             (recur (z/next (z/remove l))
-                                    (conj acc n))))))
-
+                             [l (conj acc n)]
+                             (recur (z/next (z/remove l)) (conj acc n))))))
 
         ;; This functions wraps all nodes that correstpond to a cluster into a span that
         ;; can be clicked.
@@ -118,13 +119,13 @@
                                     "])\n    };\n  } "
                                     ;; After last cluster, last var gaussian.
                                     ")\n    };\n  } "}
-                  [new-loc targets] (remove-until loc cluster-endings)]
-              (-> new-loc
-                  (z/insert-right (into [:span {:class ["cluster-clickable"
-                                                        (when current-selected "cluster-selected")
-                                                        (when current-selected "no-select")]
-                                                :onClick #(rf/dispatch [:control/select-cluster current])}]
-                                        targets))))
+                  [cluster-end-loc cluster-nodes] (remove-until loc cluster-endings)]
+              (z/replace cluster-end-loc
+                         (into [:span {:class ["cluster-clickable"
+                                               (when current-selected "cluster-selected")
+                                               (when current-selected "no-select")]
+                                       :onClick #(rf/dispatch [:control/select-cluster current])}]
+                               cluster-nodes)))
             loc))
 
         fix-hljs-string-nodes (fn [loc]

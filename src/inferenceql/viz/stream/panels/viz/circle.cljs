@@ -1,24 +1,8 @@
 (ns inferenceql.viz.stream.panels.viz.circle)
 
-(defn tree [node-names]
-  (let [root-id -1
-        root-node {:name "root" :id root-id :alpha 0.5 :beta 0}
-
-        num-other-nodes (count node-names)
-
-        other-nodes-ids (map inc (range num-other-nodes))
-        other-nodes-locs (map #(* (/ 1 num-other-nodes)
-                                  (- % 0.5))
-                              other-nodes-ids)
-        other-nodes (for [[name id loc] (map vector node-names other-nodes-ids other-nodes-locs)]
-                      {:name name :id id :parent root-id :alpha loc :beta 1 :status nil})]
-    (concat [root-node] other-nodes)))
-
-(defn dependencies [dependencies]
-  (for [d dependencies]
-    (assoc d :edge-present true :infected nil)))
-
-(defn spec [tree dependencies extent rotate]
+(defn spec
+  "Raw vega spec for circle viz."
+  [tree dependencies extent rotate]
   {:$schema "https://vega.github.io/schema/vega/v5.json",
    :width 400,
    :height 400,
@@ -138,7 +122,33 @@
                 :x {:field "x"},
                 :y {:field "y"}}}}]}],})
 
-(defn circle-viz-spec [node-names edges]
+(defn tree
+  "Helper function for producing tree data for circle viz spec."
+  [node-names]
+  (let [root-id -1
+        root-node {:name "root" :id root-id :alpha 0.5 :beta 0}
+
+        num-other-nodes (count node-names)
+
+        other-nodes-ids (map inc (range num-other-nodes))
+        other-nodes-locs (map #(* (/ 1 num-other-nodes)
+                                  (- % 0.5))
+                              other-nodes-ids)
+        other-nodes (for [[name id loc] (map vector node-names other-nodes-ids other-nodes-locs)]
+                      {:name name :id id :parent root-id :alpha loc :beta 1 :status nil})]
+    (concat [root-node] other-nodes)))
+
+(defn dependencies
+  "Helper function for producing dependency data for circle viz spec."
+  [dependencies]
+  (for [d dependencies]
+    (assoc d :edge-present true :infected nil)))
+
+(defn circle-viz-spec
+  "Returns a vega spec for the circle viz.
+  node-names - a list of node names as keywords.
+  edges - a list pairs where each pair consists of two node-names forming the edge."
+  [node-names edges]
   (let [tree (tree node-names)
         edges-clean (let [edges (for [edge edges]
                                   (set (map keyword edge)))]

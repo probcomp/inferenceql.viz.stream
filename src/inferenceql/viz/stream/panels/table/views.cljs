@@ -1,12 +1,5 @@
 (ns inferenceql.viz.stream.panels.table.views
-  (:require [handsontable$default :as yarn-handsontable]
-            [reagent.core :as reagent]
-            [medley.core :refer [filter-kv]]
-            [reagent.core :as r]
-            [re-com.core :refer [v-box h-box gap box]]
-            [cljs-bean.core :refer [->clj]]
-            [inferenceql.viz.stream.store :refer [rows col-ordering num-rows-at-iter
-                                                  xcat-models]]
+  (:require [inferenceql.viz.stream.store :refer [rows col-ordering num-rows-at-iter xcat-models]]
             [inferenceql.viz.stream.model.xcat-util :as xcat-util]
             [inferenceql.viz.panels.table.views-simple :refer [handsontable]]))
 

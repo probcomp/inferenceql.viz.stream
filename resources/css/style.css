@@ -69,13 +69,13 @@ div {
 }
 
 .cluster-clickable:not(.cluster-selected):hover {
-  background-color: #dbe4f0;
+  background-color: lemonchiffon;
 }
 
 .cluster-selected {
-  background-color: lightsteelblue;
+  background-color: #d3deed;
 }
 
 .handsontable .blue-highlight {
-  background-color: lightsteelblue;
+  background-color: #d3deed;
 }

@@ -28,29 +28,24 @@
   [highlighted-js-text cluster-selected]
   (let [highlighted-js-text (str "<span>" highlighted-js-text "</span>")
         hiccup (->> (hickory.core/parse-fragment highlighted-js-text)
-                 (map hickory.core/as-hiccup)
-                 (first))
+                    (map hickory.core/as-hiccup)
+                    (first))
 
-        ;; Returns the view-id of the view function that contains `loc`, the start of a cluster
-        ;; if-statement.
+        ;; Moves left of from `loc` until a function node is encountered. Extracts view-id from
+        ;; the function name as a number.
         view-id (fn [loc]
                   (loop [l loc]
                     (cond
-                      (nil? l)
-                      nil
+                      (nil? l) nil
 
                       (= (take 2 (z/node l)) [:span {:class "hljs-function"}])
-                      (let [func-name (-> l
-                                          z/down z/right
-                                          z/right z/down
-                                          z/node)]
-                        (-> (re-matches #"view_(\d+)" func-name)
-                            second
-                            edn/read-string))
+                      (let [func-name (-> l z/down z/right z/right z/down z/node)]
+                        (-> (re-matches #"view_(\d+)" func-name) second edn/read-string))
 
-                      :else
-                      (recur (z/left l)))))
+                      :else (recur (z/left l)))))
 
+        ;; Checks that a cluster section is not nested in a span with class "cluster-clickable".
+        ;; This would mean we have edited it before and already made it clickable.
         cluster-parent-ok? (fn [loc]
                              (when loc
                                (let [;; Get aspects of our parent node for checking.
@@ -63,6 +58,8 @@
                                  ;; "cluster-clickable".
                                  (not-any? #{"cluster-clickable"} p-classes))))
 
+        ;; Returns true if `loc` represents the start of an if-statement on else-if statement
+        ;; for a cluster.
         cluster-context-ok? (fn [loc]
                               (when loc
                                 (let [node (z/node loc)
@@ -74,15 +71,14 @@
                                        (number? (edn/read-string r1-content))
                                        (= r2 ") {\n    ")))))
 
-        ;; Returns true if `loc` represents the start of an if-statement for a cluster.
-        ;; We also check that this if-statement in not nested in a span with class
-        ;; "cluster-clickable". This would mean we have edited it before.
-        cluster-if-statement? (fn [loc]
-                                (let [node (z/node loc)]
-                                  (and (or (= node [:span {:class "hljs-keyword"} "if"])
-                                           (= node [:span {:class "hljs-keyword"} "else if"]))
-                                       (cluster-context-ok? (some-> loc z/right))
-                                       (cluster-parent-ok? loc))))
+        ;; Returns true if `loc` represents the start of an if-statement on else-if statement
+        ;; for a cluster.
+        cluster-start? (fn [loc]
+                         (let [node (z/node loc)]
+                           (and (or (= node [:span {:class "hljs-keyword"} "if"])
+                                    (= node [:span {:class "hljs-keyword"} "else if"]))
+                                (cluster-context-ok? (some-> loc z/right))
+                                (cluster-parent-ok? loc))))
 
         ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
         cluster-id (fn [loc]
@@ -101,11 +97,11 @@
                              [l (conj acc n)]
                              (recur (z/next (z/remove l)) (conj acc n))))))
 
-        ;; This functions wraps all nodes that correstpond to a cluster into a span that
+        ;; This functions wraps all nodes that correspond to a cluster into a span that
         ;; can be clicked.
         wrap-cluster-nodes
         (fn [loc]
-          (if (cluster-if-statement? loc)
+          (if (cluster-start? loc)
             (let [cluster-id (cluster-id loc)
                   view-id (view-id loc)
                   current {:cluster-id cluster-id :view-id view-id}

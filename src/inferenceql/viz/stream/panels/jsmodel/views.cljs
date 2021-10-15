@@ -1,18 +1,13 @@
 (ns inferenceql.viz.stream.panels.jsmodel.views
-  (:require [re-com.core :refer [border v-box title button gap]]
-            [reagent.core :as r]
-            [reagent.dom :as rdom]
+  (:require [reagent.core :as r]
             [re-frame.core :as rf]
-            [clojure.string :refer [replace]]
-            [goog.string :refer [format] :as gstring]
+            [goog.string :as gstring]
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [hickory.core]
-            [hickory.select :as s]
             [hickory.zip]
             [hickory.render]
             [clojure.zip :as z]
-            [clojure.string :as string]
             [clojure.edn :as edn]
             [cljstache.core :refer [render]]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
@@ -184,7 +179,7 @@
         (.addEventListener (:code-elem @dom-nodes)
                            "click"
                            (fn [event]
-                             (if (= (.-target event) (:code-elem @dom-nodes))
+                             (when (= (.-target event) (:code-elem @dom-nodes))
                                (rf/dispatch [:control/clear-cluster-selection])))))
 
       :reagent-render

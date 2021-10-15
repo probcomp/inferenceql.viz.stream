@@ -118,17 +118,12 @@
                                     "])\n    };\n  } "
                                     ;; After last cluster, last var gaussian.
                                     ")\n    };\n  } "}
-                  [new-loc targets] (remove-until loc cluster-endings)
-                  _ (.log js/console :acc targets)
-                  temp (-> new-loc
-                           (z/insert-right (into [:span {:class ["cluster-clickable"
-                                                                 (when current-selected "cluster-selected")]
-                                                         :onClick #(rf/dispatch [:control/select-cluster current])}]
-                                                 targets)))]
-              (.log js/console :temp (z/root temp))
-              (.log js/console :temp-node (z/node temp))
-              (.log js/console :temp-node-right (z/node (z/right temp)))
-              temp)
+                  [new-loc targets] (remove-until loc cluster-endings)]
+              (-> new-loc
+                  (z/insert-right (into [:span {:class ["cluster-clickable"
+                                                        (when current-selected "cluster-selected")]
+                                                :onClick #(rf/dispatch [:control/select-cluster current])}]
+                                        targets))))
             loc))
 
         fix-hljs-string-nodes (fn [loc]
@@ -145,11 +140,10 @@
                                 (if (and (= node [:span {:class "hljs-keyword"} "else"])
                                          (= r1 " ")
                                          (= r2 [:span {:class "hljs-keyword"} "if"]))
-                                  (do
-                                    (.log js/console :---- node r1 r2)
-                                    (-> loc
-                                        z/remove z/next z/remove z/next z/remove
-                                        (z/insert-right [:span {:class "hljs-keyword"} "else if"])))
+                                  (-> loc
+                                      ;; TODO: also ouch.
+                                      z/remove z/next z/remove z/next z/remove z/next z/left
+                                      (z/insert-right [:span {:class "hljs-keyword"} "else if"]))
                                   loc)))
 
         map-right (fn [zip f]

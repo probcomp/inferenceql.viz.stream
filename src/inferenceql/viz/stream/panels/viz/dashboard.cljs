@@ -9,8 +9,6 @@
             [vega-embed$vega :as vega]
             [goog.object]))
 
-(def cluster-selected-color "#4e79a7")
-
 (defn bin-counts [data bin-outcome]
   (let [min (:start bin-outcome)
         max (:stop bin-outcome)

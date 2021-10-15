@@ -55,13 +55,13 @@
                                         [gap :size "10px"]
                                         [v-box
                                          :children
-                                         (doall (for [p ["mutual-information" "select-vs-simulate"]]
+                                         (doall (for [p [:mutual-information :select-vs-simulate]]
                                                   ^{:key p}
                                                   [radio-button
-                                                   :label p
-                                                   :value (keyword p)
+                                                   :label (name p)
+                                                   :value p
                                                    :model plot-type
-                                                   :label-style (if (= p plot-type) {:font-weight "bold"})
+                                                   :label-style (when (= p plot-type) {:font-weight "bold"})
                                                    :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
                             [gap :size "20px"]
                             (when (= plot-type :mutual-information)

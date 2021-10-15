@@ -1,6 +1,5 @@
 (ns inferenceql.viz.stream.panels.control.eventsubs
   (:require [re-frame.core :as rf]
-            [goog.string :refer [format]]
             [inferenceql.viz.events.interceptors :refer [event-interceptors]]))
 
 ;; Iteration.

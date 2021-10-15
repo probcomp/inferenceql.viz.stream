@@ -1,9 +1,7 @@
 (ns inferenceql.viz.stream.model.xcat
   "Defs for importing an XCat record from a CGPM json."
   (:refer-clojure :exclude [import])
-  (:require [clojure.edn :as edn]
-            [clojure.pprint :refer [pprint]]
-            [medley.core :as medley]
+  (:require [medley.core :as medley]
             [inferenceql.inference.gpm.crosscat :as crosscat]
             [clojure.walk :refer [keywordize-keys]]))
 

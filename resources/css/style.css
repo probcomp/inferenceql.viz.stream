@@ -45,7 +45,7 @@ div {
 /* --------------- styling for js-model code view --------------- */
 
 #program-display {
-  min-width: 700px;
+  width: 700px;
   padding: 8px;
   font-size: .875rem;
   background-color: #f8f8f8;

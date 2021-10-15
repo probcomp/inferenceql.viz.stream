@@ -69,11 +69,13 @@ div {
 }
 
 .cluster-clickable:not(.cluster-selected):hover {
-  background-color: lemonchiffon;
+  background-color: lightgrey;
+  padding: 2px 0px;
 }
 
 .cluster-selected {
   background-color: #d3deed;
+  padding: 2px 0px;
 }
 
 .handsontable .blue-highlight {

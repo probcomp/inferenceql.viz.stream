@@ -31,19 +31,6 @@
                     (map hickory.core/as-hiccup)
                     (first))
 
-        ;; Moves left of from `loc` until a function node is encountered. Extracts view-id from
-        ;; the function name as a number.
-        view-id (fn [loc]
-                  (loop [l loc]
-                    (cond
-                      (nil? l) nil
-
-                      (= (take 2 (z/node l)) [:span {:class "hljs-function"}])
-                      (let [func-name (-> l z/down z/right z/right z/down z/node)]
-                        (-> (re-matches #"view_(\d+)" func-name) second edn/read-string))
-
-                      :else (recur (z/left l)))))
-
         ;; Checks that a cluster section is not nested in a span with class "cluster-clickable".
         ;; This would mean we have edited it before and already made it clickable.
         cluster-parent-ok? (fn [loc]
@@ -83,6 +70,19 @@
                      (let [[_ r2 _] (take 3 (z/rights loc))
                            [_ _ r2-content] r2]
                        (edn/read-string r2-content)))
+
+        ;; Moves left of from `loc` until a function node is encountered. Extracts view-id from
+        ;; the function name as a number.
+        view-id (fn [loc]
+                  (loop [l loc]
+                    (cond
+                      (nil? l) nil
+
+                      (= (take 2 (z/node l)) [:span {:class "hljs-function"}])
+                      (let [func-name (-> l z/down z/right z/right z/down z/node)]
+                        (-> (re-matches #"view_(\d+)" func-name) second edn/read-string))
+
+                      :else (recur (z/left l)))))
 
         ;; Remove nodes starting from `loc` until reaching one of the nodes in set `endings`.
         ;; Returns `[loc acc]` where `loc` is the position of the first node encountered in
@@ -145,6 +145,7 @@
                                   loc)))
 
         ;; Makes zipper from `hiccup` and applies `f` to each child node moving right each time.
+        ;; Returns hiccup.
         map-right (fn [hiccup f]
                     (let [zip (-> hiccup hickory.zip/hiccup-zip z/down)]
                       ;; Iterate through all nodes by moving right at each step.

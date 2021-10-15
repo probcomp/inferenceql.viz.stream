@@ -565,7 +565,7 @@
        :columns 2
        :spacing {:column 100 :row 50}})))
 
-(defn top-level-spec [data num-observed num-virtual sections]
+(defn top-level-spec [num-observed num-virtual sections]
   {:$schema vl5-schema
    :autosize {:resize true}
    :vconcat sections
@@ -661,4 +661,4 @@
           sections (cond-> []
                      (:1D marginal-types) (concat sections-1D)
                      (:2D marginal-types) (concat sections-2D))]
-      (top-level-spec samples num-observed num-virtual sections))))
+      (top-level-spec num-observed num-virtual sections))))

@@ -58,29 +58,27 @@
                                  ;; "cluster-clickable".
                                  (not-any? #{"cluster-clickable"} p-classes))))
 
-        ;; Returns true if `loc` represents the start of an if-statement on else-if statement
-        ;; for a cluster.
+        ;; Checks the three nodes to the right of `loc` to see if they represent the start of
+        ;; a cluster section of the program.
         cluster-context-ok? (fn [loc]
                               (when loc
-                                (let [node (z/node loc)
-                                      ;; Get aspects of the right 2 nodes for checking.
-                                      [r1 r2] (z/rights loc)
-                                      [r1-tag r1-attr r1-content] r1]
-                                  (and (= node " (cluster_id == ")
-                                       (= [:span {:class "hljs-number"}] [r1-tag r1-attr])
-                                       (number? (edn/read-string r1-content))
-                                       (= r2 ") {\n    ")))))
+                                (let [[r1 r2 r3] (z/rights loc)
+                                      [r2-tag r2-attr r2-content] r2]
+                                  (and (= r1 " (cluster_id == ")
+                                       (= [:span {:class "hljs-number"}] [r2-tag r2-attr])
+                                       (number? (edn/read-string r2-content))
+                                       (= r3 ") {\n    ")))))
 
-        ;; Returns true if `loc` represents the start of an if-statement on else-if statement
-        ;; for a cluster.
+        ;; Returns true if `loc` represents the start of a cluster section of the programe.
         cluster-start? (fn [loc]
                          (let [node (z/node loc)]
                            (and (or (= node [:span {:class "hljs-keyword"} "if"])
                                     (= node [:span {:class "hljs-keyword"} "else if"]))
-                                (cluster-context-ok? (some-> loc z/right))
+                                (cluster-context-ok? loc)
                                 (cluster-parent-ok? loc))))
 
-        ;; Returns the cluster-id from a `loc` representing the start of a cluster if-statement.
+        ;; Returns the cluster-id (number) given `loc` which is the starting loc of a cluster
+        ;; section of the program.
         cluster-id (fn [loc]
                      (let [[_ r2 _] (take 3 (z/rights loc))
                            [_ _ r2-content] r2]
@@ -124,6 +122,7 @@
                                cluster-nodes)))
             loc))
 
+        ;; Correctly escapes strings in hljs-string nodes, so Reagent displays them correctly.
         fix-hljs-string-nodes (fn [loc]
                                 (let [node (z/node loc)
                                       class (get-in node [1 :class])]
@@ -132,6 +131,7 @@
                                     (z/edit loc update 2 gstring/unescapeEntities)
                                     loc)))
 
+        ;; Combines three nodes representing else-if into a single node.
         merge-else-if-nodes (fn [loc]
                               (let [node (z/node loc)
                                     [r1 r2] (take 2 (z/rights loc))]
@@ -144,6 +144,7 @@
                                       (z/replace [:span {:class "hljs-keyword"} "else if"]))
                                   loc)))
 
+        ;; Moves down into `zip` and applies `f` to each node moving right each time.
         map-right (fn [zip f]
                     ;; Iterate through all nodes by moving right at each step.
                     (loop [loc (z/down zip)]

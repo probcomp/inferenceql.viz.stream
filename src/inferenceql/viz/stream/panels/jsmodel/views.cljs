@@ -121,7 +121,8 @@
                   [new-loc targets] (remove-until loc cluster-endings)]
               (-> new-loc
                   (z/insert-right (into [:span {:class ["cluster-clickable"
-                                                        (when current-selected "cluster-selected")]
+                                                        (when current-selected "cluster-selected")
+                                                        (when current-selected "no-select")]
                                                 :onClick #(rf/dispatch [:control/select-cluster current])}]
                                         targets))))
             loc))

@@ -144,20 +144,20 @@
                                       (z/replace [:span {:class "hljs-keyword"} "else if"]))
                                   loc)))
 
-        ;; Moves down into `zip` and applies `f` to each node moving right each time.
-        map-right (fn [zip f]
-                    ;; Iterate through all nodes by moving right at each step.
-                    (loop [loc (z/down zip)]
-                      (if (nil? (z/right loc))
-                        ;; We are at the right-most already. Fix current node and return root.
-                        (z/root (f loc))
-                        ;; Recur case.
-                        (recur (z/right (f loc))))))
-
-        s-0 (map-right (hickory.zip/hiccup-zip hiccup) merge-else-if-nodes)
-        s-1 (map-right (hickory.zip/hiccup-zip s-0) fix-hljs-string-nodes)
-        s-2 (map-right (hickory.zip/hiccup-zip s-1) wrap-cluster-nodes)]
-    s-2))
+        ;; Makes zipper from `hiccup` and applies `f` to each child node moving right each time.
+        map-right (fn [hiccup f]
+                    (let [zip (-> hiccup hickory.zip/hiccup-zip z/down)]
+                      ;; Iterate through all nodes by moving right at each step.
+                      (loop [loc zip]
+                        (if (nil? (z/right loc))
+                          ;; We are at the right-most already. Fix current node and return root.
+                          (z/root (f loc))
+                          ;; Recur case.
+                          (recur (z/right (f loc)))))))]
+    (-> hiccup
+        (map-right merge-else-if-nodes)
+        (map-right fix-hljs-string-nodes)
+        (map-right wrap-cluster-nodes))))
 
 (defn highlight
   "Returns html of js-text highlighted with highlight.js"

@@ -94,7 +94,8 @@
                        (loop [l loc acc []]
                          (let [n (z/node l)]
                            (if (endings n)
-                             [(z/remove l) (conj acc n)]
+                             ;; TODO ouch, better way?
+                             [(-> l z/remove z/next z/left) (conj acc n)]
                              (recur (z/next (z/remove l))
                                     (conj acc n))))))
 
@@ -146,7 +147,9 @@
                                          (= r2 [:span {:class "hljs-keyword"} "if"]))
                                   (do
                                     (.log js/console :---- node r1 r2)
-                                    (-> loc z/remove z/next z/remove z/next z/remove (z/insert-right [:span {:class "hljs-keyword"} "else if"])))
+                                    (-> loc
+                                        z/remove z/next z/remove z/next z/remove
+                                        (z/insert-right [:span {:class "hljs-keyword"} "else if"])))
                                   loc)))
 
         map-right (fn [zip f]

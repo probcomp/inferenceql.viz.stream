@@ -75,7 +75,7 @@
                                        {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
      :facet {:field "collection"
              :type "nominal"
-             :header {:title nil :labelOrient "bottom" :labelPadding 34}}
+             :header {:title nil :labelOrient "bottom" :labelPadding 40}}
      :spec {:layer [{:mark {:type "bar"
                             :color unselected-color
                             :tooltip {:content "data"}}

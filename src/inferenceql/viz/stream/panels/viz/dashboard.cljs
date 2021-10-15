@@ -31,9 +31,11 @@
             (vec (repeat num-bins 0))
             bin-vals)))
 
-(defn bin-outcome [bin-config]
-  (let [[min max] (:extent bin-config)]
-    (->clj (vega/bin (clj->js bin-config)))))
+(defn bin-outcome
+  "Takes `bin-config` which is a map with bin extents: {:extent [min max]}.
+  Returns vega's preferred binning which is map: {:start x :end y :step z}"
+  [bin-config]
+  (->clj (vega/bin (clj->js bin-config))))
 
 (defn histogram-quant
   "Generates a vega-lite spec for a histogram.

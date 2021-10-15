@@ -3,14 +3,13 @@
             [vega-embed$vega :as vega]
             [reagent.core :as r]
             [re-frame.core :as rf]
-            [clojure.data :refer [diff]]
             [clojure.math.combinatorics :refer [combinations]]
             [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
-            [inferenceql.viz.panels.viz.views :refer [log-level-default default-vega-embed-options]]
+            [inferenceql.viz.panels.viz.views :refer [default-vega-embed-options]]
             [inferenceql.viz.stream.store :refer [schema xcat-models col-ordering
                                                   all-samples observed-samples virtual-samples]]))
 

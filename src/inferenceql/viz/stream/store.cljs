@@ -1,7 +1,8 @@
 (ns inferenceql.viz.stream.store
   "Main static data-store for the app.
   Contains defs for model iterations and samples to be used in visualizations."
-  (:require [inferenceql.viz.config :refer [config]]
+  (:require [clojure.set]
+            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.csv :refer [clean-csv-maps]]
             [inferenceql.viz.util :refer [keywordize-kv]]
             [inferenceql.inference.gpm.crosscat :as crosscat]
@@ -51,7 +52,7 @@
 (def num-rows-at-iter
   "Number of rows used at each model iteration."
   (map (fn [xcat]
-         (let [[view-1-name view-1] (first (get xcat :views))]
+         (let [[_view-1-name view-1] (first (get xcat :views))]
            ;; Count the number of row to cluster assignments.
            (count (get-in view-1 [:latents :y]))))
        xcat-models))

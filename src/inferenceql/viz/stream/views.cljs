@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box gap box]]
+  (:require [re-com.core :refer [v-box h-box gap]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]

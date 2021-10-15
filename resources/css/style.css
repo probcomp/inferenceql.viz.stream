@@ -70,11 +70,13 @@ div {
 
 .cluster-clickable:not(.cluster-selected):hover {
   background-color: lightgrey;
+  box-shadow: 0px 0px 5px 0px lightgrey;
   padding: 2px 0px;
 }
 
 .cluster-selected {
   background-color: #d3deed;
+  box-shadow: 0px 0px 5px 0px #d3deed;
   padding: 2px 0px;
 }
 

@@ -90,7 +90,7 @@
       :reagent-render
       (fn [spec opt generators pts-store data params]
         (when spec
-          [:div#viz-container {:style {:min-width "720px"}}
+          [:div#viz-container
            [:div {:ref #(swap! dom-nodes assoc :vega-node %)}]]))})))
 
 (defn mi-plot

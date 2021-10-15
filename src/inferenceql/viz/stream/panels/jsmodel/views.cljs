@@ -79,7 +79,8 @@
         ;; "cluster-clickable". This would mean we have edited it before.
         cluster-if-statement? (fn [loc]
                                 (let [node (z/node loc)]
-                                  (and (= node [:span {:class "hljs-keyword"} "if"])
+                                  (and (or (= node [:span {:class "hljs-keyword"} "if"])
+                                           (= node [:span {:class "hljs-keyword"} "else if"]))
                                        (cluster-context-ok? (some-> loc z/right))
                                        (cluster-parent-ok? loc))))
 
@@ -116,12 +117,17 @@
                                     "])\n    };\n  } "
                                     ;; After last cluster, last var gaussian.
                                     ")\n    };\n  } "}
-                  [new-loc targets] (remove-until loc cluster-endings)]
-              (-> new-loc
-                  (z/insert-right (into [:span {:class ["cluster-clickable"
-                                                        (when current-selected "cluster-selected")]
-                                                :onClick #(rf/dispatch [:control/select-cluster current])}]
-                                        targets))))
+                  [new-loc targets] (remove-until loc cluster-endings)
+                  _ (.log js/console :acc targets)
+                  temp (-> new-loc
+                           (z/insert-right (into [:span {:class ["cluster-clickable"
+                                                                 (when current-selected "cluster-selected")]
+                                                         :onClick #(rf/dispatch [:control/select-cluster current])}]
+                                                 targets)))]
+              (.log js/console :temp (z/root temp))
+              (.log js/console :temp-node (z/node temp))
+              (.log js/console :temp-node-right (z/node (z/right temp)))
+              temp)
             loc))
 
         fix-hljs-string-nodes (fn [loc]
@@ -132,6 +138,17 @@
                                     (z/edit loc update 2 gstring/unescapeEntities)
                                     loc)))
 
+        merge-else-if-nodes (fn [loc]
+                              (let [node (z/node loc)
+                                    [r1 r2] (take 2 (z/rights loc))]
+                                (if (and (= node [:span {:class "hljs-keyword"} "else"])
+                                         (= r1 " ")
+                                         (= r2 [:span {:class "hljs-keyword"} "if"]))
+                                  (do
+                                    (.log js/console :---- node r1 r2)
+                                    (-> loc z/remove z/next z/remove z/next z/remove (z/insert-right [:span {:class "hljs-keyword"} "else if"])))
+                                  loc)))
+
         map-right (fn [zip f]
                     ;; Iterate through all nodes by moving right at each step.
                     (loop [loc (z/down zip)]
@@ -141,7 +158,8 @@
                         ;; Recur case.
                         (recur (z/right (f loc))))))
 
-        s-1 (map-right (hickory.zip/hiccup-zip hiccup) fix-hljs-string-nodes)
+        s-0 (map-right (hickory.zip/hiccup-zip hiccup) merge-else-if-nodes)
+        s-1 (map-right (hickory.zip/hiccup-zip s-0) fix-hljs-string-nodes)
         s-2 (map-right (hickory.zip/hiccup-zip s-1) wrap-cluster-nodes)]
     s-2))
 

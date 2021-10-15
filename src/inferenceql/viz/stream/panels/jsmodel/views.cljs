@@ -143,9 +143,9 @@
                                          (= r1 " ")
                                          (= r2 [:span {:class "hljs-keyword"} "if"]))
                                   (-> loc
-                                      ;; TODO: also ouch.
-                                      z/remove z/next z/remove z/next z/remove z/next z/left
-                                      (z/insert-right [:span {:class "hljs-keyword"} "else if"]))
+                                      z/remove z/next
+                                      z/remove z/next
+                                      (z/replace [:span {:class "hljs-keyword"} "else if"]))
                                   loc)))
 
         map-right (fn [zip f]

@@ -155,8 +155,8 @@
                           ;; Recur case.
                           (recur (z/right (f loc)))))))]
     (-> hiccup
-        (map-right merge-else-if-nodes)
         (map-right fix-hljs-string-nodes)
+        (map-right merge-else-if-nodes)
         (map-right wrap-cluster-nodes))))
 
 (defn highlight

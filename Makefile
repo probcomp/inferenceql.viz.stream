@@ -52,16 +52,15 @@ watch-advanced-min: $(hot-css-resource)
 
 .PHONY: js
 js: $(hot-css-resource) $(transitions-js) $(mutual-info-js)
-	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts) -c inferenceql.viz.stream.core
+	clojure -M -m cljs.main -co $(compile-opts) -c inferenceql.viz.stream.core
 
 .PHONY: js-advanced
 js-advanced: $(hot-css-resource) $(transitions-js) $(mutual-info-js)
-	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts-advn) -c inferenceql.viz.stream.core
+	clojure -M -m cljs.main -co $(compile-opts-advn) -c inferenceql.viz.stream.core
 
 .PHONY: js-advanced-min
 js-advanced-min: $(hot-css-resource) $(transitions-js) $(mutual-info-js)
-	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts-advn-min) -c inferenceql.viz.stream.core
-
+	clojure -M -m cljs.main -co $(compile-opts-advn-min) -c inferenceql.viz.stream.core
 
 ### Supporting defs for compilation.
 

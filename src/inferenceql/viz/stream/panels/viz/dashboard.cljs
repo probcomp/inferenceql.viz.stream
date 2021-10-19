@@ -219,9 +219,8 @@
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
-  [col-1 col-2 vega-type correlation samples counter]
-  (let [zoom-control-name (str "zoom-control-" counter) ; Random id so pan/zoom is independent.
-        f-sum (filtering-summary [col-1 col-2] vega-type nil samples)]
+  [col-1 col-2 counter]
+  (let [zoom-control-name (str "zoom-control-" counter)] ; Random id so pan/zoom is independent.
     {:width 250
      :height 250
      :mark {:type "point"
@@ -485,9 +484,9 @@
        :columns 2
        :spacing {:column 100 :row 50}})))
 
-(defn scatter-plot-section [cols vega-type correlation samples counter]
+(defn scatter-plot-section [cols counter]
   (when (seq cols)
-    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 vega-type correlation samples counter))]
+    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 counter))]
       {:concat specs
        :columns 2
        :spacing {:column 50 :row 50}
@@ -555,7 +554,7 @@
   Path to correlation data is optional.
   Category limit is the max number of options to include for categorical variable.
   It can be set to nil for no limit."
-  [samples schema correlation cols category-limit marginal-types]
+  [samples schema cols category-limit marginal-types]
   (when (and (seq marginal-types) (seq cols))
     (let [vega-type (vega-type-fn schema)
 
@@ -585,9 +584,6 @@
           pair-types (group-by #(set (map vega-type %)) select-pairs)
 
           scatter-plots (scatter-plot-section (get pair-types #{"quantitative"})
-                                              vega-type
-                                              correlation
-                                              samples
                                               counter)
           bubble-plots (bubble-plot-section (get pair-types #{"nominal"})
                                             vega-type

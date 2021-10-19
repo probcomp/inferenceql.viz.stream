@@ -141,7 +141,7 @@
                       all-samples)
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)
-        qc-spec (dashboard/spec all-samples schema nil cols 10 marginal-types)]
+        qc-spec (dashboard/spec all-samples schema cols 10 marginal-types)]
     [vega-lite qc-spec {:actions false} nil nil all-samples
      {:iter iteration
       :cluster (:cluster-id cluster-selected)

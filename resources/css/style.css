@@ -1,0 +1,95 @@
+/* --------------- global settings --------------- */
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: Roboto, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #333;
+  height: 5000px
+}
+
+div {
+  margin: 0px
+}
+
+
+/* --------------- styling for vega-vizualization --------------- */
+
+#viz-container {
+  display: flex;
+}
+
+#vg-tooltip-element.vg-tooltip.custom-theme table {
+  font-size: .75rem;
+}
+
+/* --------------- styling for handsontables --------------- */
+
+#table-container {
+  display: table;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.ht_master tr td {
+  font-size: 13px;
+}
+
+.handsontable th {
+  font-size: 13px;
+}
+
+/* --------------- styling for js-model code view --------------- */
+
+#program-display {
+  width: 700px;
+  padding: 8px;
+  font-size: .875rem;
+  background-color: #f8f8f8;
+  border: none;
+}
+
+#program-display code {
+  display: block;
+  min-width: 2000px;
+  background-color: #f8f8f8;
+  border: none;
+  padding: 0px;
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+
+/* --------------- js-model program cluster selection --------------- */
+
+.cluster-clickable {
+  cursor: pointer;
+}
+
+.cluster-clickable:not(.cluster-selected):hover {
+  background-color: lightgrey;
+  box-shadow: 0px 0px 5px 0px lightgrey;
+  padding: 2px 0px;
+}
+
+.cluster-selected {
+  background-color: #d3deed;
+  box-shadow: 0px 0px 5px 0px #d3deed;
+  padding: 2px 0px;
+}
+
+.handsontable .blue-highlight {
+  background-color: #d3deed;
+}
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  user-select: none;
+}

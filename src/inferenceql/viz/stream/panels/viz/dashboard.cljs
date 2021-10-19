@@ -1,13 +1,13 @@
 (ns inferenceql.viz.stream.panels.viz.dashboard
   "Code related to producing a vega-lite spec for a dashboard."
-  (:require [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary should-bin?
-                                                            obs-data-color virtual-data-color
-                                                            unselected-color vega-type-fn
-                                                            vl5-schema]]
-            [cljs-bean.core :refer [->clj]]
+  (:require [cljs-bean.core :refer [->clj]]
             [goog.string :refer [format]]
             [vega-embed$vega :as vega]
-            [goog.object]))
+            [goog.object]
+            [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary should-bin?
+                                                            obs-data-color virtual-data-color
+                                                            unselected-color vega-type-fn
+                                                            vl5-schema]]))
 
 (defn bin-counts [data bin-outcome]
   (let [min (:start bin-outcome)
@@ -58,19 +58,10 @@
 
         y-range-buffer 1
         max-bin-count (+ y-range-buffer
-                         (apply max bins-counted))
-
-        fsum (filtering-summary [col] vega-type nil samples)]
+                         (apply max bins-counted))]
     {:resolve {:scale {:x "shared" :y "shared"}}
      :spacing 0
      :bounds "flush"
-     :transform [{:window [{:op "row_number", :as "row_number_subplot"}]
-                  :groupby ["collection"]}
-                 {:filter {:or [{:and [{:field "collection" :equal "observed"}
-                                       {:field "row_number_subplot" :lte {:expr "numObservedPoints"}}]}
-                                {:and [{:field "collection" :equal "virtual"}
-                                       {:field "row_number_subplot" :lte (:num-valid fsum)}
-                                       {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
      :facet {:field "collection"
              :type "nominal"
              :header {:title nil :labelOrient "bottom" :labelPadding 40}}
@@ -116,7 +107,6 @@
                                         :legend {:orient "top"
                                                  :title nil}}}}]}}))
 
-
 (defn histogram-nom
   "Generates a vega-lite spec for a histogram.
   `selections` is a collection of maps representing data in selected rows and columns.
@@ -131,15 +121,7 @@
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
         cat-max-count (apply max (vals freqs))
-        bin-flag (should-bin? col-type)
-        f-sum (filtering-summary [col] vega-type nil samples)]
-    {:transform [{:window [{:op "row_number", :as "row_number_subplot"}]
-                  :groupby ["collection"]}
-                 {:filter {:or [{:and [{:field "collection" :equal "observed"}
-                                       {:field "row_number_subplot" :lte {:expr "numObservedPoints"}}]}
-                                {:and [{:field "collection" :equal "virtual"}
-                                       {:field "row_number_subplot" :lte (:num-valid f-sum)}
-                                       {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
+        bin-flag (should-bin? col-type)]
      :layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
@@ -232,9 +214,7 @@
                          :x {:aggregate "count"
                              :type "quantitative"
                              :axis {:orient "top"}
-                             :scale {:domain [0 cat-max-count]}}}}]}))
-
-
+                             :scale {:domain [0 cat-max-count]}}}}]))
 
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.
@@ -244,81 +224,73 @@
         f-sum (filtering-summary [col-1 col-2] vega-type nil samples)]
     {:width 250
      :height 250
-     :layer [{:transform [{:window [{:op "row_number", :as "row_number_subplot"}]
-                           :groupby ["collection"]}
-                          {:filter {:or [{:and [{:field "collection" :equal "observed"}
-                                                {:field "row_number_subplot" :lte {:expr "numObservedPoints"}}]}
-                                         {:and [{:field "collection" :equal "virtual"}
-                                                {:field "row_number_subplot" :lte (:num-valid f-sum)}
-                                                {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
-              :mark {:type "point"
-                     :tooltip {:content "data"}
-                     :filled true
-                     :size {:expr "splomPointSize"}}
-              :params [{:name zoom-control-name
-                        :bind "scales"
-                        :select {:type "interval"
-                                 :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                                 :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                                 :clear "dblclick[event.shiftKey]"
-                                 :zoom "wheel![event.shiftKey]"}}
-                       {:name :brush-all
-                        :select {:type "interval"
-                                 :on "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
-                                 :translate "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
-                                 :clear "dblclick[!event.shiftKey]"
-                                 :zoom "wheel![!event.shiftKey]"}}]
-              :encoding {:x {:field col-1
-                             :type "quantitative"
-                             :scale {:zero false}
-                             :axis {:title col-1}}
-                         :y {:field col-2
-                             :type "quantitative"
-                             :scale {:zero false}
-                             :axis {:minExtent 40
-                                    :title col-2}}
-                         :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                           "cluster != null"
-                                                           "datum[view] == cluster"]}
-                                              :value 10}
-                                             {:test {:and [{:field "collection" :equal "observed"}
-                                                           {:param "brush-all"}
-                                                           "cluster == null"]}
-                                              :value 2}
-                                             ;; Show the virtual data colored even
-                                             ;; when a particular cluster is selected.
-                                             {:test {:and [{:field "collection" :equal "virtual"}
-                                                           {:param "brush-all"}]}
-                                              :value 1}
-                                             {:test "true"
-                                              :value 0}]
-                                 :value 0}
-                         :opacity {:field "collection"
-                                   :scale {:domain ["observed", "virtual"]
-                                           :range [{:expr "splomAlphaObserved"} {:expr "splomAlphaVirtual"}]}
-                                   :legend nil}
-                         :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                           "cluster != null"
-                                                           "datum[view] == cluster"]}
-                                              :value obs-data-color}
-                                             {:test {:and [{:field "collection" :equal "observed"}
-                                                           {:param "brush-all"}
-                                                           "cluster == null"]}
-                                              :value obs-data-color}
-                                             {:test {:and [{:field "collection" :equal "virtual"}
-                                                           {:param "brush-all"}]}
-                                              :value virtual-data-color}
-                                             {:test "true"
-                                              :value unselected-color}]
-                                 :field "collection" ; Dummy field. Never gets used.
-                                 :scale {:domain ["observed", "virtual"]
-                                         :range [obs-data-color virtual-data-color]}
-                                 :legend {:orient "top"
-                                          :title nil}}}}]}))
+     :mark {:type "point"
+            :tooltip {:content "data"}
+            :filled true
+            :size {:expr "splomPointSize"}}
+     :params [{:name zoom-control-name
+               :bind "scales"
+               :select {:type "interval"
+                        :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                        :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                        :clear "dblclick[event.shiftKey]"
+                        :zoom "wheel![event.shiftKey]"}}
+              {:name :brush-all
+               :select {:type "interval"
+                        :on "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
+                        :translate "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
+                        :clear "dblclick[!event.shiftKey]"
+                        :zoom "wheel![!event.shiftKey]"}}]
+     :encoding {:x {:field col-1
+                    :type "quantitative"
+                    :scale {:zero false}
+                    :axis {:title col-1}}
+                :y {:field col-2
+                    :type "quantitative"
+                    :scale {:zero false}
+                    :axis {:minExtent 40
+                           :title col-2}}
+                :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                  "cluster != null"
+                                                  "datum[view] == cluster"]}
+                                     :value 10}
+                                    {:test {:and [{:field "collection" :equal "observed"}
+                                                  {:param "brush-all"}
+                                                  "cluster == null"]}
+                                     :value 2}
+                                    ;; Show the virtual data colored even
+                                    ;; when a particular cluster is selected.
+                                    {:test {:and [{:field "collection" :equal "virtual"}
+                                                  {:param "brush-all"}]}
+                                     :value 1}
+                                    {:test "true"
+                                     :value 0}]
+                        :value 0}
+                :opacity {:field "collection"
+                          :scale {:domain ["observed", "virtual"]
+                                  :range [{:expr "splomAlphaObserved"} {:expr "splomAlphaVirtual"}]}
+                          :legend nil}
+                :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                  "cluster != null"
+                                                  "datum[view] == cluster"]}
+                                     :value obs-data-color}
+                                    {:test {:and [{:field "collection" :equal "observed"}
+                                                  {:param "brush-all"}
+                                                  "cluster == null"]}
+                                     :value obs-data-color}
+                                    {:test {:and [{:field "collection" :equal "virtual"}
+                                                  {:param "brush-all"}]}
+                                     :value virtual-data-color}
+                                    {:test "true"
+                                     :value unselected-color}]
+                        :field "collection" ; Dummy field. Never gets used.
+                        :scale {:domain ["observed", "virtual"]
+                                :range [obs-data-color virtual-data-color]}
+                        :legend {:orient "top"
+                                 :title nil}}}}))
 
 (defn- strip-plot-size-helper
   "Returns a vega-lite height/width size.
-
   Args:
     `col-type` - A vega-lite column type."
   [col-type]
@@ -353,16 +325,7 @@
      :spacing 0
      :bounds "flush"
      :transform [;; Filtering for top categories
-                 {:filter {:field y-field :oneOf y-cats}}
-                 {:window [{:op "row_number", :as "row_number_subplot"}]
-                  :groupby ["collection"]}
-                 ;; Displaying an equal number of virtual data points as observed datapoints.
-                 ;; Filtering virtual and observed datapoints based on user-set limit.
-                 {:filter {:or [{:and [{:field "collection" :equal "observed"}
-                                       {:field "row_number_subplot" :lte {:expr "numObservedPoints"}}]}
-                                {:and [{:field "collection" :equal "virtual"}
-                                       {:field "row_number_subplot" :lte (:num-valid f-sum)}
-                                       {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
+                 {:filter {:field y-field :oneOf y-cats}}]
      :width width
      :height height
      :mark {:type "tick"
@@ -422,7 +385,6 @@
                                  :title nil
                                  :offset 10}}}}))
 
-
 (defn- table-bubble-plot
   "Generates vega-lite spec for a table-bubble plot.
   Useful for comparing nominal-nominal data."
@@ -436,16 +398,7 @@
      :bounds "flush"
      :transform [;; Filtering for top categories
                  {:filter {:field x-field :oneOf x-cats}}
-                 {:filter {:field y-field :oneOf y-cats}}
-                 {:window [{:op "row_number", :as "row_number_subplot"}]
-                  :groupby ["collection"]}
-                 ;; Displaying an equal number of virtual data points as observed datapoints.
-                 ;; Filtering virtual and observed datapoints based on user-set limit.
-                 {:filter {:or [{:and [{:field "collection" :equal "observed"}
-                                       {:field "row_number_subplot" :lte {:expr "numObservedPoints"}}]}
-                                {:and [{:field "collection" :equal "virtual"}
-                                       {:field "row_number_subplot" :lte (:num-valid f-sum)}
-                                       {:field "row_number_subplot" :lte {:expr "numVirtualPoints"}}]}]}}]
+                 {:filter {:field y-field :oneOf y-cats}}]
      :width {:step 20}
      :height {:step 20}
      :resolve {:scale {:size "shared"}}
@@ -563,7 +516,7 @@
        :columns 2
        :spacing {:column 100 :row 50}})))
 
-(defn top-level-spec [num-observed num-virtual sections]
+(defn top-level-spec [sections]
   {:$schema vl5-schema
    :autosize {:resize true}
    :vconcat sections
@@ -571,22 +524,20 @@
    :data {:name "rows"}
    :params [{:name "iter"
              :value 0}
+            ;;----------------
             {:name "view"
              :value "view_1"}
             {:name "view_columns"
              :value ["BMI" "age" "blah"]}
             {:name "cluster"
              :value 1}
+            ;;----------------
             {:name "splomAlphaObserved"
              :value 0.7}
             {:name "splomAlphaVirtual"
              :value 0.7}
             {:name "splomPointSize"
              :value 30}
-            {:name "numObservedPoints"
-             :value num-observed}
-            {:name "numVirtualPoints"
-             :value num-virtual}
             {:name "showRegression"
              :value false}]
    :transform [{:window [{:op "row_number", :as "row_number"}]
@@ -606,14 +557,7 @@
   It can be set to nil for no limit."
   [samples schema correlation cols category-limit marginal-types]
   (when (and (seq marginal-types) (seq cols))
-    (let [num-observed (-> (group-by :collection samples)
-                           (get "observed")
-                           (count))
-          num-virtual (-> (group-by :collection samples)
-                          (get "virtual")
-                          (count))
-
-          vega-type (vega-type-fn schema)
+    (let [vega-type (vega-type-fn schema)
 
           ;; Visualize the columns passed in.
           ;; If not specified, visualize columns found in schema.
@@ -659,4 +603,4 @@
           sections (cond-> []
                      (:1D marginal-types) (concat sections-1D)
                      (:2D marginal-types) (concat sections-2D))]
-      (top-level-spec num-observed num-virtual sections))))
+      (top-level-spec sections))))

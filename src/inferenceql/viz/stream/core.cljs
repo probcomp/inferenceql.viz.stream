@@ -1,12 +1,7 @@
 (ns ^:figwheel-hooks inferenceql.viz.stream.core
   (:require [goog.dom :as dom]
             [re-frame.core :as rf]
-            [reagent.dom :as rdom]
-            ;; Core
-            [inferenceql.viz.stream.events]
-            [inferenceql.viz.stream.views :as views]
-            ;; Control
-            [inferenceql.viz.stream.panels.control.eventsubs]))
+            [reagent.dom :as rdom]))
 
 (enable-console-print!)
 (set! *warn-on-infer* true)
@@ -16,14 +11,11 @@
 
   Tagged with :after-load so that figwheel will call this function after every hot-reload."
   []
-  (rdom/render [views/app] (dom/$ "app")))
+  (rdom/render [:span "placeholder"] (dom/$ "app")))
 
 (defn ^:export -main
   "The main entry point for the app.
 
   Called from javascript in resources/index.html on initial page load."
   []
-  ;; We only initialize the app-db on first load. This is so figwheel's hot code reloading does
-  ;; not reset the state of the app.
-  (rf/dispatch-sync [:app/initialize-db])
   (render-app))

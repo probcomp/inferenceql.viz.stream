@@ -122,7 +122,7 @@
                    col-vals)
         cat-max-count (apply max (vals freqs))
         bin-flag (should-bin? col-type)]
-     :layer [{:mark {:type "point"
+    {:layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
                      :size 50
@@ -214,7 +214,7 @@
                          :x {:aggregate "count"
                              :type "quantitative"
                              :axis {:orient "top"}
-                             :scale {:domain [0 cat-max-count]}}}}]))
+                             :scale {:domain [0 cat-max-count]}}}}]}))
 
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.

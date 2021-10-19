@@ -568,9 +568,11 @@
 
           cols-by-type (group-by vega-type cols)
 
+          ;; Returns unique ids starting at 1.
           id-generator (let [c (atom 0)]
-                         (swap! c inc)
-                         @c)
+                         (fn []
+                           (swap! c inc)
+                           @c))
 
           histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples)
           histograms-nom (histogram-nom-section (get cols-by-type "nominal") samples)

@@ -4,7 +4,7 @@
             [goog.string :refer [format]]
             [vega-embed$vega :as vega]
             [goog.object]
-            [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary should-bin?
+            [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary
                                                             obs-data-color virtual-data-color
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
@@ -40,9 +40,8 @@
   `selections` is a collection of maps representing data in selected rows and columns.
   `col` is the key within each map in `selections` that is used to extract data for the histogram.
   `vega-type` is a function that takes a column name and returns an vega datatype."
-  [col vega-type samples]
-  (let [col-type (vega-type col)
-
+  [col samples]
+  (let [col-type "quantitative"
         max-bins 30
         points (remove nil? (map col samples))
         col-min (apply min points)
@@ -112,8 +111,8 @@
   `selections` is a collection of maps representing data in selected rows and columns.
   `col` is the key within each map in `selections` that is used to extract data for the histogram.
   `vega-type` is a function that takes a column name and returns an vega datatype."
-  [col vega-type samples]
-  (let [col-type (vega-type col)
+  [col samples]
+  (let [col-type "nominal"
         freqs (frequencies (map col samples))
         col-vals (sort (keys freqs))
         ;; If nil is present, move it to the back of the list.
@@ -121,7 +120,7 @@
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
         cat-max-count (apply max (vals freqs))
-        bin-flag (should-bin? col-type)]
+        bin-flag false]
     {:layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
@@ -219,8 +218,8 @@
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
-  [col-1 col-2 counter]
-  (let [zoom-control-name (str "zoom-control-" counter)] ; Random id so pan/zoom is independent.
+  [col-1 col-2 id-gen]
+  (let [zoom-control-name (str "zoom-control-" id-gen)] ; Random id so pan/zoom is independent.
     {:width 250
      :height 250
      :mark {:type "point"
@@ -300,8 +299,8 @@
 (defn- strip-plot
   "Generates vega-lite spec for a strip plot.
   Useful for comparing quantitative-nominal data."
-  [cols vega-type n-cats samples counter]
-  (let [zoom-control-name (str "zoom-control-" counter) ; Random id so pan/zoom is independent.
+  [cols vega-type n-cats samples id-gen]
+  (let [zoom-control-name (str "zoom-control-" id-gen) ; Random id so pan/zoom is independent.
         ;; NOTE: This is a temporary hack to that forces the x-channel in the plot to be "numerical"
         ;; and the y-channel to be "nominal". The rest of the code remains nuetral to the order so that
         ;; it can be used by the iql-viz query language later regardless of column type order.
@@ -470,23 +469,23 @@
                                         :scale {:domain ["observed", "virtual"]
                                                 :range [obs-data-color virtual-data-color]}}}}]}}))
 
-(defn histogram-quant-section [cols vega-type samples]
+(defn histogram-quant-section [cols samples]
   (when (seq cols)
-    (let [specs (for [col cols] (histogram-quant col vega-type samples))]
+    (let [specs (for [col cols] (histogram-quant col samples))]
       {:concat specs
        :columns 2
        :spacing {:column 50 :row 50}})))
 
-(defn histogram-nom-section [cols vega-type samples]
+(defn histogram-nom-section [cols samples]
   (when (seq cols)
-    (let [specs (for [col cols] (histogram-nom col vega-type samples))]
+    (let [specs (for [col cols] (histogram-nom col samples))]
       {:concat specs
        :columns 2
        :spacing {:column 100 :row 50}})))
 
-(defn scatter-plot-section [cols counter]
+(defn scatter-plot-section [cols id-gen]
   (when (seq cols)
-    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 counter))]
+    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 id-gen))]
       {:concat specs
        :columns 2
        :spacing {:column 50 :row 50}
@@ -507,10 +506,10 @@
        :columns 2
        :spacing {:column 50 :row 50}})))
 
-(defn strip-plot-section [cols vega-type n-cats samples counter]
+(defn strip-plot-section [cols vega-type n-cats samples id-gen]
   (when (seq cols)
     (let [specs (for [col-pair cols]
-                  (strip-plot col-pair vega-type n-cats samples counter))]
+                  (strip-plot col-pair vega-type n-cats samples id-gen))]
       {:concat specs
        :columns 2
        :spacing {:column 100 :row 50}})))
@@ -569,22 +568,18 @@
 
           cols-by-type (group-by vega-type cols)
 
-          counter (let [c (atom 0)]
-                    (swap! c inc)
-                    @c)
+          id-generator (let [c (atom 0)]
+                         (swap! c inc)
+                         @c)
 
-          histograms-quant (histogram-quant-section (get cols-by-type "quantitative")
-                                                    vega-type
-                                                    samples)
-          histograms-nom (histogram-nom-section (get cols-by-type "nominal")
-                                                vega-type
-                                                samples)
+          histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples)
+          histograms-nom (histogram-nom-section (get cols-by-type "nominal") samples)
 
           select-pairs (for [x cols y cols :while (not= x y)] [x y])
           pair-types (group-by #(set (map vega-type %)) select-pairs)
 
           scatter-plots (scatter-plot-section (get pair-types #{"quantitative"})
-                                              counter)
+                                              id-generator)
           bubble-plots (bubble-plot-section (get pair-types #{"nominal"})
                                             vega-type
                                             category-limit
@@ -593,10 +588,10 @@
                                           vega-type
                                           category-limit
                                           samples
-                                          counter)
+                                          id-generator)
           sections-1D (remove nil? [histograms-quant histograms-nom])
           sections-2D (remove nil? [scatter-plots strip-plots bubble-plots])
           sections (cond-> []
-                     (:1D marginal-types) (concat sections-1D)
-                     (:2D marginal-types) (concat sections-2D))]
+                           (:1D marginal-types) (concat sections-1D)
+                           (:2D marginal-types) (concat sections-2D))]
       (top-level-spec sections))))

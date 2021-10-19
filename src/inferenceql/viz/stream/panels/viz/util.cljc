@@ -26,18 +26,6 @@
                    :nominal "nominal"}]
       (get mapping (get schema (name col-name))))))
 
-;; TODO: remove this function.
-(defn should-bin?
-  "Returns whether data for a certain column should be binned in a vega-lite spec.
-
-  Args:
-    col-type: A vega-lite column type."
-  [col-type]
-  (case col-type
-    "quantitative" {:maxbins 30}
-    "nominal" false
-    false))
-
 (defn filtering-summary
   "Takes a collection of `samples` and returns information useful for filtering nulls.
 

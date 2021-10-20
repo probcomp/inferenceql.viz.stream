@@ -197,11 +197,11 @@
                              :scale {:domain [0 cat-max-count]}}}}
              ;; Virtual data ticks.
              {:mark {:type "point"
-                     :shape "circle"
-                     :filled true
-                     :size 40
+                     :shape "triangle-right"
+                     :size 20
+                     :strokeWidth 3
                      :color virtual-data-color
-                     :opacity 0.65}
+                     :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "virtual"}
                                           "cluster != null"]}}]
 

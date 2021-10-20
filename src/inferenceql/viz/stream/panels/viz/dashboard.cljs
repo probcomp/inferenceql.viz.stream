@@ -124,7 +124,7 @@
     {:layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
-                     :size 50
+                     :size 40
                      :strokeWidth 2
                      :tooltip {:content "data"}
                      :opacity 0.85}
@@ -180,7 +180,7 @@
              {:mark {:type "point"
                      :shape "circle"
                      :filled true
-                     :size 40
+                     :size 30
                      :color obs-data-color
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "observed"}
@@ -198,7 +198,7 @@
              ;; Virtual data ticks.
              {:mark {:type "point"
                      :shape "stroke"
-                     :size 60
+                     :size 80
                      :strokeWidth 3
                      :angle 90
                      :color virtual-data-color

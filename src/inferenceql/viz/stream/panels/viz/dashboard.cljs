@@ -219,7 +219,7 @@
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
   [col-1 col-2 id-gen]
-  (let [zoom-control-name (str "zoom-control-" id-gen)] ; Random id so pan/zoom is independent.
+  (let [zoom-control-name (str "zoom-control-" (id-gen))] ; Random id so pan/zoom is independent.
     {:width 250
      :height 250
      :mark {:type "point"
@@ -300,7 +300,7 @@
   "Generates vega-lite spec for a strip plot.
   Useful for comparing quantitative-nominal data."
   [cols vega-type n-cats samples id-gen]
-  (let [zoom-control-name (str "zoom-control-" id-gen) ; Random id so pan/zoom is independent.
+  (let [zoom-control-name (str "zoom-control-" (id-gen)) ; Random id so pan/zoom is independent.
         ;; NOTE: This is a temporary hack to that forces the x-channel in the plot to be "numerical"
         ;; and the y-channel to be "nominal". The rest of the code remains nuetral to the order so that
         ;; it can be used by the iql-viz query language later regardless of column type order.

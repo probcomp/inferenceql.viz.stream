@@ -128,8 +128,6 @@
     {:layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
-                     :size 40
-                     :strokeWidth 2
                      :tooltip {:content "data"}
                      :opacity 0.85}
               :params [{:name "brush-all"
@@ -182,9 +180,10 @@
                                           :offset 10}}}}
              ;; Observed data ticks.
              {:mark {:type "point"
-                     :shape "circle"
-                     :filled true
-                     :size 30
+                     :shape "stroke"
+                     :size 80
+                     :strokeWidth 2
+                     :angle 90
                      :color obs-data-color
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "observed"}
@@ -201,10 +200,8 @@
                              :scale {:domain [0 cat-max-count]}}}}
              ;; Virtual data ticks.
              {:mark {:type "point"
-                     :shape "stroke"
-                     :size 80
-                     :strokeWidth 3
-                     :angle 90
+                     :shape "triangle-right"
+                     :strokeWidth 2
                      :color virtual-data-color
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "virtual"}

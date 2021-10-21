@@ -108,7 +108,7 @@
                         ;; All potential edges
                         (combinations nodes 2))
           circle-spec (circle-viz-spec nodes edges)]
-      ;; TODO: make this faster by passing in nodes and edges as datasets.
+      ;; TODO: Make this faster by passing in nodes and edges as datasets.
       [vega-lite circle-spec {:actions false :mode "vega" :renderer "canvas"} nil nil nil nil])))
 
 (defn select-vs-simulate-plot
@@ -141,9 +141,10 @@
                       all-samples)
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)
-        qc-spec (dashboard/spec all-samples schema cols 10 marginal-types)]
-    [vega-lite qc-spec {:actions false} nil nil all-samples
-     {:iter iteration
-      :cluster (:cluster-id cluster-selected)
-      :view_columns (clj->js (map name cols-in-view))
-      :view (some->> (:view-id cluster-selected) (str "view_"))}]))
+        qc-spec (dashboard/spec all-samples schema cols 10 marginal-types)
+        params {:iter iteration
+                :cluster (:cluster-id cluster-selected)
+                :view_columns (clj->js (map name cols-in-view))
+                :view (some->> (:view-id cluster-selected) (str "view_"))}]
+    [vega-lite qc-spec {:actions false} nil nil all-samples params]))
+

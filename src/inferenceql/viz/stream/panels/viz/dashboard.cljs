@@ -9,10 +9,14 @@
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
 
-(defn bin-counts [data bin-outcome]
-  (let [min (:start bin-outcome)
-        max (:stop bin-outcome)
-        width (:step bin-outcome)
+(defn bin-counts
+  "Takes a seq of numerical `data` and `binning`. Returns the number of data points in each bin.
+  `binning` is a map with a :start and :stop value for the range of the bins. And a :step value
+  for the bin widths."
+  [data binning]
+  (let [min (:start binning)
+        max (:stop binning)
+        width (:step binning)
         bin-vals (->> data
                       (filter #(and (<= min %) (<= % max))) ; Val in range.
                       (remove nil?)
@@ -29,7 +33,7 @@
             (vec (repeat num-bins 0))
             bin-vals)))
 
-(defn bin-outcome
+(defn vega-binning
   "Takes `bin-config` which is a map with bin extents: {:extent [min max]}.
   Returns vega's preferred binning which is map: {:start x :end y :step z}"
   [bin-config]
@@ -48,12 +52,12 @@
         col-max (apply max points)
         bin-config {:extent [col-min col-max]
                     :maxbins max-bins}
-        bin-outcome (bin-outcome bin-config)
+        binning (vega-binning bin-config)
 
         observed-points (map col (filter #(= (:collection %) "observed") samples))
         virtual-points (map col (filter #(= (:collection %) "virtual") samples))
-        bins-counted (concat (bin-counts observed-points bin-outcome)
-                             (bin-counts virtual-points bin-outcome))
+        bins-counted (concat (bin-counts observed-points binning)
+                             (bin-counts virtual-points binning))
 
         y-range-buffer 1
         max-bin-count (+ y-range-buffer

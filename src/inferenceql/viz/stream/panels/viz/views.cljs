@@ -25,10 +25,26 @@
                                 ;; Free resources used by vega-embed.
                                 ;; See https://github.com/vega/vega-embed#api-reference
                                 (.finalize @vega-embed-result)))
-        embed (fn [this spec opt generators pts-store data params]
-                (free-resources)
-                ;; TODO: make use of generators.
 
+        update-data (fn [ve-inst data]
+                      (when (and ve-inst (seq data))
+                        (let [view (.-view ve-inst)]
+                          (doseq [[k v] data]
+                            (let [cs (.changeset vega)]
+                              (.insert cs (clj->js v))
+                              (.remove cs (fn [] true))
+                              (.change view (name k) cs)))
+                          (.run view))))
+
+        update-params (fn [ve-inst params]
+                        (when (and ve-inst (seq params))
+                          (let [view (.-view ve-inst)]
+                            (doseq [[k v] params]
+                              (.signal view (name k) (clj->js v)))
+                            (.run view))))
+
+        embed (fn [this spec opt data params]
+                (free-resources)
                 ;; TODO: can I get rid of this when?
                 (when (:vega-node @dom-nodes)
                   (let [spec (clj->js spec)
@@ -37,23 +53,11 @@
                     (doto (yarn-vega-embed (:vega-node @dom-nodes)
                                            spec
                                            opt)
-                      ;; TODO: merge all these then statements into a single function.
-                      ;; Store the result of vega-embed.
+                      (.then (fn [res]
+                               (update-data res data)
+                               (update-params res params)))
                       (.then (fn [res]
                                (reset! vega-embed-result res)))
-                      ;; TODO: make data a map of dataset-name -> data
-                      (.then (fn [res]
-                               (when (seq data)
-                                 (let [view (.-view res)]
-                                   (.insert view "rows" (clj->js data))
-                                   (.run view)))))
-                      ;; TODO: Run clj->js on all the parameter values.
-                      (.then (fn [res]
-                               (when (seq params)
-                                 (let [view (.-view res)]
-                                   (doseq [[k v] params]
-                                     (.signal view (name k) v))
-                                   (.run view)))))
                       (.catch (fn [err]
                                 (js/console.error err)))))))]
     (r/create-class
@@ -61,8 +65,7 @@
 
       :component-did-mount
       (fn [this]
-        (embed this spec opt generators pts-store data params))
-        ;; TODO: update data and params outside of embed.
+        (embed this spec opt data params))
 
       :component-did-update
       (fn [this old-argv]
@@ -72,25 +75,16 @@
                     [new-spec new-opt new-generators])
             ;; When the spec, options, or generators changed, we want to completely reset the
             ;; component by calling embed again which creates a new instance of vega-embed.
-            (embed this new-spec new-opt new-generators current-pts-store new-data new-params)
+            (embed this new-spec new-opt new-data new-params)
             ;; Otherwise, we update the data or params in the current instance of vega-embed.
             (do
-              ;; TODO: what about updating PTS-store.
               (when (not= old-data new-data)
-                (when-let [v @vega-embed-result]
-                  (let [cs (.changeset vega)
-                        view (.-view v)]
-                    (.insert cs (clj->js new-data))
-                    (.remove cs (fn [] true))
-                    (.change view "rows" cs)
-                    (.run view))))
+                (update-data @vega-embed-result new-data))
 
               (when (not= old-params new-params)
-                (when-let [v @vega-embed-result]
-                  (let [view (.-view v)]
-                    (doseq [[k v] new-params]
-                      (.signal view (name k) v))
-                    (.run view))))))))
+                (update-params @vega-embed-result new-params))))))
+
+
 
       :component-will-unmount
       (fn [this]
@@ -151,9 +145,11 @@
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)
         qc-spec (dashboard/spec all-samples schema cols 10 marginal-types)
+
+        data {:rows all-samples}
         params {:iter iteration
                 :cluster (:cluster-id cluster-selected)
                 :view_columns (clj->js (map name cols-in-view))
                 :view (some->> (:view-id cluster-selected) (str "view_"))}]
-    [vega-lite qc-spec {:actions false} nil nil all-samples params]))
+    [vega-lite qc-spec {:actions false} nil nil data params]))
 

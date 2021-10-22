@@ -1,6 +1,5 @@
 (ns ^:figwheel-hooks inferenceql.viz.stream.core
   (:require [goog.dom :as dom]
-            [re-frame.core :as rf]
             [reagent.dom :as rdom]))
 
 (enable-console-print!)

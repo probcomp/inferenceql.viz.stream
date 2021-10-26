@@ -27,13 +27,13 @@
         modeled-cols (-> (set (xcat-util/columns-in-model xcat-model))
                          ;; Get modeled columns in the correct order by picking items in order
                          ;; from col-ordering.
-                         (keep col-ordering))]
+                         (keep col-ordering))
+        hot-options {:height "400px"
+                     :width "1390px"
+                     :cols (map name modeled-cols)
+                     :cells (cells-fn xcat-model cluster-selected)}]
     [:div {:style {:overflow "hidden"
                    :border-radius "4px"
                    :width "1390px"}}
      [:div
-      [handsontable :reagent {} (take num-points rows)
-       {:height "400px"
-        :width "1390px"
-        :cols (map name modeled-cols)
-        :cells (cells-fn xcat-model cluster-selected)}]]]))
+      [handsontable {} (take num-points rows) hot-options false]]]))

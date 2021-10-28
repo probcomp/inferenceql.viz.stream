@@ -11,7 +11,7 @@ output-to	 := $(output-dir)/main.js
 hot-css-file     := $(node-modules-dir)/handsontable/dist/handsontable.full.css
 hot-css-resource := $(resource-dir)/css/handsontable.full.css
 transitions-js := $(resource-dir)/transitions.js
-transitions-json := $(resource-dir)/transitions.edn
+transitions-edn := $(resource-dir)/transitions.edn
 mutual-info-js := $(resource-dir)/mutual-info.js
 mutual-info-json := $(resource-dir)/mutual-info.json
 

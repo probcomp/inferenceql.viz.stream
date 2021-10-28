@@ -5,8 +5,8 @@
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.csv :refer [clean-csv-maps]]
             [inferenceql.viz.util :refer [keywordize-kv]]
+            [inferenceql.inference.gpm :as gpm]
             [inferenceql.inference.gpm.crosscat :as crosscat]
-            [inferenceql.viz.stream.model.xcat :as xcat]
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]))
 
 ;;; Compiled-in elements from config.
@@ -16,22 +16,17 @@
   (keywordize-kv (:schema config)))
 
 (def rows (clean-csv-maps schema (:data config)))
-(def mapping-table (:mapping-table config))
 
 ;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
 
+;TODO : Try using ->clj
 (def mutual-info (js->clj js/mutual_info :keywordize-keys true))
-(def cgpm-models (js->clj js/transitions))
-
-;;; Model iterations
-
-;; TODO: Off-load the conversion into xcat into a DVC stage.
+;TODO : Try using ->clj
 (def xcat-models
   "Sequence of xcat models for each iteration."
-  (map (fn [cgpm]
-         (let [num-rows (count (get cgpm "X"))]
-           (xcat/import cgpm (take num-rows rows) mapping-table schema)))
-       cgpm-models))
+  (gpm/read-string (js->clj js/transitions)))
+
+;;; Model iterations
 
 (def mmix-models
   "Sequence of mmix models for each iteration."

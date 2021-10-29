@@ -17,6 +17,9 @@
 
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]))
 
+;; Stuff related to transit.
+;; TODO: Move this to iql.inference or another ns
+
 (def readers
   (let [class-names ["inferenceql.inference.gpm.column.Column"
                      "inferenceql.inference.gpm.compositional.Compositional"
@@ -35,7 +38,7 @@
         read-handlers (map t/read-handler constructors)]
     (zipmap class-names read-handlers)))
 
-;------------------------
+(def transit-reader (t/reader :json {:handlers readers}))
 
 ;;; Compiled-in elements from config.
 
@@ -49,13 +52,10 @@
 
 ;TODO : Try using ->clj
 (def mutual-info (js->clj js/mutual_info :keywordize-keys true))
-;TODO : Try using ->clj
-
-(def reader (t/reader :json {:handlers readers}))
 
 (def xcat-models
   "Sequence of xcat models for each iteration."
-  (t/read reader js/transitions))
+  (t/read transit-reader js/transitions))
 
 ;;; Model iterations
 

@@ -11,7 +11,7 @@ output-to	 := $(output-dir)/main.js
 hot-css-file     := $(node-modules-dir)/handsontable/dist/handsontable.full.css
 hot-css-resource := $(resource-dir)/css/handsontable.full.css
 transitions-js := $(resource-dir)/transitions.js
-transitions-edn := $(resource-dir)/transitions.edn
+transitions-json := $(resource-dir)/transitions.json
 mutual-info-js := $(resource-dir)/mutual-info.js
 mutual-info-json := $(resource-dir)/mutual-info.json
 
@@ -76,8 +76,8 @@ $(hot-css-resource): $(hot-css-file)
 	# Copy Handsontable CSS file from Handsontable NPM dependency.
 	cp $(hot-css-file) $(resource-dir)/css
 
-$(transitions-js): $(transitions-edn)
-	bin/js-ify-edn $(transitions-edn) $(transitions-js) transitions
+$(transitions-js): $(transitions-json)
+	bin/js-ify-json $(transitions-json) $(transitions-js) transitions
 
 $(mutual-info-js): $(mutual-info-json)
 	bin/js-ify-json $(mutual-info-json) $(mutual-info-js) mutual_info

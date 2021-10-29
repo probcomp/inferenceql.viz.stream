@@ -18,6 +18,7 @@
         cljs-ajax/cljs-ajax {:mvn/version "0.8.1"}
         cljs-bean/cljs-bean {:mvn/version "1.7.0"}
         cljstache/cljstache {:mvn/version "2.0.6"}
+        com.cognitect/transit-cljs {:mvn/version "0.8.269"}
         hickory/hickory {:mvn/version "0.7.1"}
         ;; This is branch: htella/20211008-fix-mmix-export-simple
         probcomp/inferenceql.inference {:git/url "git@github.com:probcomp/inferenceql.inference.git"

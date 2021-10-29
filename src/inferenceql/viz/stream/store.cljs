@@ -21,9 +21,9 @@
   (let [class-names ["inferenceql.inference.gpm.column.Column"
                      "inferenceql.inference.gpm.compositional.Compositional"
                      "inferenceql.inference.gpm.crosscat.XCat"
-                     "inferenceql.inference.gpm.primitive-gpms.bernoulli.Bernoulli"
-                     "inferenceql.inference.gpm.primitive-gpms.categorical.Categorical"
-                     "inferenceql.inference.gpm.primitive-gpms.gaussian.Gaussian"
+                     "inferenceql.inference.gpm.primitive_gpms.bernoulli.Bernoulli"
+                     "inferenceql.inference.gpm.primitive_gpms.categorical.Categorical"
+                     "inferenceql.inference.gpm.primitive_gpms.gaussian.Gaussian"
                      "inferenceql.inference.gpm.view.View"]
         constructors [column/map->Column
                       compositional/map->Compositional

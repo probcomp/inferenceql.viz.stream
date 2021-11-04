@@ -8,7 +8,7 @@
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
             [inferenceql.viz.stream.store :refer [schema xcat-models col-ordering
-                                                  all-samples observed-samples virtual-samples]]))
+                                                  observed-samples virtual-samples]]))
 
 (defn mi-plot
   "Reagent component for circle viz for mutual info."
@@ -56,7 +56,7 @@
                                                                       num-rows {:remove-neg true})
                                                  (map #(assoc % :collection "virtual" :iter 0)))]
                         (concat observed-samples virtual-samples))
-                      all-samples)
+                      (concat observed-samples (virtual-samples iteration)))
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)
 

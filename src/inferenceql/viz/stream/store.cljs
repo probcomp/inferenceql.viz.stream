@@ -54,8 +54,6 @@
 (def transitions-samples
   (t/read transit-reader js/transitions_samples))
 
-(.log js/console :samples transitions-samples)
-
 ;; FIXME: Don't put mutual info in an array. Fix on auto-modeling side perhaps.
 (def mutual-info [(->clj js/mutual_info)])
 
@@ -114,10 +112,15 @@
        (map merge iteration-tags)))
 
 ;; TODO: give this a collection xcat records taken randomly from the ensemble.
-(def virtual-samples
-  (->> (mapcat sample-xcat xcat-models num-rows-required (repeat {:remove-neg true}))
+#_(def virtual-samples
+    (->> (mapcat sample-xcat xcat-models num-rows-required (repeat {:remove-neg true}))
+         (map #(assoc % :collection "virtual"))
+         (map add-null-columns)
+         (map merge iteration-tags)))
+
+(defn virtual-samples [iteration]
+  (->> (nth transitions-samples iteration)
+       ;(take 100)
        (map #(assoc % :collection "virtual"))
        (map add-null-columns)
-       (map merge iteration-tags)))
-
-(def all-samples (concat observed-samples virtual-samples))
+       (map #(assoc % :iter 0))))

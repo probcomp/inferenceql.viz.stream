@@ -96,7 +96,7 @@ $(figwheel-index-file): $(figwheel-public-dir)
 	# Copy static index.html file.
 	cp $(current-dir)/index.html $(figwheel-index-file)
 
-$(figwheel-resource-dir): $(figwheel-public-dir) $(hot-css-resource) $(transitions-js) $(mutual-info-js)
+$(figwheel-resource-dir): $(figwheel-public-dir) $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js)
 	# Copy static resource files.
 	cp -r $(resource-dir) $(figwheel-resource-dir)
 

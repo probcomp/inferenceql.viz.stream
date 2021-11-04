@@ -2,6 +2,7 @@
   "Main static data-store for the app.
   Contains defs for model iterations and samples to be used in visualizations."
   (:require [clojure.set]
+            [cljs-bean.core :refer [->clj]]
             [cognitect.transit :as t]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.csv :refer [clean-csv-maps]]
@@ -53,8 +54,10 @@
 (def transitions-samples
   (t/read transit-reader js/transitions_samples))
 
-;TODO : Try using ->clj
-(def mutual-info (js->clj js/mutual_info :keywordize-keys true))
+(.log js/console :samples transitions-samples)
+
+;; FIXME: Don't put mutual info in an array. Fix on auto-modeling side perhaps.
+(def mutual-info [(->clj js/mutual_info)])
 
 (def transitions
   (t/read transit-reader js/transitions))

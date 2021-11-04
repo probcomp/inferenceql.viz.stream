@@ -30,7 +30,7 @@
 
                               :select-vs-simulate
                               [h-box
-                               :children [[js-model iteration cluster-selected]
+                               :children [#_[js-model iteration cluster-selected]
                                           [gap :size "20px"]
                                           [select-vs-simulate-plot cluster-selected
                                            cluster-selected-click-count iteration]]])]]]]))

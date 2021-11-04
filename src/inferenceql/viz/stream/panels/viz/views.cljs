@@ -59,8 +59,9 @@
                       (concat observed-samples (virtual-samples iteration)))
         cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
         cols (or (seq cols-in-view) viz-cols)
+        ranges {:BMI [-15 65]}
 
-        spec (dashboard/spec all-samples schema cols 10 marginal-types)
+        spec (dashboard/spec all-samples schema cols 10 marginal-types ranges)
         options {:actions false}
         data {:rows all-samples}
         params {:iter iteration

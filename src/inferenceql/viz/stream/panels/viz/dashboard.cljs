@@ -44,13 +44,13 @@
   `selections` is a collection of maps representing data in selected rows and columns.
   `col` is the key within each map in `selections` that is used to extract data for the histogram.
   `vega-type` is a function that takes a column name and returns an vega datatype."
-  [col samples]
+  [col samples ranges]
   (let [col-type "quantitative"
         max-bins 30
         points (remove nil? (map col samples))
         col-min (apply min points)
         col-max (apply max points)
-        bin-config {:extent [col-min col-max]
+        bin-config {:extent (get ranges col)
                     :maxbins max-bins}
         binning (vega-binning bin-config)
 
@@ -61,7 +61,8 @@
 
         y-range-buffer 1
         max-bin-count (+ y-range-buffer
-                         (apply max bins-counted))]
+                         (apply max bins-counted))
+        max-bin-count 800]
     {:resolve {:scale {:x "shared" :y "shared"}}
      :spacing 0
      :bounds "flush"
@@ -70,22 +71,26 @@
              :header {:title nil :labelOrient "bottom" :labelPadding 40}}
      :spec {:layer [{:mark {:type "bar"
                             :color unselected-color
-                            :tooltip {:content "data"}}
+                            :tooltip {:content "data"}
+                            :clip true}
                      :params [{:name "brush-all"
                                ;; TODO: is there a way to select based on collection here as well?
                                :select {:type "interval" :encodings ["x"]}}]
                      :encoding {:x {:bin bin-config
                                     :field col
-                                    :type col-type}
+                                    :type col-type
+                                    :scale {:domain (get ranges col)}}
                                 :y {:aggregate "count"
                                     :type "quantitative"
                                     :scale {:domain [0, max-bin-count]}}}}
                     {:transform [{:filter {:and ["cluster == null"
                                                  {:param "brush-all"}]}}]
-                     :mark {:type "bar"}
+                     :mark {:type "bar"
+                            :clip true}
                      :encoding {:x {:bin bin-config
                                     :field col
-                                    :type col-type}
+                                    :type col-type
+                                    :scale {:domain (get ranges col)}}
                                 :y {:aggregate "count"
                                     :type "quantitative"
                                     :scale {:domain [0, max-bin-count]}}
@@ -97,10 +102,12 @@
                     {:transform [{:filter {:or [{:field "collection" :equal "virtual"}
                                                 {:and ["datum[view] == cluster"
                                                        (format "indexof(view_columns, '%s') != -1" (name col))]}]}}]
-                     :mark {:type "bar"}
+                     :mark {:type "bar"
+                            :clip true}
                      :encoding {:x {:bin bin-config
                                     :field col
-                                    :type col-type}
+                                    :type col-type
+                                    :scale {:domain (get ranges col)}}
                                 :y {:aggregate "count"
                                     :type "quantitative"
                                     :scale {:domain [0, max-bin-count]}}
@@ -124,6 +131,7 @@
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
         cat-max-count (apply max (vals freqs))
+        cat-max-count 700
         bin-flag false]
     {:layer [{:mark {:type "point"
                      :shape "circle"
@@ -471,9 +479,9 @@
                                         :scale {:domain ["observed", "virtual"]
                                                 :range [obs-data-color virtual-data-color]}}}}]}}))
 
-(defn histogram-quant-section [cols samples]
+(defn histogram-quant-section [cols samples ranges]
   (when (seq cols)
-    (let [specs (for [col cols] (histogram-quant col samples))]
+    (let [specs (for [col cols] (histogram-quant col samples ranges))]
       {:concat specs
        :columns 2
        :spacing {:column 50 :row 50}})))
@@ -555,7 +563,7 @@
   Path to correlation data is optional.
   Category limit is the max number of options to include for categorical variable.
   It can be set to nil for no limit."
-  [samples schema cols category-limit marginal-types]
+  [samples schema cols category-limit marginal-types ranges]
   (when (and (seq marginal-types) (seq cols))
     (let [vega-type (vega-type-fn schema)
 
@@ -576,7 +584,7 @@
                            (swap! c inc)
                            @c))
 
-          histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples)
+          histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples ranges)
           histograms-nom (histogram-nom-section (get cols-by-type "nominal") samples)
 
           select-pairs (for [x cols y cols :while (not= x y)] [x y])

@@ -53,9 +53,12 @@
 ;TODO : Try using ->clj
 (def mutual-info (js->clj js/mutual_info :keywordize-keys true))
 
+(def xcat-models-pre
+  (t/read transit-reader js/transitions))
+
 (def xcat-models
   "Sequence of xcat models for each iteration."
-  (t/read transit-reader js/transitions))
+  (first xcat-models-pre))
 
 ;;; Model iterations
 
@@ -104,6 +107,7 @@
        (map add-null-columns)
        (map merge iteration-tags)))
 
+;; TODO: give this a collection xcat records taken randomly from the ensemble.
 (def virtual-samples
   (->> (mapcat sample-xcat xcat-models num-rows-required (repeat {:remove-neg true}))
        (map #(assoc % :collection "virtual"))

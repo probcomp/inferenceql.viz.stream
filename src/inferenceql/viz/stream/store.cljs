@@ -50,15 +50,18 @@
 
 ;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
 
+(def transitions-samples
+  (t/read transit-reader js/transitions_samples))
+
 ;TODO : Try using ->clj
 (def mutual-info (js->clj js/mutual_info :keywordize-keys true))
 
-(def xcat-models-pre
+(def transitions
   (t/read transit-reader js/transitions))
 
 (def xcat-models
   "Sequence of xcat models for each iteration."
-  (first xcat-models-pre))
+  (first transitions))
 
 ;;; Model iterations
 

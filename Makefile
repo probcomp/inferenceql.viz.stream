@@ -12,6 +12,8 @@ hot-css-file     := $(node-modules-dir)/handsontable/dist/handsontable.full.css
 hot-css-resource := $(resource-dir)/css/handsontable.full.css
 transitions-js := $(resource-dir)/transitions.js
 transitions-json := $(resource-dir)/transitions.json
+transitions-samples-js := $(resource-dir)/transitions-samples.js
+transitions-samples-json := $(resource-dir)/transitions-samples.json
 mutual-info-js := $(resource-dir)/mutual-info.js
 mutual-info-json := $(resource-dir)/mutual-info.json
 
@@ -78,6 +80,9 @@ $(hot-css-resource): $(hot-css-file)
 
 $(transitions-js): $(transitions-json)
 	bin/js-ify-json $(transitions-json) $(transitions-js) transitions
+
+$(transitions-samples-js): $(transitions-sample-json)
+	bin/js-ify-json $(transitions-samples-json) $(transitions-samples-js) transitions_samples
 
 $(mutual-info-js): $(mutual-info-json)
 	bin/js-ify-json $(mutual-info-json) $(mutual-info-js) mutual_info

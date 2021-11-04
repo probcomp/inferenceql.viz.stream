@@ -61,7 +61,7 @@
         cols (or (seq cols-in-view) viz-cols)
         ranges {:BMI [-15 65]}
 
-        spec (dashboard/spec all-samples schema cols 10 marginal-types ranges)
+        spec (dashboard/spec observed-samples schema cols 10 marginal-types ranges)
         options {:actions false}
         data {:rows all-samples}
         params {:iter iteration

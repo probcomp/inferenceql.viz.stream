@@ -130,8 +130,7 @@
         col-vals (if (some nil? col-vals)
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
-        cat-max-count (apply max (vals freqs))
-        cat-max-count 700
+        cat-max-count 800
         bin-flag false]
     {:layer [{:mark {:type "point"
                      :shape "circle"
@@ -309,7 +308,7 @@
 (defn- strip-plot
   "Generates vega-lite spec for a strip plot.
   Useful for comparing quantitative-nominal data."
-  [cols vega-type n-cats samples id-gen]
+  [cols vega-type n-cats samples ranges id-gen]
   (let [zoom-control-name (str "zoom-control-" (id-gen)) ; Random id so pan/zoom is independent.
         ;; NOTE: This is a temporary hack to that forces the x-channel in the plot to be "numerical"
         ;; and the y-channel to be "nominal". The rest of the code remains nuetral to the order so that
@@ -323,9 +322,7 @@
         quant-dimension (if (= x-type "quantitative") :x :y)
         [width height] (map (comp strip-plot-size-helper vega-type) cols-to-draw)
 
-        x-vals (map x-field samples)
-        x-min (apply min x-vals)
-        x-max (apply max x-vals)
+        [x-min x-max] (get ranges x-field)
         f-sum (filtering-summary cols vega-type n-cats samples)
         y-cats (sort (get-in f-sum [:top-cats y-field]))
         title-limit (* (count y-cats) 25)]
@@ -516,10 +513,10 @@
        :columns 2
        :spacing {:column 50 :row 50}})))
 
-(defn strip-plot-section [cols vega-type n-cats samples id-gen]
+(defn strip-plot-section [cols vega-type n-cats samples ranges id-gen]
   (when (seq cols)
     (let [specs (for [col-pair cols]
-                  (strip-plot col-pair vega-type n-cats samples id-gen))]
+                  (strip-plot col-pair vega-type n-cats samples ranges id-gen))]
       {:concat specs
        :columns 2
        :spacing {:column 100 :row 50}})))
@@ -600,6 +597,7 @@
                                           vega-type
                                           category-limit
                                           samples
+                                          ranges
                                           id-generator)
           sections-1D (remove nil? [histograms-quant histograms-nom])
           sections-2D (remove nil? [scatter-plots strip-plots bubble-plots])

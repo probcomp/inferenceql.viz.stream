@@ -59,10 +59,8 @@
 
 ;;; Model iterations
 
-(def mmix-models
-  "Sequence of mmix models for each iteration."
-  ;; Using doall so models are fully evaled. Scrubbing through iterations will be smooth.
-  (doall (map xcat/xcat->mmix xcat-models)))
+(defn mmix-model [i]
+  (xcat/xcat->mmix (nth xcat-models i)))
 
 ;;; Secondary defs built off of xcat model iterations.
 

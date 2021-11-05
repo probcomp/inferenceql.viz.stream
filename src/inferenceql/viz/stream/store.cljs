@@ -54,8 +54,7 @@
 (def transitions-samples
   (t/read transit-reader js/transitions_samples))
 
-;; FIXME: Don't put mutual info in an array. Fix on auto-modeling side perhaps.
-(def mutual-info [(->clj js/mutual_info)])
+(def mutual-info (->clj js/mutual_info))
 
 (def transitions
   (t/read transit-reader js/transitions))

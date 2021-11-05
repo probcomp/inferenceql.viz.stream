@@ -30,5 +30,5 @@
                                                               :font-weight "bold"
                                                               :text-align "center"}}
                                                      "Mutual Information"]
-                                                    [mi-plot (first mutual-info) iteration]]]]]]]]]))
+                                                    [mi-plot mutual-info iteration]]]]]]]]]))
 

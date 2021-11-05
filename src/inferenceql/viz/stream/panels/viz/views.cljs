@@ -12,7 +12,7 @@
 (defn mi-plot
   "Reagent component for circle viz for mutual info."
   [mi-data iteration]
-  (when mi-data
+  (when (seq mi-data)
     (let [mi-threshold @(rf/subscribe [:control/mi-threshold])
           mi-data (-> mi-data (nth iteration) :mi)
           nodes (-> (set (keys mi-data))

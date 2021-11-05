@@ -2,10 +2,28 @@
   "Main db for state of user interactions and settings."
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
-            [inferenceql.viz.stream.store :as store]))
+            [inferenceql.viz.stream.store :as store]
+            [inferenceql.viz.stream.store :refer [mutual-info]]))
 
 (def default-col-selection
   (-> store/xcat-models first :latents :z keys set))
+
+(def mi-bounds
+  (if (seq mutual-info)
+    (let [mi-vals (flatten
+                   (for [mi-crosscat-sample mutual-info]
+                     (for [mi-model-iter mi-crosscat-sample]
+                       (for [[_col-1 inner-map] (:mi mi-model-iter)]
+                         (for [[_col-2 mi-val] inner-map]
+                           mi-val)))))]
+      {:min (apply min mi-vals)
+       :max (apply max mi-vals)})
+    {:min 0
+     :max 1}))
+
+(def mi-initial-threshold (* (- (:max mi-bounds)
+                                (:min mi-bounds))
+                             (/ 1 200)))
 
 (def default-db
   {:control-panel {:iteration 0
@@ -13,7 +31,8 @@
                    :plot-type :select-vs-simulate
                    :marginal-types #{:1D}
                    :show-plot-options false
-                   :mi-threshold 0}})
+                   :mi-bounds mi-bounds
+                   :mi-threshold mi-initial-threshold}})
 
 (s/def ::control-panel (s/keys :req-un [::iteration
                                         ::col-selection

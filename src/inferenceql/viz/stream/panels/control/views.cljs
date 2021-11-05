@@ -3,21 +3,7 @@
             [re-com.core :refer [v-box h-box box slider label gap
                                  selection-list radio-button hyperlink]]
             [goog.string :refer [format]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering
-                                                  xcat-models mutual-info]]))
-
-(def mi-bounds
-  (if (seq mutual-info)
-    (let [mi-vals (flatten
-                   (for [mi-crosscat-sample mutual-info]
-                     (for [mi-model-iter mi-crosscat-sample]
-                       (for [[_col-1 inner-map] (:mi mi-model-iter)]
-                         (for [[_col-2 mi-val] inner-map]
-                           mi-val)))))]
-      {:min (apply min mi-vals)
-       :max (apply max mi-vals)})
-    {:min 0
-     :max 1}))
+            [inferenceql.viz.stream.store :refer [schema col-ordering xcat-models]]))
 
 (def column-list (keep (set (keys schema)) col-ordering))
 
@@ -27,7 +13,8 @@
         plot-type @(rf/subscribe [:control/plot-type])
         marginal-types @(rf/subscribe [:control/marginal-types])
         show-plot-options @(rf/subscribe [:control/show-plot-options])
-        mi-threshold @(rf/subscribe [:control/mi-threshold])]
+        mi-threshold @(rf/subscribe [:control/mi-threshold])
+        mi-bounds @(rf/subscribe [:control/mi-bounds])]
     [v-box
      :padding "20px 20px 10px 20px"
      :margin "0px 0px 0px 0px"

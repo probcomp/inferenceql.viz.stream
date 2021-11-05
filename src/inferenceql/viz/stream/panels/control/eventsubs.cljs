@@ -100,6 +100,11 @@
   (fn [db _]
     (get-in db [:control-panel :mi-threshold])))
 
+(rf/reg-sub
+  :control/mi-bounds
+  (fn [db _]
+    (get-in db [:control-panel :mi-bounds])))
+
 (rf/reg-event-db
   :control/set-mi-threshold
   event-interceptors

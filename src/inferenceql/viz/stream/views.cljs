@@ -14,11 +14,12 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
     [v-box
-     :children [[control/panel]
-                [v-box
+     :children [[v-box
                  :margin "20px"
                  :children [[data-table iteration cluster-selected]
-                            [gap :size "30px"]
+                            [gap :size "10px"]
+                            [control/panel]
+                            [gap :size "10px"]
                             [h-box
                              :children [[v-box
                                          :children [#_[js-model iteration cluster-selected]

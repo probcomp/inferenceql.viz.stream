@@ -16,7 +16,7 @@
         mi-threshold @(rf/subscribe [:control/mi-threshold])
         mi-bounds @(rf/subscribe [:control/mi-bounds])]
     [v-box
-     :padding "20px 20px 10px 20px"
+     :padding "20px 20px 10px 0px"
      :margin "0px 0px 0px 0px"
      :children [[h-box
                  :children [[label :label "Iteration:"]

@@ -24,7 +24,7 @@
   (if (seq mutual-info)
     (* (- (:max mi-bounds)
           (:min mi-bounds))
-       (/ 1 200))
+       (/ 3 200))
     0))
 
 (def default-db

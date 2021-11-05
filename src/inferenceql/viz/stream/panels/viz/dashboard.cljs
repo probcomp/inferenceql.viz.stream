@@ -130,7 +130,7 @@
         col-vals (if (some nil? col-vals)
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
-        cat-max-count 800
+        cat-max-count 900
         bin-flag false]
     {:layer [{:mark {:type "point"
                      :shape "circle"

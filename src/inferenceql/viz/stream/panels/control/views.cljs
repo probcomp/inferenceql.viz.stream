@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [re-com.core :refer [v-box h-box box slider label gap
                                  selection-list radio-button hyperlink]]
+            [goog.string :refer [format]]
             [inferenceql.viz.stream.store :refer [schema col-ordering
                                                   xcat-models mutual-info]]))
 
@@ -29,7 +30,7 @@
         mi-threshold @(rf/subscribe [:control/mi-threshold])]
     [v-box
      :padding "20px 20px 10px 20px"
-     :margin "0px 0px 20px 0px"
+     :margin "0px 0px 0px 0px"
      :children [[h-box
                  :children [[label :label "Iteration:"]
                             [gap :size "10px"]
@@ -44,7 +45,7 @@
                                                   (rf/dispatch [:control/set-iteration iter]))]]
                             [gap :size "10px"]
                             [label :label iteration]]]
-                [gap :size "20px"]
+                [gap :size "15px"]
                 [hyperlink :label (if show-plot-options "hide" "Plot options")
                            :on-click #(rf/dispatch [:control/toggle-plot-options])]
                 [gap :size "10px"]
@@ -63,7 +64,6 @@
                                                      :model plot-type
                                                      :label-style (when (= p plot-type) {:font-weight "bold"})
                                                      :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
-                            [gap :size "20px"]
                             [h-box
                              :children [[label :label "MI edge threshold:"]
                                         [gap :size "10px"]
@@ -78,8 +78,8 @@
                                                  :on-change (fn [val]
                                                               (rf/dispatch [:control/set-mi-threshold val]))]]
                                         [gap :size "10px"]
-                                        [label :label mi-threshold]]]
-                            [gap :size "10px"]
+                                        [label :label (format "%.5f" mi-threshold)]]]
+                            [gap :size "20px"]
                             [h-box
                              :children [[label :label "Marginals:"]
                                         [gap :size "10px"]

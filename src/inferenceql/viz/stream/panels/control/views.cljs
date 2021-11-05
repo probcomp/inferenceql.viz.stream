@@ -50,63 +50,57 @@
                 [gap :size "10px"]
                 [v-box
                  :style {:display (if show-plot-options "flex" "none")}
-                 :children [[h-box
-                             :children [[label :label "Plot type:"]
-                                        [gap :size "10px"]
-                                        [v-box
-                                         :children
-                                         (doall (for [p [:mutual-information :select-vs-simulate]]
-                                                  ^{:key p}
-                                                  [radio-button
-                                                   :label (name p)
-                                                   :value p
-                                                   :model plot-type
-                                                   :label-style (when (= p plot-type) {:font-weight "bold"})
-                                                   :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
+                 :children [#_[h-box
+                               :children [[label :label "Plot type:"]
+                                          [gap :size "10px"]
+                                          [v-box
+                                           :children
+                                           (doall (for [p [:mutual-information :select-vs-simulate]]
+                                                    ^{:key p}
+                                                    [radio-button
+                                                     :label (name p)
+                                                     :value p
+                                                     :model plot-type
+                                                     :label-style (when (= p plot-type) {:font-weight "bold"})
+                                                     :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
                             [gap :size "20px"]
-                            (when (= plot-type :mutual-information)
-                              [h-box
-                               :children [[label :label "Edge threshold:"]
-                                          [gap :size "10px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [slider
-                                                   :min (:min mi-bounds)
-                                                   :max (:max mi-bounds)
-                                                   :step (/ (- (:max mi-bounds) (:min mi-bounds))
-                                                            100)
-                                                   :disabled? (not= plot-type :mutual-information)
-                                                   :model mi-threshold
-                                                   :on-change (fn [val]
-                                                                (rf/dispatch [:control/set-mi-threshold val]))]]
-                                          [gap :size "10px"]
-                                          [label :label mi-threshold]]])
+                            [h-box
+                             :children [[label :label "MI edge threshold:"]
+                                        [gap :size "10px"]
+                                        [box
+                                         :style {:padding-top "3px"}
+                                         :child [slider
+                                                 :min (:min mi-bounds)
+                                                 :max (:max mi-bounds)
+                                                 :step (/ (- (:max mi-bounds) (:min mi-bounds))
+                                                          1000)
+                                                 :model mi-threshold
+                                                 :on-change (fn [val]
+                                                              (rf/dispatch [:control/set-mi-threshold val]))]]
+                                        [gap :size "10px"]
+                                        [label :label mi-threshold]]]
                             [gap :size "10px"]
-                            (when (= plot-type :select-vs-simulate)
-                              [h-box
-                               :children [[label :label "Marginals:"]
-                                          [gap :size "10px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [selection-list
-                                                   :choices (vec (for [c [:1D :2D]]
-                                                                   {:id c :label (name c)}))
-                                                   :disabled? (= plot-type :mutual-information)
-                                                   :model marginal-types
-                                                   :on-change #(rf/dispatch [:control/set-marginal-types %])]]]])
+                            [h-box
+                             :children [[label :label "Marginals:"]
+                                        [gap :size "10px"]
+                                        [box
+                                         :style {:padding-top "3px"}
+                                         :child [selection-list
+                                                 :choices (vec (for [c [:1D :2D]]
+                                                                 {:id c :label (name c)}))
+                                                 :model marginal-types
+                                                 :on-change #(rf/dispatch [:control/set-marginal-types %])]]]]
                             [gap :size "10px"]
-                            (when (= plot-type :select-vs-simulate)
-                              [h-box
-                               :children [[label :label "Columns:"]
-                                          [gap :size "16px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [selection-list
-                                                   :choices (vec (for [c column-list]
-                                                                   {:id c :label (name c)}))
-                                                   :disabled? (= plot-type :mutual-information)
-                                                   :model col-selection
-                                                   :on-change #(rf/dispatch [:control/select-cols %])]]]])]]]]))
+                            [h-box
+                             :children [[label :label "Columns:"]
+                                        [gap :size "16px"]
+                                        [box
+                                         :style {:padding-top "3px"}
+                                         :child [selection-list
+                                                 :choices (vec (for [c column-list]
+                                                                 {:id c :label (name c)}))
+                                                 :model col-selection
+                                                 :on-change #(rf/dispatch [:control/select-cols %])]]]]]]]]))
 
 
 

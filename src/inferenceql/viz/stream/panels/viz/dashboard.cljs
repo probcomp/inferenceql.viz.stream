@@ -9,6 +9,8 @@
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
 
+(def ranges {:BMI [-15 65]})
+
 (defn bin-counts
   "Takes a seq of numerical `data` and `binning`. Returns the number of data points in each bin.
   `binning` is a map with a :start and :stop value for the range of the bins. And a :step value
@@ -227,13 +229,14 @@
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
-  [col-1 col-2 id-gen]
+  [col-1 col-2 ranges id-gen]
   (let [zoom-control-name (str "zoom-control-" (id-gen))] ; Random id so pan/zoom is independent.
     {:width 250
      :height 250
      :mark {:type "point"
             :tooltip {:content "data"}
             :filled true
+            :clip true
             :size {:expr "splomPointSize"}}
      :params [{:name zoom-control-name
                :bind "scales"
@@ -250,11 +253,11 @@
                         :zoom "wheel![!event.shiftKey]"}}]
      :encoding {:x {:field col-1
                     :type "quantitative"
-                    :scale {:zero false}
+                    :scale {:domain (get ranges col-1)}
                     :axis {:title col-1}}
                 :y {:field col-2
                     :type "quantitative"
-                    :scale {:zero false}
+                    :scale {:domain (get ranges col-2)}
                     :axis {:minExtent 40
                            :title col-2}}
                 :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
@@ -490,9 +493,9 @@
        :columns 2
        :spacing {:column 100 :row 50}})))
 
-(defn scatter-plot-section [cols id-gen]
+(defn scatter-plot-section [cols ranges id-gen]
   (when (seq cols)
-    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 id-gen))]
+    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 ranges id-gen))]
       {:concat specs
        :columns 2
        :spacing {:column 50 :row 50}
@@ -560,7 +563,7 @@
   Path to correlation data is optional.
   Category limit is the max number of options to include for categorical variable.
   It can be set to nil for no limit."
-  [samples schema cols category-limit marginal-types ranges]
+  [samples schema cols category-limit marginal-types]
   (when (and (seq marginal-types) (seq cols))
     (let [vega-type (vega-type-fn schema)
 
@@ -588,6 +591,7 @@
           pair-types (group-by #(set (map vega-type %)) select-pairs)
 
           scatter-plots (scatter-plot-section (get pair-types #{"quantitative"})
+                                              ranges
                                               id-generator)
           bubble-plots (bubble-plot-section (get pair-types #{"nominal"})
                                             vega-type

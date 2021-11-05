@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf]
             [clojure.math.combinatorics :refer [combinations]]
             [inferenceql.viz.panels.viz.views-simple :refer [vega-lite]]
-            [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
                                                             xcat-view-id-map xcat-cluster-id-map
@@ -32,10 +31,9 @@
 (defn select-vs-simulate-plot
   "Reagent component for select-vs-simulate plot."
   [cluster-selected _click-count iteration]
-  (let [viz-cols @(rf/subscribe [:control/col-selection])
-        marginal-types @(rf/subscribe [:control/marginal-types])
-
-        xcat-model (nth xcat-models iteration)
+  (let [spec @(rf/subscribe [:viz/spec])
+        cols-in-view @(rf/subscribe [:app/cols-in-view])
+        xcat-model @(rf/subscribe [:app/model])
 
         ;; Merge in the view-cluster information only when we have to.
         all-samples (if cluster-selected
@@ -57,11 +55,6 @@
                                                  (map #(assoc % :collection "virtual" :iter 0)))]
                         (concat observed-samples virtual-samples))
                       (concat observed-samples (virtual-samples iteration)))
-        cols-in-view (set (columns-in-view xcat-model (:view-id cluster-selected)))
-        cols (or (seq cols-in-view) viz-cols)
-        ranges {:BMI [-15 65]}
-
-        spec (dashboard/spec observed-samples schema cols 10 marginal-types ranges)
         options {:actions false}
         data {:rows all-samples}
         params {:iter iteration

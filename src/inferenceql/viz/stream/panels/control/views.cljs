@@ -52,7 +52,7 @@
                                                      :label-style (when (= p plot-type) {:font-weight "bold"})
                                                      :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
                             [h-box
-                             :children [[label :label "MI edge threshold:"]
+                             :children [[label :label "Dep-prob edge threshold:"]
                                         [gap :size "10px"]
                                         [box
                                          :style {:padding-top "3px"}

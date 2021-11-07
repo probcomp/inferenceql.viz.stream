@@ -14,7 +14,7 @@
   [mi-data iteration]
   (when (seq mi-data)
     (let [mi-threshold @(rf/subscribe [:control/mi-threshold])
-          mi-data (-> mi-data (nth iteration) :mi)
+          mi-data (nth mi-data iteration)
           nodes (-> (set (keys mi-data))
                     ;; Get nodes in consistent order by picking from col-ordering.
                     (keep col-ordering))

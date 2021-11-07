@@ -30,6 +30,6 @@
                                                      {:style {:color "black"
                                                               :font-weight "bold"
                                                               :text-align "center"}}
-                                                     "Mutual Information"]
+                                                     "Column dependencies"]
                                                     [mi-plot mutual-info iteration]]]]]]]]]))
 

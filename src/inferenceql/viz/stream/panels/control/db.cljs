@@ -9,16 +9,8 @@
   (-> store/xcat-models first :latents :z keys set))
 
 (def mi-bounds
-  (if (seq mutual-info)
-    (let [mi-vals (flatten
-                   (for [mi-model-iter mutual-info]
-                     (for [[_col-1 inner-map] (:mi mi-model-iter)]
-                       (for [[_col-2 mi-val] inner-map]
-                         mi-val))))]
-      {:min (apply min mi-vals)
-       :max (apply max mi-vals)})
-    {:min 0
-     :max 1}))
+  {:min 0
+   :max 1})
 
 (def mi-initial-threshold
   (if (seq mutual-info)

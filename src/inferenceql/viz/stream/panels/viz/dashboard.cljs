@@ -502,7 +502,7 @@
   (when (seq cols)
     (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 ranges id-gen))]
       {:concat specs
-       :columns 2
+       :columns 3
        :spacing {:column 50 :row 50}
        :resolve {:legend {:color "shared"}}})))
 

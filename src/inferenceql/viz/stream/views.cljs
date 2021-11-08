@@ -22,8 +22,7 @@
                             [gap :size "10px"]
                             [h-box
                              :children [[v-box
-                                         :children [#_[js-model iteration cluster-selected]
-                                                    [select-vs-simulate-plot cluster-selected
+                                         :children [[select-vs-simulate-plot cluster-selected
                                                      cluster-selected-click-count iteration]]]
                                         [v-box
                                          :children [[:h5
@@ -31,5 +30,10 @@
                                                               :font-weight "bold"
                                                               :text-align "center"}}
                                                      "Column dependencies"]
-                                                    [mi-plot mutual-info iteration]]]]]]]]]))
+                                                    [mi-plot mutual-info iteration]]]]]
+                            [h-box
+                             :gap "50px"
+                             :children [[js-model 0 iteration cluster-selected]
+                                        #_[js-model 1 iteration cluster-selected]
+                                        #_[js-model 2 iteration cluster-selected]]]]]]]))
 

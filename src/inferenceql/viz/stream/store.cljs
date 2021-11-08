@@ -65,7 +65,7 @@
 
 ;;; Model iterations
 
-(defn mmix-model [i]
+(defn mmix-model [model-num i]
   (xcat/xcat->mmix (nth xcat-models i)))
 
 ;;; Secondary defs built off of xcat model iterations.

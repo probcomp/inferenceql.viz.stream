@@ -190,8 +190,8 @@
 
 (defn js-model
   "Reagent component for js-model."
-  [iteration cluster-selected]
-  (let [mmix (mmix-model iteration)
+  [model-num iteration cluster-selected]
+  (let [mmix (mmix-model model-num iteration)
         js-model-text (render (:js-model-template config)
                               (multimix/template-data mmix))]
     [js-code-block js-model-text cluster-selected]))

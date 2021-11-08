@@ -2,7 +2,7 @@
 
 (defn spec
   "Raw vega spec for circle viz."
-  [tree dependencies extent rotate]
+  [tree dependencies extent rotate k]
   {:$schema "https://vega.github.io/schema/vega/v5.json",
    :width 400,
    :height 400,
@@ -63,7 +63,10 @@
            [{:type "filter",
              :expr
              "datum['source-id'] === activeSource || datum['target-id'] === activeTarget"}]}]
-   :scales [{:name "color",
+   :scales [{:name "edge-opacity"
+             :type "pow"
+             :exponent k}
+            {:name "color",
              :type "ordinal",
              :domain ["depends on" "imported by"],
              :range [{:signal "colorIn"} {:signal "colorOut"}]}],
@@ -114,7 +117,7 @@
                         :strokeOpacity [{:test
                                          "parent['source-id'] === activeSource || parent['target-id'] === activeTarget",
                                          :value 0.5}
-                                        {:signal "parent['edge-val']"}]
+                                        {:signal "scale('edge-opacity', parent['edge-val'])"}]
                         :tension {:signal "tension"},
                         :x {:field "x"},
                         :y {:field "y"}}}}]}],})
@@ -145,7 +148,7 @@
   "Returns a vega spec for the circle viz.
   node-names - a list of node names as keywords.
   edges - a list pairs where each pair consists of two node-names forming the edge."
-  [node-names edges]
+  [node-names edges k]
   (let [tree (tree node-names)
         edges-clean (let [edges (for [e edges]
                                   (update e :targets #(->> % (map keyword) (set))))]
@@ -164,5 +167,5 @@
                                                    :target-name node-2
                                                    :edge-val edge-val}))]
                        (dependencies proto-dependencies))]
-    (spec tree dependencies 360 0)))
+    (spec tree dependencies 360 0 k)))
 

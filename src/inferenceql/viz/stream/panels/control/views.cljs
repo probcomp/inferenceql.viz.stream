@@ -52,7 +52,7 @@
                                                      :label-style (when (= p plot-type) {:font-weight "bold"})
                                                      :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
                             [h-box
-                             :children [[label :label "Dep-prob edge threshold:"]
+                             :children [[label :label "Dep-prob exponential weighting:"]
                                         [gap :size "10px"]
                                         [box
                                          :style {:padding-top "3px"}
@@ -60,7 +60,7 @@
                                                  :min (:min mi-bounds)
                                                  :max (:max mi-bounds)
                                                  :step (/ (- (:max mi-bounds) (:min mi-bounds))
-                                                          1000)
+                                                          100)
                                                  :model mi-threshold
                                                  :on-change (fn [val]
                                                               (rf/dispatch [:control/set-mi-threshold val]))]]

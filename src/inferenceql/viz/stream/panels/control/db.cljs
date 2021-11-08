@@ -10,14 +10,10 @@
 
 (def mi-bounds
   {:min 0
-   :max 1})
+   :max 10})
 
 (def mi-initial-threshold
-  (if (seq mutual-info)
-    (* (- (:max mi-bounds)
-          (:min mi-bounds))
-       (/ 3 200))
-    0))
+    3)
 
 (def default-db
   {:control-panel {:iteration 0

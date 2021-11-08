@@ -23,7 +23,7 @@
                         :val (get-in mi-data [col-1 col-2])})
                      ;; All potential edges
                      (combinations nodes 2))
-          spec (circle-viz-spec nodes edges)
+          spec (circle-viz-spec nodes edges mi-threshold)
           options {:actions false :mode "vega" :renderer "canvas"}]
       ;; TODO: Make this faster by passing in nodes and edges as datasets.
       [vega-lite spec options nil nil nil])))

@@ -150,19 +150,21 @@
   edges - a list pairs where each pair consists of two node-names forming the edge."
   [node-names edges]
   (let [tree (tree node-names)
-        edges-clean (let [edges (for [edge edges]
-                                  (set (map keyword edge)))]
+        edges-clean (let [edges (for [e edges]
+                                  (update e :targets #(->> % (map keyword) (set))))]
                       (->> edges
-                           (remove #(= (count %) 1))
+                           (remove #(= (-> % :targets count) 1))
                            (distinct)))
         dependencies (let [tree (remove (comp #(= % -1) :id) tree) ;; Remove the root node.
                            col-ids (zipmap (map :name tree) (map :id tree))
-                           proto-dependencies (for [[node-1 node-2] (map seq edges-clean)]
-                                                {:source-id (get col-ids node-1)
-                                                 :target-id (get col-ids node-2)
-                                                 :source-name node-1
-                                                 :target-name node-2
-                                                 :edge-val nil})]
+                           proto-dependencies (for [e edges-clean]
+                                                (let [[node-1 node-2] (seq (:targets e))
+                                                      edge-val (:val e)]
+                                                  {:source-id (get col-ids node-1)
+                                                   :target-id (get col-ids node-2)
+                                                   :source-name node-1
+                                                   :target-name node-2
+                                                   :edge-val edge-val}))]
                        (dependencies proto-dependencies))]
     (spec tree dependencies 360 0)))
 

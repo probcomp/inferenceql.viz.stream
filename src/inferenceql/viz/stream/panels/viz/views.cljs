@@ -18,11 +18,11 @@
           nodes (-> (set (keys mi-data))
                     ;; Get nodes in consistent order by picking from col-ordering.
                     (keep col-ordering))
-          edges (filter (fn [[col-1 col-2]]
-                          (>= (get-in mi-data [col-1 col-2])
-                              mi-threshold))
-                        ;; All potential edges
-                        (combinations nodes 2))
+          edges (map (fn [[col-1 col-2]]
+                       {:targets [col-1 col-2]
+                        :val (get-in mi-data [col-1 col-2])})
+                     ;; All potential edges
+                     (combinations nodes 2))
           spec (circle-viz-spec nodes edges)
           options {:actions false :mode "vega" :renderer "canvas"}]
       ;; TODO: Make this faster by passing in nodes and edges as datasets.

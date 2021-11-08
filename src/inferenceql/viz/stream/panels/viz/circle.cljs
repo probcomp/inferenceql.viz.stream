@@ -105,22 +105,19 @@
               :from {:data "path"},
               :encode
               {:enter {:interpolate {:value "bundle"}, :strokeWidth {:value 3}},
-               :update
-               {:stroke
-                [{:test
-                  "parent['source-id'] === activeSource || parent['target-id'] === activeTarget",
-                  :signal "colorOut"}
-                 {:test "parent['infected']",
-                  :value "red"}
-                 {:value "steelblue"},]
-                :strokeOpacity
-                [{:test
-                  "parent['source-id'] === activeSource || parent['target-id'] === activeTarget",
-                  :value 0.5}
-                 {:value 0.2}],
-                :tension {:signal "tension"},
-                :x {:field "x"},
-                :y {:field "y"}}}}]}],})
+               :update {:stroke [{:test
+                                  "parent['source-id'] === activeSource || parent['target-id'] === activeTarget",
+                                  :signal "colorOut"}
+                                 {:test "parent['infected']",
+                                  :value "red"}
+                                 {:value "steelblue"},]
+                        :strokeOpacity [{:test
+                                         "parent['source-id'] === activeSource || parent['target-id'] === activeTarget",
+                                         :value 0.5}
+                                        {:signal "parent['edge-val']"}]
+                        :tension {:signal "tension"},
+                        :x {:field "x"},
+                        :y {:field "y"}}}}]}],})
 
 (defn tree
   "Helper function for producing tree data for circle viz spec."
@@ -165,6 +162,8 @@
                                                    :source-name node-1
                                                    :target-name node-2
                                                    :edge-val edge-val}))]
-                       (dependencies proto-dependencies))]
-    (spec tree dependencies 360 0)))
+                       (dependencies proto-dependencies))
+        spec (spec tree dependencies 360 0)]
+    (.log js/console (clj->js spec))
+    spec))
 

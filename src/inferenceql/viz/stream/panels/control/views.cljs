@@ -19,7 +19,7 @@
      :padding "20px 20px 10px 0px"
      :margin "0px 0px 0px 0px"
      :children [[h-box
-                 :children [[label :label "Iteration:"]
+                 :children [[label :label "Number of Patients:"]
                             [gap :size "10px"]
                             [box
                              :style {:padding-top "3px"}
@@ -31,7 +31,7 @@
                                                   (rf/dispatch [:control/clear-cluster-selection])
                                                   (rf/dispatch [:control/set-iteration iter]))]]
                             [gap :size "10px"]
-                            [label :label iteration]]]
+                            [label :label (inc iteration)]]]
                 [gap :size "15px"]
                 [hyperlink :label (if show-plot-options "hide" "Plot options")
                            :on-click #(rf/dispatch [:control/toggle-plot-options])]

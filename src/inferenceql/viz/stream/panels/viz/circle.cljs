@@ -20,8 +20,8 @@
              {:name "originX", :update "width / 2"}
              {:name "originY", :update "height / 2"}
              {:name "active", :value nil,
-              :on [{:events "text:mouseover", :update "datum.id"}
-                   {:events "mouseover[!event.item]", :update "null"}]}
+              #_:on #_[{:events "text:mouseover", :update "datum.id"}
+                       {:events "mouseover[!event.item]", :update "null"}]}
              {:name "activeSource", :value nil, :update "active"}
              {:name "activeTarget", :value nil, :update "active"}
              {:name "edgeClicked"}

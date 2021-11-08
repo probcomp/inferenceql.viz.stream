@@ -151,7 +151,8 @@
                                   (update e :targets #(->> % (map keyword) (set))))]
                       (->> edges
                            (remove #(= (-> % :targets count) 1))
-                           (distinct)))
+                           (distinct)
+                           (sort-by :val >)))
         dependencies (let [tree (remove (comp #(= % -1) :id) tree) ;; Remove the root node.
                            col-ids (zipmap (map :name tree) (map :id tree))
                            proto-dependencies (for [e edges-clean]
@@ -162,8 +163,6 @@
                                                    :source-name node-1
                                                    :target-name node-2
                                                    :edge-val edge-val}))]
-                       (dependencies proto-dependencies))
-        spec (spec tree dependencies 360 0)]
-    (.log js/console (clj->js spec))
-    spec))
+                       (dependencies proto-dependencies))]
+    (spec tree dependencies 360 0)))
 

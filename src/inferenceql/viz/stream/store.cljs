@@ -65,8 +65,17 @@
 
 ;;; Model iterations
 
-(defn mmix-model [model-num i]
-  (xcat/xcat->mmix (nth xcat-models i)))
+(def mmix-model
+  (let [store (atom {})]
+    (fn [model-num i]
+      (let [k [model-num i]
+            hit-maybe (get @store k)]
+        (if hit-maybe
+          hit-maybe
+          (let [new-val (xcat/xcat->mmix (nth xcat-models i))]
+            (swap! store assoc k new-val)
+            new-val))))))
+
 
 ;;; Secondary defs built off of xcat model iterations.
 

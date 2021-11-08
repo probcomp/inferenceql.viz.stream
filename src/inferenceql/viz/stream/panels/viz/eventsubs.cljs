@@ -11,7 +11,7 @@
   :<- [:control/marginal-types]
   :<- [:app/cols-in-view]
   (fn [[col-selection marginal-types cols-in-view] _]
-    (.log js/console :in-viz-spec--------)
+    #_(.log js/console :in-viz-spec--------)
     (let [cols (or (seq cols-in-view) col-selection)]
       (dashboard/spec observed-samples schema cols 10 marginal-types))))
 

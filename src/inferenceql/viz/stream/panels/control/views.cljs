@@ -57,6 +57,7 @@
                                         [box
                                          :style {:padding-top "3px"}
                                          :child [slider
+                                                 :width "200px"
                                                  :min (:min mi-bounds)
                                                  :max (:max mi-bounds)
                                                  :step (/ (- (:max mi-bounds) (:min mi-bounds))

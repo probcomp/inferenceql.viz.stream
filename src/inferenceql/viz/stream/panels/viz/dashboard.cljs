@@ -9,7 +9,12 @@
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
 
-(def ranges {:BMI [-15 65]})
+(def ranges {:BMI [-15 65]
+             :labtest_1 [0 15.514786623448469]
+             :labtest_2 [0 11390.127776197322]
+             :labtest_3 [0 16.747923871194022]
+             :labtest_4 [0 11056.229850297572]
+             :heart_rate [0 295.7882627553621]})
 
 (defn bin-counts
   "Takes a seq of numerical `data` and `binning`. Returns the number of data points in each bin.

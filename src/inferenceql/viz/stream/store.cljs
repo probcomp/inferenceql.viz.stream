@@ -41,6 +41,9 @@
 
 (def transit-reader (t/reader :json {:handlers readers}))
 
+(defn read-transit-string [string]
+  (t/read transit-reader string))
+
 ;;; Compiled-in elements from config.
 
 (def schema
@@ -51,17 +54,17 @@
 
 ;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
 
-(def transitions-samples
-  (t/read transit-reader js/transitions_samples))
+(def transitions-samples (->clj js/transitions_samples))
 
 (def mutual-info (->clj js/mutual_info))
 
-(def transitions
-  (t/read transit-reader js/transitions))
+(def transitions (->clj js/transitions))
 
 (def xcat-models
   "Sequence of xcat models for each iteration."
-  (first transitions))
+  (->> transitions
+       (map first)
+       (map #(t/read transit-reader %))))
 
 ;;; Model iterations
 
@@ -126,9 +129,14 @@
          (map add-null-columns)
          (map merge iteration-tags)))
 
+;; Force the reading of transit strings for samples at each iteration.
+(def transitions-samples-reified
+  ;; TODO: are this being read in as a simple js objects. Should I surround in ->clj?
+  (mapv read-transit-string transitions-samples))
+
 (defn virtual-samples [iteration]
-  (->> (nth transitions-samples iteration)
-       ;(take 100)
+  (->> (nth transitions-samples-reified iteration)
+       ;; TODO: move this stuff to pre-process stage.
        (map #(assoc % :collection "virtual"))
        (map add-null-columns)
        (map #(assoc % :iter 0))))

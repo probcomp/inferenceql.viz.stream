@@ -122,12 +122,12 @@
        (map add-null-columns)
        (map merge iteration-tags)))
 
-;; TODO: give this a collection xcat records taken randomly from the ensemble.
-#_(def virtual-samples
-    (->> (mapcat sample-xcat xcat-models num-rows-required (repeat {:remove-neg true}))
+;; NOTE: this samples from the model. It is too slow, however.
+#_(defn virtual-samples [iteration]
+    (->> (sample-xcat (nth xcat-models iteration) 1000)
          (map #(assoc % :collection "virtual"))
          (map add-null-columns)
-         (map merge iteration-tags)))
+         (map #(assoc % :iter 0))))
 
 ;; Force the reading of transit strings for samples at each iteration.
 (def transitions-samples-reified

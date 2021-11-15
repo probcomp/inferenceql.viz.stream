@@ -19,6 +19,11 @@
                  :children [[data-table iteration cluster-selected]
                             [gap :size "10px"]
                             [control/panel]
+                            [h-box
+                             :gap "50px"
+                             :children [[js-model 0 iteration cluster-selected]
+                                        #_[js-model 1 iteration cluster-selected]
+                                        #_[js-model 2 iteration cluster-selected]]]
                             [gap :size "10px"]
                             [h-box
                              :children [[v-box
@@ -30,10 +35,5 @@
                                                               :font-weight "bold"
                                                               :text-align "center"}}
                                                      "Column dependencies"]
-                                                    [mi-plot mutual-info iteration]]]]]
-                            [h-box
-                             :gap "50px"
-                             :children [[js-model 0 iteration cluster-selected]
-                                        #_[js-model 1 iteration cluster-selected]
-                                        #_[js-model 2 iteration cluster-selected]]]]]]]))
+                                                    [mi-plot mutual-info iteration]]]]]]]]]))
 

@@ -97,7 +97,7 @@
           (if (cluster-start? loc)
             (let [cluster-id (cluster-id loc)
                   view-id (view-id loc)
-                  current {:cluster-id cluster-id :view-id view-id}
+                  current {:model-id 0 :cluster-id cluster-id :view-id view-id}
                   current-selected (= current cluster-selected)
 
                   cluster-endings #{;; After intermediate cluster, last var categorical.

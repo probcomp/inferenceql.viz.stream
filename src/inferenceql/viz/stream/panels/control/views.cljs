@@ -3,7 +3,7 @@
             [re-com.core :refer [v-box h-box box slider label gap
                                  selection-list radio-button hyperlink]]
             [goog.string :refer [format]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering xcat-models]]))
+            [inferenceql.viz.stream.store :refer [schema col-ordering num-transitions]]))
 
 (def column-list (keep (set (keys schema)) col-ordering))
 
@@ -25,7 +25,7 @@
                              :style {:padding-top "3px"}
                              :child [slider
                                      :min 0
-                                     :max (dec (count xcat-models))
+                                     :max (dec num-transitions)
                                      :model iteration
                                      :on-change (fn [iter]
                                                   (rf/dispatch [:control/clear-cluster-selection])

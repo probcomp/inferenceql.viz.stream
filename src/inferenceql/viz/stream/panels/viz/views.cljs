@@ -6,7 +6,7 @@
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
-            [inferenceql.viz.stream.store :refer [schema xcat-models col-ordering
+            [inferenceql.viz.stream.store :refer [schema col-ordering
                                                   observed-samples virtual-samples]]))
 
 (defn mi-plot

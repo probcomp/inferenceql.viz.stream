@@ -61,10 +61,14 @@
 (def transitions (->clj js/transitions))
 
 (def xcat-models
-  "Sequence of xcat models for each iteration."
-  (->> transitions
-       (map first)
-       (map #(t/read transit-reader %))))
+  (let [store (atom {})]
+    (fn [model-num i]
+      (let [k [model-num i]
+            hit-maybe (get @store k)]
+        (if hit-maybe
+          hit-maybe
+          (let [ts (get-in transitions [i model-num])]
+            (read-transit-string ts)))))))
 
 ;;; Model iterations
 
@@ -75,12 +79,23 @@
             hit-maybe (get @store k)]
         (if hit-maybe
           hit-maybe
-          (let [new-val (xcat/xcat->mmix (nth xcat-models i))]
+          (let [new-val (xcat/xcat->mmix (xcat-models model-num i))]
             (swap! store assoc k new-val)
             new-val))))))
 
 
 ;;; Secondary defs built off of xcat model iterations.
+
+(def num-transitions
+  (count transitions))
+
+(def first-stream-transitions
+  (map #(xcat-models 0 %)
+       (range num-transitions)))
+
+(def starting-cols
+  (-> first-stream-transitions first :latents :z keys set))
+
 
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."
@@ -89,7 +104,7 @@
                                                       (set ordering))]
               (concat ordering new-columns)))
           []
-          xcat-models))
+          first-stream-transitions))
 
 (def num-rows-at-iter
   "Number of rows used at each model iteration."
@@ -97,7 +112,7 @@
          (let [[_view-1-name view-1] (first (get xcat :views))]
            ;; Count the number of row to cluster assignments.
            (count (get-in view-1 [:latents :y]))))
-       xcat-models))
+       first-stream-transitions))
 
 (def num-rows-required
   "Number of new rows incorporated at this model iteration."

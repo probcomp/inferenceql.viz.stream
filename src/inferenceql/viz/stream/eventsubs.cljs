@@ -15,7 +15,7 @@
   :app/model-default
   :<-[:control/iteration]
   (fn [iteration _]
-    (xcat-models 0 iteration)))
+    (get-in xcat-models [iteration 0])))
 
 (rf/reg-sub
   :app/model
@@ -23,7 +23,7 @@
   :<-[:control/cluster-selected]
   (fn [[iteration cluster-selected] _]
     (when cluster-selected
-      (xcat-models (:model-id cluster-selected) iteration))))
+      (get-in xcat-models [iteration (:model-id cluster-selected)]))))
 
 (rf/reg-sub
   :app/cols-in-view

@@ -61,14 +61,9 @@
 (def transitions (->clj js/transitions))
 
 (def xcat-models
-  (let [store (atom {})]
-    (fn [model-num i]
-      (let [k [model-num i]
-            hit-maybe (get @store k)]
-        (if hit-maybe
-          hit-maybe
-          (let [ts (get-in transitions [i model-num])]
-            (read-transit-string ts)))))))
+  (mapv (fn [transit-strings]
+          (mapv read-transit-string (take 1 transit-strings)))
+        transitions))
 
 ;;; Model iterations
 
@@ -79,7 +74,7 @@
             hit-maybe (get @store k)]
         (if hit-maybe
           hit-maybe
-          (let [new-val (xcat/xcat->mmix (xcat-models model-num i))]
+          (let [new-val (xcat/xcat->mmix (get-in xcat-models [i model-num]))]
             (swap! store assoc k new-val)
             new-val))))))
 
@@ -90,12 +85,10 @@
   (count transitions))
 
 (def first-stream-transitions
-  (map #(xcat-models 0 %)
-       (range num-transitions)))
+  (map first xcat-models))
 
 (def starting-cols
   (-> first-stream-transitions first :latents :z keys set))
-
 
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."

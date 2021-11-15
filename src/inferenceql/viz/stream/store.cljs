@@ -137,14 +137,6 @@
          (map add-null-columns)
          (map #(assoc % :iter 0))))
 
-;; Force the reading of transit strings for samples at each iteration.
-(def transitions-samples-reified
+(def virtual-samples
   ;; TODO: are this being read in as a simple js objects. Should I surround in ->clj?
-  (mapv read-transit-string transitions-samples))
-
-(defn virtual-samples [iteration]
-  (->> (nth transitions-samples-reified iteration)
-       ;; TODO: move this stuff to pre-process stage.
-       (map #(assoc % :collection "virtual"))
-       (map add-null-columns)
-       (map #(assoc % :iter 0))))
+  (read-transit-string transitions-samples))

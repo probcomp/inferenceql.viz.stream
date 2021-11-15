@@ -54,7 +54,7 @@
                                                                       num-rows {:remove-neg true})
                                                  (map #(assoc % :collection "virtual" :iter 0)))]
                         (concat observed-samples virtual-samples))
-                      (concat observed-samples (virtual-samples iteration)))
+                      (concat observed-samples virtual-samples))
         options {:actions false}
         data {:rows all-samples}
         params {:iter iteration

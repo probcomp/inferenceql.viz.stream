@@ -555,7 +555,10 @@
              :value false}]
    :transform [{:window [{:op "row_number", :as "row_number"}]
                 :groupby ["collection"]}
-               {:filter {:field "iter" :lte {:expr "iter"}}}]
+               {:filter {:or [{:and [{:field "collection" :equal "observed"}
+                                     {:field "iter" :lte {:expr "iter"}}]}
+                              {:and [{:field "collection" :equal "virtual"}
+                                     {:field "iter" :equal {:expr "iter"}}]}]}}]
    :config {:countTitle "Count"
             :axisY {:minExtent 10}}
    :resolve {:legend {:size "independent"

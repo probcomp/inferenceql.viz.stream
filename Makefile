@@ -32,6 +32,7 @@ clean:
 	rm -Rf $(figwheel-build-dir)
 	rm -Rf $(node-modules-dir)
 	rm -Rf $(transitions-js)
+	rm -Rf $(transitions-samples-js)
 	rm -Rf $(mutual-info-js)
 
 ### Spreadsheets app compilation.

@@ -54,16 +54,13 @@
 
 ;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
 
-(def transitions-samples (->clj js/transitions_samples))
-
+(def transitions-samples (read-transit-string js/transitions_samples))
 (def mutual-info (->clj js/mutual_info))
+(def transitions (read-transit-string js/transitions))
 
-(def transitions (->clj js/transitions))
+(def xcat-models [transitions])
 
-(def xcat-models
-  (mapv (fn [transit-strings]
-          (mapv read-transit-string (take 1 transit-strings)))
-        transitions))
+(.log js/console :xcat-models xcat-models)
 
 ;;; Model iterations
 
@@ -74,18 +71,18 @@
             hit-maybe (get @store k)]
         (if hit-maybe
           hit-maybe
-          (let [new-val (xcat/xcat->mmix (get-in xcat-models [i model-num]))]
+          (let [new-val (xcat/xcat->mmix (get-in xcat-models [model-num i]))]
             (swap! store assoc k new-val)
             new-val))))))
 
 
 ;;; Secondary defs built off of xcat model iterations.
 
-(def num-transitions
-  (count transitions))
-
 (def first-stream-transitions
-  (map first xcat-models))
+  (first xcat-models))
+
+(def num-transitions
+  (count first-stream-transitions))
 
 (def starting-cols
   (-> first-stream-transitions first :latents :z keys set))
@@ -137,6 +134,8 @@
          (map add-null-columns)
          (map #(assoc % :iter 0))))
 
-(def virtual-samples
+(defn virtual-samples [iteration]
   ;; TODO: are this being read in as a simple js objects. Should I surround in ->clj?
-  (read-transit-string transitions-samples))
+  (->> (nth transitions-samples iteration)
+       (map #(assoc % :collection "virtual"
+                      :iter 0))))

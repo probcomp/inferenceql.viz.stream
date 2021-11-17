@@ -20,7 +20,7 @@
 
 (defn add-cluster-spans
   "Takes html of highlighted js-program and returns hiccup with cluster if-statements clickable."
-  [highlighted-js-text cluster-selected]
+  [highlighted-js-text model-num cluster-selected]
   (let [highlighted-js-text (str "<span>" highlighted-js-text "</span>")
         hiccup (->> (hickory.core/parse-fragment highlighted-js-text)
                     (map hickory.core/as-hiccup)
@@ -97,7 +97,7 @@
           (if (cluster-start? loc)
             (let [cluster-id (cluster-id loc)
                   view-id (view-id loc)
-                  current {:model-id 0 :cluster-id cluster-id :view-id view-id}
+                  current {:model-id model-num :cluster-id cluster-id :view-id view-id}
                   current-selected (= current cluster-selected)
 
                   cluster-endings #{;; After intermediate cluster, last var categorical.
@@ -162,14 +162,14 @@
 
 (defn js-clickable-clusters
   "A reagent component that highlights js-code and makes clusters clickable."
-  [js-code cluster-selected]
+  [model-num js-code cluster-selected]
   ;; Returns hiccup.
-  (-> js-code highlight (add-cluster-spans cluster-selected)))
+  (-> js-code highlight (add-cluster-spans model-num cluster-selected)))
 
 (defn js-code-block
   "Reagent component that display of Javascript code with syntax highlighting.
   Args: `js-code` -- (string) The Javascript source code to display."
-  [js-code cluster-selected]
+  [model-num js-code cluster-selected]
   (let [dom-nodes (r/atom {})]
     (r/create-class
      {:display-name "js-model-code"
@@ -183,13 +183,13 @@
                                (rf/dispatch [:control/clear-cluster-selection])))))
 
       :reagent-render
-      (fn [js-code cluster-selected]
+      (fn [model-num js-code cluster-selected]
         [:pre#program-display
          [:code {:ref #(swap! dom-nodes assoc :code-elem %)}
-          [js-clickable-clusters js-code cluster-selected]]])})))
+          [js-clickable-clusters model-num js-code cluster-selected]]])})))
 
 (defn js-model
   "Reagent component for js-model."
   [model-num iteration cluster-selected]
   (let [js-model-text (get-in js-program-transitions [iteration model-num])]
-    [js-code-block js-model-text cluster-selected]))
+    [js-code-block model-num js-model-text cluster-selected]))

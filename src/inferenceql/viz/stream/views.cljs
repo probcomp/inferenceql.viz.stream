@@ -21,19 +21,20 @@
                             [control/panel]
                             [gap :size "10px"]
                             [h-box
+                             :gap "50px"
+                             :children [[js-model 0 iteration cluster-selected]
+                                        [js-model 1 iteration cluster-selected]]]
+                            [gap :size "50px"]
+                            [h-box
                              :children [[v-box
                                          :children [[select-vs-simulate-plot cluster-selected
                                                      cluster-selected-click-count iteration]]]
+                                        [gap :size "50px"]
                                         [v-box
                                          :children [[:h5
                                                      {:style {:color "black"
                                                               :font-weight "bold"
                                                               :text-align "center"}}
                                                      "Column dependencies"]
-                                                    [mi-plot mutual-info iteration]]]]]
-                            [h-box
-                             :gap "50px"
-                             :children [[js-model 0 iteration cluster-selected]
-                                        #_[js-model 1 iteration cluster-selected]
-                                        #_[js-model 2 iteration cluster-selected]]]]]]]))
+                                                    [mi-plot mutual-info iteration]]]]]]]]]))
 

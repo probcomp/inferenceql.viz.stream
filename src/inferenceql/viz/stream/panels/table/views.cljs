@@ -25,14 +25,12 @@
 (defn data-table
   "Reagent component for data table."
   [iteration cluster-selected]
-  (let [num-points (nth num-rows-at-iter iteration)
+  (let [xcat-model @(rf/subscribe [:app/model])
+        num-points (nth num-rows-at-iter iteration)
         modeled-cols (nth columns-at-iter iteration
+                          ;; Get modeled columns in the correct order by picking items in order
+                          ;; from col-ordering.
                           (keep col-ordering))
-
-        modeled-cols (-> (set (xcat-util/columns-in-model xcat-model))
-                         ;; Get modeled columns in the correct order by picking items in order
-                         ;; from col-ordering.
-                         (keep col-ordering))
         hot-options {:height "400px"
                      :width "1390px"
                      :cols (map name modeled-cols)

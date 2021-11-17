@@ -56,25 +56,25 @@
 
 (def transitions-samples (read-transit-string js/transitions_samples))
 (def mutual-info (->clj js/mutual_info))
-(def transitions (read-transit-string js/transitions))
+(def transitions (->clj js/transitions))
 (def js-program-transitions (->clj js/js_program_transitions))
 
-(def xcat-models [transitions])
+(def xcat-models transitions)
 
 ;;; Secondary defs built off of xcat model iterations.
-
-(def first-stream-transitions
-  (first xcat-models))
 
 (def num-transitions
   (get-in config [:transitions :count]))
 
-(def starting-cols
-  (get-in config [:transitions :starting-cols]))
-
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."
   (get-in config [:transitions :column-ordering]))
+
+(def columns-at-iter
+  (get-in config [:transitions :columns-at-iter]))
+
+(def starting-cols
+  (nth columns-at-iter 0))
 
 (def num-rows-at-iter
   "Number of rows used at each model iteration."

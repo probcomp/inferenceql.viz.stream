@@ -13,7 +13,7 @@
 
 (def default-db
   {:control-panel {:iteration 0
-                   :col-selection starting-cols
+                   :col-selection (set starting-cols)
                    :plot-type :select-vs-simulate
                    :marginal-types #{:1D}
                    :show-plot-options false

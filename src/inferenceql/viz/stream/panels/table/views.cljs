@@ -1,5 +1,7 @@
 (ns inferenceql.viz.stream.panels.table.views
-  (:require [inferenceql.viz.stream.store :refer [rows col-ordering num-rows-at-iter]]
+  (:require [inferenceql.viz.stream.store :refer [rows col-ordering
+                                                  columns-at-iter
+                                                  num-rows-at-iter]]
             [inferenceql.viz.stream.model.xcat-util :as xcat-util]
             [inferenceql.viz.panels.table.views-simple :refer [handsontable]]
             [re-frame.core :as rf]))
@@ -23,8 +25,10 @@
 (defn data-table
   "Reagent component for data table."
   [iteration cluster-selected]
-  (let [xcat-model @(rf/subscribe [:app/model-default])
-        num-points (nth num-rows-at-iter iteration)
+  (let [num-points (nth num-rows-at-iter iteration)
+        modeled-cols (nth columns-at-iter iteration
+                          (keep col-ordering))
+
         modeled-cols (-> (set (xcat-util/columns-in-model xcat-model))
                          ;; Get modeled columns in the correct order by picking items in order
                          ;; from col-ordering.

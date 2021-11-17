@@ -60,8 +60,6 @@
 
 (def xcat-models [transitions])
 
-(.log js/console :xcat-models xcat-models)
-
 ;;; Model iterations
 
 (def mmix-model
@@ -82,27 +80,18 @@
   (first xcat-models))
 
 (def num-transitions
-  (count first-stream-transitions))
+  (get-in config [:transitions :count]))
 
 (def starting-cols
-  (-> first-stream-transitions first :latents :z keys set))
+  (get-in config [:transitions :starting-cols]))
 
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."
-  (reduce (fn [ordering xcat]
-            (let [new-columns (clojure.set/difference (set (columns-in-model xcat))
-                                                      (set ordering))]
-              (concat ordering new-columns)))
-          []
-          first-stream-transitions))
+  (get-in config [:transitions :column-ordering]))
 
 (def num-rows-at-iter
   "Number of rows used at each model iteration."
-  (map (fn [xcat]
-         (let [[_view-1-name view-1] (first (get xcat :views))]
-           ;; Count the number of row to cluster assignments.
-           (count (get-in view-1 [:latents :y]))))
-       first-stream-transitions))
+  (get-in config [:transitions :num-rows-at-iter]))
 
 (def num-rows-required
   "Number of new rows incorporated at this model iteration."

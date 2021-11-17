@@ -56,10 +56,8 @@
 
 (def transitions-samples (read-transit-string js/transitions_samples))
 (def mutual-info (->clj js/mutual_info))
-(def transitions (->clj js/transitions))
+(def xcat-models (->clj js/transitions))
 (def js-program-transitions (->clj js/js_program_transitions))
-
-(def xcat-models transitions)
 
 ;;; Secondary defs built off of xcat model iterations.
 

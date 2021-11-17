@@ -57,7 +57,7 @@
 (def transitions-samples (read-transit-string js/transitions_samples))
 (def mutual-info (->clj js/mutual_info))
 (def transitions (read-transit-string js/transitions))
-(def js-program-transitions (->clj js/js_programs_transitions))
+(def js-program-transitions (->clj js/js_program_transitions))
 
 (def xcat-models [transitions])
 

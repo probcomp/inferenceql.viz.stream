@@ -16,6 +16,8 @@ transitions-samples-js := $(resource-dir)/transitions-samples.js
 transitions-samples-json := $(resource-dir)/transitions-samples.json
 mutual-info-js := $(resource-dir)/mutual-info.js
 mutual-info-json := $(resource-dir)/mutual-info.json
+js-program-transitions-js := $(resource-dir)/js-program-transitions.js
+js-program-transitions-json := $(resource-dir)/js-program-transitions.json
 
 ### Definitions for Figwheel.
 
@@ -34,6 +36,7 @@ clean:
 	rm -Rf $(transitions-js)
 	rm -Rf $(transitions-samples-js)
 	rm -Rf $(mutual-info-js)
+	rm -Rf $(js-program-transitions-js)
 
 ### Spreadsheets app compilation.
 
@@ -54,15 +57,15 @@ watch-advanced-min: $(hot-css-resource)
 	clojure -M -m cljs.main -w $(src-dir) -co $(compile-opts-advn-min) -c inferenceql.viz.stream.core
 
 .PHONY: js
-js: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js)
+js: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js) $(js-program-transitions-js)
 	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts) -c inferenceql.viz.stream.core
 
 .PHONY: js-advanced
-js-advanced: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js)
+js-advanced: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js) $(js-program-transitions-js)
 	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts-advn) -c inferenceql.viz.stream.core
 
 .PHONY: js-advanced-min
-js-advanced-min: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js)
+js-advanced-min: $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js) $(js-program-transitions-js)
 	clojure -J-Xmx4G -M -m cljs.main -co $(compile-opts-advn-min) -c inferenceql.viz.stream.core
 
 
@@ -88,6 +91,9 @@ $(transitions-samples-js): $(transitions-sample-json)
 $(mutual-info-js): $(mutual-info-json)
 	bin/js-ify-json $(mutual-info-json) $(mutual-info-js) mutual_info
 
+$(js-program-transitions-js): $(js-program-transitions-json)
+	bin/js-ify-json $(js-program-transitions-json) $(js-program-transitions-js) js_program_transitions
+
 ### Compilation with Figwheel
 
 $(figwheel-public-dir):
@@ -97,7 +103,7 @@ $(figwheel-index-file): $(figwheel-public-dir)
 	# Copy static index.html file.
 	cp $(current-dir)/index.html $(figwheel-index-file)
 
-$(figwheel-resource-dir): $(figwheel-public-dir) $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js)
+$(figwheel-resource-dir): $(figwheel-public-dir) $(hot-css-resource) $(transitions-js) $(transitions-samples-js) $(mutual-info-js) $(js-program-transitions-js)
 	# Copy static resource files.
 	cp -r $(resource-dir) $(figwheel-resource-dir)
 

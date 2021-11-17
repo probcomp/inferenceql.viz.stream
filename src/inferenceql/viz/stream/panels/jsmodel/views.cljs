@@ -12,7 +12,7 @@
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
             [inferenceql.viz.config :refer [config]]
-            [inferenceql.viz.stream.store :refer [mmix-model]]))
+            [inferenceql.viz.stream.store :refer [js-program-transitions]]))
 
 ;; We are using the minimal version of highlight.js where
 ;; every language used has to be registered individually.
@@ -191,7 +191,5 @@
 (defn js-model
   "Reagent component for js-model."
   [model-num iteration cluster-selected]
-  (let [mmix (mmix-model model-num iteration)
-        js-model-text (render (:js-model-template config)
-                              (multimix/template-data mmix))]
+  (let [js-model-text (get-in js-program-transitions [iteration model-num])]
     [js-code-block js-model-text cluster-selected]))

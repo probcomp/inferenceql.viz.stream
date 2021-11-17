@@ -57,22 +57,9 @@
 (def transitions-samples (read-transit-string js/transitions_samples))
 (def mutual-info (->clj js/mutual_info))
 (def transitions (read-transit-string js/transitions))
+(def js-program-transitions (->clj js/js_programs_transitions))
 
 (def xcat-models [transitions])
-
-;;; Model iterations
-
-(def mmix-model
-  (let [store (atom {})]
-    (fn [model-num i]
-      (let [k [model-num i]
-            hit-maybe (get @store k)]
-        (if hit-maybe
-          hit-maybe
-          (let [new-val (xcat/xcat->mmix (get-in xcat-models [model-num i]))]
-            (swap! store assoc k new-val)
-            new-val))))))
-
 
 ;;; Secondary defs built off of xcat model iterations.
 

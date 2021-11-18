@@ -54,7 +54,7 @@
 
 ;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
 
-(def transitions-samples (read-transit-string js/transitions_samples))
+(def transitions-samples (read-transit-string (.decompress js/LZString js/transitions_samples)))
 (def mutual-info (->clj js/mutual_info))
 (def xcat-models (->clj js/transitions))
 (def js-program-transitions (->clj js/js_program_transitions))

@@ -72,7 +72,8 @@
   (get-in config [:transitions :columns-at-iter]))
 
 (def starting-cols
-  (nth columns-at-iter 0))
+  (let [num-cols (nth columns-at-iter 0)]
+    (take num-cols col-ordering)))
 
 (def num-rows-at-iter
   "Number of rows used at each model iteration."

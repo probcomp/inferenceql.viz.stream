@@ -80,7 +80,9 @@
 
 (def num-rows-required
   "Number of new rows incorporated at this model iteration."
-  (map - num-rows-at-iter (conj num-rows-at-iter 0)))
+  (map -
+       num-rows-at-iter
+       (concat [0] num-rows-at-iter)))
 
 ;;; Settings up samples.
 

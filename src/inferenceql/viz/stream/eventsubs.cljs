@@ -23,7 +23,7 @@
             xcat-latents (read-transit-string t-string)
             {:keys [latents spec num-rows]} xcat-latents
 
-            data (take num-rows rows)
+            data (zipmap (range) (take num-rows rows))
             options {:options (get-in config [:transitions :options])}]
         (xcat/construct-xcat-from-latents spec latents data options)))))
 

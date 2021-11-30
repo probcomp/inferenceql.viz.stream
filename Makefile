@@ -3,6 +3,7 @@ output-dir       := $(current-dir)/out
 output-dir-worker:= $(current-dir)/out-worker
 src-dir          := $(current-dir)/src
 resource-dir     := $(current-dir)/resources
+temp-resource-dir     := $(current-dir)/temp-resources
 cache-dir        := $(current-dir)/src/inferenceql/spreadsheets
 node-modules-dir := $(current-dir)/node_modules
 
@@ -10,14 +11,16 @@ output-to	 := $(output-dir)/main.js
 
 hot-css-file     := $(node-modules-dir)/handsontable/dist/handsontable.full.css
 hot-css-resource := $(resource-dir)/css/handsontable.full.css
+
+transitions-json := $(temp-resource-dir)/transitions.json
+transitions-samples-json := $(temp-resource-dir)/transitions-samples.json
+mutual-info-json := $(temp-resource-dir)/mutual-info.json
+js-program-transitions-json := $(temp-resource-dir)/js-program-transitions.json
+
 transitions-js := $(resource-dir)/transitions.js
-transitions-json := $(resource-dir)/transitions.json
 transitions-samples-js := $(resource-dir)/transitions-samples.js
-transitions-samples-json := $(resource-dir)/transitions-samples.json
 mutual-info-js := $(resource-dir)/mutual-info.js
-mutual-info-json := $(resource-dir)/mutual-info.json
 js-program-transitions-js := $(resource-dir)/js-program-transitions.js
-js-program-transitions-json := $(resource-dir)/js-program-transitions.json
 
 ### Definitions for Figwheel.
 

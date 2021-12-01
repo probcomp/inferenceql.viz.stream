@@ -7,9 +7,26 @@
 
 (def column-list (keep (set (keys schema)) col-ordering))
 
-(defn panel []
-  (let [iteration @(rf/subscribe [:control/iteration])
-        col-selection @(rf/subscribe [:control/col-selection])
+(defn iteration []
+  (let [iteration @(rf/subscribe [:control/iteration])]
+    [h-box
+     :children [[label :label "Number of Patients:"]
+                [gap :size "10px"]
+                [box
+                 :style {:padding-top "3px"}
+                 :child [slider
+                         :min 0
+                         :max (dec num-transitions)
+                         :model iteration
+                         :on-change (fn [iter]
+                                      (rf/dispatch [:control/clear-cluster-selection])
+                                      (rf/dispatch [:control/set-iteration iter]))]]
+                [gap :size "10px"]
+                [label :label (inc iteration)]]]))
+
+
+(defn plot-options []
+  (let [col-selection @(rf/subscribe [:control/col-selection])
         plot-type @(rf/subscribe [:control/plot-type])
         marginal-types @(rf/subscribe [:control/marginal-types])
         show-plot-options @(rf/subscribe [:control/show-plot-options])
@@ -18,23 +35,8 @@
     [v-box
      :padding "0px 0px 0px 0px"
      :margin "0px 0px 0px 0px"
-     :children [[h-box
-                 :children [[label :label "Number of Patients:"]
-                            [gap :size "10px"]
-                            [box
-                             :style {:padding-top "3px"}
-                             :child [slider
-                                     :min 0
-                                     :max (dec num-transitions)
-                                     :model iteration
-                                     :on-change (fn [iter]
-                                                  (rf/dispatch [:control/clear-cluster-selection])
-                                                  (rf/dispatch [:control/set-iteration iter]))]]
-                            [gap :size "10px"]
-                            [label :label (inc iteration)]]]
-                [gap :size "15px"]
-                [hyperlink :label (if show-plot-options "hide" "Plot options")
-                           :on-click #(rf/dispatch [:control/toggle-plot-options])]
+     :children [[hyperlink :label (if show-plot-options "hide" "Plot options")
+                 :on-click #(rf/dispatch [:control/toggle-plot-options])]
                 [v-box
                  :style {:display (if show-plot-options "flex" "none")}
                  :children [[gap :size "10px"]
@@ -88,7 +90,6 @@
                                                  :choices (vec (for [c column-list]
                                                                  {:id c :label (name c)}))
                                                  :model col-selection
-                                                 :on-change #(rf/dispatch [:control/select-cols %])]]]]]]]]))
-
-
+                                                 :on-change #(rf/dispatch [:control/select-cols %])]]]]
+                            [gap :size "50px"]]]]]))
 

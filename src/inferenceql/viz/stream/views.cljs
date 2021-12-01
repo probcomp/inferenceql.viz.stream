@@ -14,8 +14,7 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
     [v-box
-     :children [
-                [box
+     :children [[box
                  :style {:top 0
                          :position "sticky"
                          :padding "20px 20px 20px 20px"
@@ -24,7 +23,7 @@
                          :box-shadow (str "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px, "
                                           "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
                                           "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
-                 :child [control/panel]]
+                 :child [control/iteration]]
                 [v-box
                  :margin "20px 20px 20px 20px"
                  :children [
@@ -41,6 +40,7 @@
                                         [mi-plot mutual-info iteration]]]
 
                             [h-box :children [[:h4 "Select vs. Simulate"]]]
+                            [control/plot-options]
                             [select-vs-simulate-plot cluster-selected
                              cluster-selected-click-count iteration]
                             [gap :size "40px"]

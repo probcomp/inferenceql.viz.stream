@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box box gap info-button]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]
@@ -27,26 +27,41 @@
                 [v-box
                  :margin "20px 20px 20px 20px"
                  :children [
-                            [h-box :children [[:h4 "Data Table"]
-                                              [gap :size "5px"]
-                                              [info-button :info "This is the ..."]]]
+                            ;; Section 1
+                            [h-box
+                             :children [[title :level :level2 :label "Data Table"]
+                                        [gap :size "5px"]
+                                        [info-button
+                                         :style {:margin-top "8px"}
+                                         :info "This is the ..."]]]
+                            [gap :size "2px"]
                             [data-table iteration cluster-selected]
-                            [gap :size "10px"]
+                            [gap :size "20px"]
 
-                            [h-box :children [[:h4 "Ensemble"]
-                                              [gap :size "5px"]
-                                              [info-button :info "This is the ..."]]]
-                            [v-box
+                            ;; Section 2
+                            [h-box
+                             :children [[title :level :level2 :label "Ensemble"]
+                                        [gap :size "5px"]
+                                        [info-button
+                                         :style {:margin-top "8px"}
+                                         :info "This is the ..."]]]
+                            [h-box
                              :children [[mi-plot mutual-info iteration]]]
-                            [h-box :children [[:h4 "Select vs. Simulate"]
-                                              [gap :size "5px"]
-                                              [info-button :info "This is the ..."]]]
+
+                            ;; Section 3
+                            [h-box
+                             :children [[title :level :level2 :label "Select vs. Simulate"]
+                                        [gap :size "5px"]
+                                        [info-button
+                                         :style {:margin-top "8px"}
+                                         :info "This is the ..."]]]
                             [control/plot-options]
                             [select-vs-simulate-plot cluster-selected
                              cluster-selected-click-count iteration]
                             [gap :size "40px"]
 
-                            [h-box :children [[:h4 "Model programs"]]]
+                            ;; Section 4
+                            [h-box :children [[title :level :level2 :label "Model programs"]]]
                             [h-box
                              :gap "50px"
                              :children [[js-model 0 iteration cluster-selected]

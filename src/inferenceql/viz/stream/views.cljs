@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box gap]]
+  (:require [re-com.core :refer [v-box h-box box gap]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]
@@ -14,11 +14,20 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
     [v-box
-     :children [[v-box
-                 :margin "20px"
+     :children [
+                [box
+                 :style {:top 0
+                         :position "sticky"
+                         :padding "20px 20px 20px 20px"
+                         :background "white"
+                         :z-index 10000
+                         :box-shadow (str "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px, "
+                                          "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
+                                          "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
+                 :child [control/panel]]
+                [v-box
+                 :margin "0px 20px 20px 20px"
                  :children [[data-table iteration cluster-selected]
-                            [gap :size "10px"]
-                            [control/panel]
                             [gap :size "10px"]
                             [h-box
                              :children [[v-box

@@ -16,7 +16,7 @@
         mi-threshold @(rf/subscribe [:control/mi-threshold])
         mi-bounds @(rf/subscribe [:control/mi-bounds])]
     [v-box
-     :padding "20px 20px 10px 0px"
+     :padding "0px 0px 0px 0px"
      :margin "0px 0px 0px 0px"
      :children [[h-box
                  :children [[label :label "Number of Patients:"]
@@ -35,10 +35,10 @@
                 [gap :size "15px"]
                 [hyperlink :label (if show-plot-options "hide" "Plot options")
                            :on-click #(rf/dispatch [:control/toggle-plot-options])]
-                [gap :size "10px"]
                 [v-box
                  :style {:display (if show-plot-options "flex" "none")}
-                 :children [#_[h-box
+                 :children [[gap :size "10px"]
+                            #_[h-box
                                :children [[label :label "Plot type:"]
                                           [gap :size "10px"]
                                           [v-box

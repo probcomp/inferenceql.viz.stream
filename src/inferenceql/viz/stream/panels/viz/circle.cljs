@@ -4,6 +4,7 @@
   "Raw vega spec for circle viz."
   [tree dependencies extent rotate k]
   {:$schema "https://vega.github.io/schema/vega/v5.json",
+   :title "Column dependencies"
    :width 400,
    :height 400,
    :padding 10,

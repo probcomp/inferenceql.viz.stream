@@ -26,22 +26,26 @@
                                           "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
                  :child [control/panel]]
                 [v-box
-                 :margin "0px 20px 20px 20px"
-                 :children [[data-table iteration cluster-selected]
+                 :margin "20px 20px 20px 20px"
+                 :children [
+                            [h-box :children [[:h4 "Data Table"]]]
+                            [data-table iteration cluster-selected]
                             [gap :size "10px"]
-                            [h-box
-                             :children [[v-box
-                                         :children [[select-vs-simulate-plot cluster-selected
-                                                     cluster-selected-click-count iteration]]]
-                                        [gap :size "50px"]
-                                        [v-box
-                                         :children [[:h5
-                                                     {:style {:color "black"
-                                                              :font-weight "bold"
-                                                              :text-align "center"}}
-                                                     "Column dependencies"]
-                                                    [mi-plot mutual-info iteration]]]]]
-                            [gap :size "50px"]
+
+                            [h-box :children [[:h4 "Ensemble"]]]
+                            [v-box
+                             :children [[:h5 {:style {:color "black"
+                                                      :font-weight "bold"
+                                                      :text-align "left"}}
+                                         "Column dependencies"]
+                                        [mi-plot mutual-info iteration]]]
+
+                            [h-box :children [[:h4 "Select vs. Simulate"]]]
+                            [select-vs-simulate-plot cluster-selected
+                             cluster-selected-click-count iteration]
+                            [gap :size "40px"]
+
+                            [h-box :children [[:h4 "Model programs"]]]
                             [h-box
                              :gap "50px"
                              :children [[js-model 0 iteration cluster-selected]

@@ -82,6 +82,7 @@
                              :children [[model-summaries iteration]
                                         [gap :size "30px"]
                                         [mi-plot mutual-info iteration]]]
+                            [gap :size "20px"]
 
                             ;; Section 3
                             [h-box

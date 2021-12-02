@@ -68,6 +68,15 @@ div {
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
+/* --------------- tiny js-model --------------- */
+
+.tiny-js-model {
+  cursor: pointer;
+}
+
+.tiny-js-model:hover {
+  background-color: lightgrey;
+}
 
 /* --------------- js-model program cluster selection --------------- */
 

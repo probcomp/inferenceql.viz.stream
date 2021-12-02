@@ -212,17 +212,19 @@
      :children [[v-box
                  :padding "10px"
                  :height "150px"
-                 :style {:font-size "12px"
+                 :style {:font-size "11px"
                          :background-color "whitesmoke"}
                  :gap "10px"
                  :children (for [cg column-groupings]
                              (let [cg (map name cg)]
-                               [:div (string/join ", " cg)]))]
+                               [:span (string/join ", " cg)]))]
                 [line]
                 [:pre {:style {:border "none"
-                               :margin "0px"}}
+                               :margin "0px"}
+                       :class "tiny-js-model"}
                  [:div {:style {:font-size "5px"
                                 :height "400px"
                                 :overflow "hidden"}
+                        :onClick #(.log js/console "hello")
                         :dangerouslySetInnerHTML {:__html highlighted-html}}]]]]))
 

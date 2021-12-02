@@ -59,6 +59,17 @@
 (def xcat-models (->clj js/transitions))
 (def js-program-transitions (->clj js/js_program_transitions))
 
+(defn xcat-model
+  "Reifies model at given iteration and model-id."
+  [iteration model-id]
+  (let [t-string (get-in xcat-models [iteration model-id])
+        xcat-latents (read-transit-string t-string)
+        {:keys [latents spec num-rows]} xcat-latents
+
+        data (zipmap (range) (take num-rows rows))
+        options {:options (get-in config [:transitions :options])}]
+    (xcat/construct-xcat-from-latents spec latents data options)))
+
 ;;; Secondary defs built off of xcat model iterations.
 
 (def num-transitions

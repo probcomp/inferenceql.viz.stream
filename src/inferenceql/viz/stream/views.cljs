@@ -100,9 +100,9 @@
                             [gap :size "40px"]
 
                             ;; Section 4
-                            [h-box :children [[title :level :level2 :label "Model programs"]]]
-                            [h-box
-                             :gap "50px"
-                             :children [[js-model 0 iteration cluster-selected]
-                                        [js-model 1 iteration cluster-selected]
-                                        [js-model 2 iteration cluster-selected]]]]]]]))
+                            #_[h-box :children [[title :level :level2 :label "Model programs"]]]
+                            #_[h-box
+                               :gap "50px"
+                               :children [[js-model 0 iteration cluster-selected]
+                                          [js-model 1 iteration cluster-selected]
+                                          [js-model 2 iteration cluster-selected]]]]]]]))

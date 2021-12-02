@@ -98,13 +98,4 @@
                             #_[control/plot-options]
                             [gap :size "5px"]
                             [select-vs-simulate-plot cluster-selected
-                             cluster-selected-click-count iteration]
-                            [gap :size "40px"]
-
-                            ;; Section 4
-                            #_[h-box :children [[title :level :level2 :label "Model programs"]]]
-                            #_[h-box
-                               :gap "50px"
-                               :children [[js-model 0 iteration cluster-selected]
-                                          [js-model 1 iteration cluster-selected]
-                                          [js-model 2 iteration cluster-selected]]]]]]]))
+                             cluster-selected-click-count iteration]]]]]))

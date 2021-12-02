@@ -220,6 +220,7 @@
                                [:span (string/join ", " cg)]))]
                 [line]
                 [:pre {:style {:border "none"
+                               :border-radius "0px"
                                :margin "0px"}
                        :class "tiny-js-model"}
                  [:div {:style {:font-size "5px"

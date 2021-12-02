@@ -12,7 +12,10 @@
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
             [inferenceql.viz.config :refer [config]]
-            [inferenceql.viz.stream.store :refer [js-program-transitions]]))
+            [inferenceql.viz.stream.store :refer [js-program-transitions xcat-model]]
+            [re-com.core :refer [v-box h-box box gap title info-button line hyperlink]]
+            [medley.core :as medley]
+            [clojure.string :as string]))
 
 ;; We are using the minimal version of highlight.js where
 ;; every language used has to be registered individually.
@@ -196,13 +199,30 @@
 
 (defn tiny-js-model [model-num iteration]
   (let [js-model-text (get-in js-program-transitions [iteration model-num])
+        xcat (xcat-model iteration model-num)
+        column-groupings (->> (get-in xcat [:latents :z])
+                              (group-by val)
+                              (medley/map-vals #(map first %))
+                              (sort-by key)
+                              (map second)
+                              (map sort))
         highlighted-html (highlight js-model-text)]
-    [:pre
-     {:style {:border "none"
-              :margin "0px"}}
-     [:div {:style {:font-size "5px"
-                    :height "400px"
-                    :width "300px"
-                    :overflow "hidden"}
-            :dangerouslySetInnerHTML {:__html highlighted-html}}]]))
+    [v-box
+     :width "310px"
+     :children [[v-box
+                 :padding "10px"
+                 :height "150px"
+                 :style {:font-size "12px"
+                         :background-color "whitesmoke"}
+                 :gap "10px"
+                 :children (for [cg column-groupings]
+                             (let [cg (map name cg)]
+                               [:div (string/join ", " cg)]))]
+                [line]
+                [:pre {:style {:border "none"
+                               :margin "0px"}}
+                 [:div {:style {:font-size "5px"
+                                :height "400px"
+                                :overflow "hidden"}
+                        :dangerouslySetInnerHTML {:__html highlighted-html}}]]]]))
 

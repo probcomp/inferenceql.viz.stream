@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box box gap title info-button]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]
@@ -33,8 +33,22 @@
                                         [gap :size "5px"]
                                         [info-button
                                          :style {:margin-top "8px"}
-                                         :info "This is the ..."]]]
-                            [gap :size "2px"]
+                                         :info "This is the ..."]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                                         :label "hide" :on-click nil]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                                         :label "small" :on-click nil
+                                         :style {:padding "2px 10px"
+                                                 :background-color "whitesmoke"}]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                                         :label "large" :on-click nil]]]
+                            [gap :size "5px"]
                             [data-table iteration cluster-selected]
                             [gap :size "20px"]
 
@@ -44,7 +58,16 @@
                                         [gap :size "5px"]
                                         [info-button
                                          :style {:margin-top "8px"}
-                                         :info "This is the ..."]]]
+                                         :info "This is the ..."]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                                         :label "hide" :on-click nil]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                                         :label "options" :on-click nil]]]
+
                             [h-box
                              :children [[mi-plot mutual-info iteration]]]
 
@@ -54,8 +77,14 @@
                                         [gap :size "5px"]
                                         [info-button
                                          :style {:margin-top "8px"}
-                                         :info "This is the ..."]]]
-                            [control/plot-options]
+                                         :info "This is the ..."]
+                                        [gap :size "20px"]
+                                        [hyperlink
+                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                                         :label "options" :on-click nil]]]
+                            ;; TODO: fix plot options.
+                            #_[control/plot-options]
+                            [gap :size "5px"]
                             [select-vs-simulate-plot cluster-selected
                              cluster-selected-click-count iteration]
                             [gap :size "40px"]

@@ -198,6 +198,8 @@
   (let [js-model-text (get-in js-program-transitions [iteration model-num])
         highlighted-html (highlight js-model-text)]
     [:pre
+     {:style {:border "none"
+              :margin "0px"}}
      [:div {:style {:font-size "5px"
                     :height "400px"
                     :width "300px"

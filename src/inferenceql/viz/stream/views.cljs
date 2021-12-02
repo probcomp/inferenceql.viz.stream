@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box box gap title info-button hyperlink]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button line hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model]]
@@ -12,7 +12,9 @@
    :children [[title :level :level3 :label "Model summaries"]
               [h-box
                :children [[tiny-js-model 0 iteration]
+                          [line]
                           [tiny-js-model 1 iteration]
+                          [line]
                           [tiny-js-model 2 iteration]]]]])
 
 (defn app

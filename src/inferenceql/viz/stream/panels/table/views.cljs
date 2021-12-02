@@ -32,7 +32,7 @@
                      :width "1390px"
                      :cols (map name modeled-cols)
                      :cells (cells-fn xcat-model cluster-selected)}]
-    [:div {:style {:overflow "hidden"
+    [:div {:style {;;:overflow "hidden"
                    :border-radius "4px"
                    :width "1390px"}}
      [:div

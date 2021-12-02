@@ -95,18 +95,32 @@
                  cluster-selected-click-count iteration]]]))
 
 
-(defn model-page []
-  (let [iteration nil
-        model-num nil]
-    [:div
-     [hyperlink :label "back" :on-click #(rf/dispatch [:app/set-page :home-page])]
-     ;; TODO: add js-program
-     ;; TODO: add table
-     [:div "hello"]]))
+(defn model-page [model-num]
+  (let [iteration @(rf/subscribe [:control/iteration])
+        cluster-selected @(rf/subscribe [:control/cluster-selected])
+        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
+    [v-box
+     :margin "40px"
+     :children [[hyperlink
+                 :label "« back"
+                 :style {:font-size "16px"}
+                 :on-click #(do
+                              (rf/dispatch [:app/set-page [:home-page]])
+                              (rf/dispatch [:control/clear-cluster-selection]))]
+                [gap :size "20px"]
+                [h-box
+                 :children [[box
+                             :width "640px"
+                             :style {:overflow "hidden"
+                                     :border-radius "4px"}
+                             :child [js-model model-num iteration cluster-selected]]
+                            [gap :size "50px"]
+                            [data-table iteration cluster-selected]]]]]))
 
 (defn app
   []
-  (let [page @(rf/subscribe [:app/page])]
+  (let [page-vector @(rf/subscribe [:app/page])
+        page (first page-vector)]
     [v-box
      :children [[box
                  :style {:top 0
@@ -120,5 +134,5 @@
                  :child [control/iteration]]
                 (case page
                   :home-page [home-page]
-                  :model-page [model-page])]]))
+                  :model-page [model-page (second page-vector)])]]))
 

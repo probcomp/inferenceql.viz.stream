@@ -12,5 +12,5 @@
   and panel specific dbs all merged together."
   []
   (let [dbs [control-panel/default-db
-             {:app {:page :home-page}}]]
+             {:app {:page [:home-page]}}]]
     (apply merge dbs)))

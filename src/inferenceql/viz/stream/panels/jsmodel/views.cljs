@@ -226,6 +226,6 @@
                  [:div {:style {:font-size "5px"
                                 :height "400px"
                                 :overflow "hidden"}
-                        :onClick #(rf/dispatch [:app/set-page :model-page])
+                        :onClick #(rf/dispatch [:app/set-page [:model-page model-num]])
                         :dangerouslySetInnerHTML {:__html highlighted-html}}]]]]))
 

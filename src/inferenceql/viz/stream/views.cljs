@@ -7,6 +7,27 @@
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]))
 
+(defn model-summaries []
+  [v-box
+   :children [[title :level :level3 :label "Models"]
+              [h-box
+               :children [
+                          [:div
+                           {:style {:height "400px"
+                                    :width "300px"
+                                    :background-color "orange"}}
+                           "one"]
+                          [:div
+                           {:style {:height "400px"
+                                    :width "300px"
+                                    :background-color "lightblue"}}
+                           "two"]
+                          [:div
+                           {:style {:height "400px"
+                                    :width "300px"
+                                    :background-color "lightgreen"}}
+                           "three"]]]]])
+
 (defn app
   []
   (let [iteration @(rf/subscribe [:control/iteration])
@@ -69,7 +90,9 @@
                                          :label "options" :on-click nil]]]
 
                             [h-box
-                             :children [[mi-plot mutual-info iteration]]]
+                             :children [[model-summaries]
+                                        [gap :size "30px"]
+                                        [mi-plot mutual-info iteration]]]
 
                             ;; Section 3
                             [h-box

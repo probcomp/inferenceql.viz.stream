@@ -11,23 +11,9 @@
   [v-box
    :children [[title :level :level3 :label "Model summaries"]
               [h-box
-               :children [
-                          [:div
-                           {:style {:height "400px"
-                                    :width "300px"
-                                    :background-color "orange"}}
-                           [tiny-js-model 0 iteration]]
-                          [:div
-                           {:style {:height "400px"
-                                    :width "300px"
-                                    :background-color "lightblue"}}
-
-                           [tiny-js-model 1 iteration]]
-                          [:div
-                           {:style {:height "400px"
-                                    :width "300px"
-                                    :background-color "lightgreen"}}
-                           [tiny-js-model 2 iteration]]]]]])
+               :children [[tiny-js-model 0 iteration]
+                          [tiny-js-model 1 iteration]
+                          [tiny-js-model 2 iteration]]]]])
 
 (defn app
   []
@@ -91,7 +77,7 @@
                                          :label "options" :on-click nil]]]
 
                             [h-box
-                             :children [[model-summaries]
+                             :children [[model-summaries iteration]
                                         [gap :size "30px"]
                                         [mi-plot mutual-info iteration]]]
 

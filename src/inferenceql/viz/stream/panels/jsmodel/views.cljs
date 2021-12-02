@@ -195,5 +195,12 @@
     [js-code-block model-num js-model-text cluster-selected]))
 
 (defn tiny-js-model [model-num iteration]
-  [:span "foobar"])
+  (let [js-model-text (get-in js-program-transitions [iteration model-num])
+        highlighted-html (highlight js-model-text)]
+    [:pre
+     [:div {:style {:font-size "5px"
+                    :height "400px"
+                    :width "300px"
+                    :overflow "hidden"}
+            :dangerouslySetInnerHTML {:__html highlighted-html}}]]))
 

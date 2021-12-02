@@ -11,5 +11,6 @@
   It consists of keys and values from the general db
   and panel specific dbs all merged together."
   []
-  (let [dbs [control-panel/default-db]]
+  (let [dbs [control-panel/default-db
+             {:app {:page :home-page}}]]
     (apply merge dbs)))

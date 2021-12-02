@@ -21,12 +21,92 @@
                           [line]
                           [tiny-js-model 2 iteration]]]]])
 
-(defn app
+(defn home-page
   []
   (let [iteration @(rf/subscribe [:control/iteration])
         plot-type @(rf/subscribe [:control/plot-type])
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
+    [v-box
+     :margin "20px 20px 20px 20px"
+     :children [
+                ;; Section 1
+                [h-box
+                 :children [[title :level :level2 :label "Data Table"]
+                            [gap :size "5px"]
+                            [info-button
+                             :style {:margin-top "8px"}
+                             :info "This is the ..."]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                             :label "hide" :on-click nil]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                             :label "small" :on-click nil
+                             :style {:padding "2px 10px"
+                                     :background-color "whitesmoke"}]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                             :label "large" :on-click nil]]]
+                [gap :size "5px"]
+                [data-table iteration cluster-selected]
+                [gap :size "20px"]
+
+                ;; Section 2
+                [h-box
+                 :children [[title :level :level2 :label "Ensemble"]
+                            [gap :size "5px"]
+                            [info-button
+                             :style {:margin-top "8px"}
+                             :info "This is the ..."]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                             :label "hide" :on-click nil]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                             :label "options" :on-click nil]]]
+
+                [h-box
+                 :children [[model-summaries iteration]
+                            [gap :size "30px"]
+                            [mi-plot mutual-info iteration]]]
+                [gap :size "20px"]
+
+                ;; Section 3
+                [h-box
+                 :children [[title :level :level2 :label "Select vs. Simulate"]
+                            [gap :size "5px"]
+                            [info-button
+                             :style {:margin-top "8px"}
+                             :info "This is the ..."]
+                            [gap :size "20px"]
+                            [hyperlink
+                             :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                             :label "options" :on-click nil]]]
+                ;; TODO: fix plot options.
+                #_[control/plot-options]
+                [gap :size "5px"]
+                [select-vs-simulate-plot cluster-selected
+                 cluster-selected-click-count iteration]]]))
+
+
+(defn model-page []
+  (let [iteration nil
+        model-num nil]
+    [:div
+     [hyperlink :label "back" :on-click #(rf/dispatch [:app/set-page :home-page])]
+     ;; TODO: add js-program
+     ;; TODO: add table
+     [:div "hello"]]))
+
+(defn app
+  []
+  (let [page @(rf/subscribe [:app/page])]
     [v-box
      :children [[box
                  :style {:top 0
@@ -38,69 +118,7 @@
                                           "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
                                           "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
                  :child [control/iteration]]
-                [v-box
-                 :margin "20px 20px 20px 20px"
-                 :children [
-                            ;; Section 1
-                            [h-box
-                             :children [[title :level :level2 :label "Data Table"]
-                                        [gap :size "5px"]
-                                        [info-button
-                                         :style {:margin-top "8px"}
-                                         :info "This is the ..."]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                                         :label "hide" :on-click nil]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                                         :label "small" :on-click nil
-                                         :style {:padding "2px 10px"
-                                                 :background-color "whitesmoke"}]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                                         :label "large" :on-click nil]]]
-                            [gap :size "5px"]
-                            [data-table iteration cluster-selected]
-                            [gap :size "20px"]
+                (case page
+                  :home-page [home-page]
+                  :model-page [model-page])]]))
 
-                            ;; Section 2
-                            [h-box
-                             :children [[title :level :level2 :label "Ensemble"]
-                                        [gap :size "5px"]
-                                        [info-button
-                                         :style {:margin-top "8px"}
-                                         :info "This is the ..."]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                                         :label "hide" :on-click nil]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                                         :label "options" :on-click nil]]]
-
-                            [h-box
-                             :children [[model-summaries iteration]
-                                        [gap :size "30px"]
-                                        [mi-plot mutual-info iteration]]]
-                            [gap :size "20px"]
-
-                            ;; Section 3
-                            [h-box
-                             :children [[title :level :level2 :label "Select vs. Simulate"]
-                                        [gap :size "5px"]
-                                        [info-button
-                                         :style {:margin-top "8px"}
-                                         :info "This is the ..."]
-                                        [gap :size "20px"]
-                                        [hyperlink
-                                         :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                                         :label "options" :on-click nil]]]
-                            ;; TODO: fix plot options.
-                            #_[control/plot-options]
-                            [gap :size "5px"]
-                            [select-vs-simulate-plot cluster-selected
-                             cluster-selected-click-count iteration]]]]]))

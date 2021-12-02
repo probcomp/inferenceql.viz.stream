@@ -25,3 +25,17 @@
   :<-[:control/cluster-selected]
   (fn [[model cluster-selected] _]
     (set (columns-in-view model (:view-id cluster-selected)))))
+
+;; Page selection
+
+(rf/reg-sub
+  :app/page
+  (fn [db _]
+    (get-in db [:app :page])))
+
+(rf/reg-event-db
+  :app/set-page
+  event-interceptors
+  (fn [db [_ new-val]]
+    (assoc-in db [:app :page] new-val)))
+

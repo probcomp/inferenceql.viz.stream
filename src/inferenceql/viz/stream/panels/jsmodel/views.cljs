@@ -193,3 +193,7 @@
   [model-num iteration cluster-selected]
   (let [js-model-text (get-in js-program-transitions [iteration model-num])]
     [js-code-block model-num js-model-text cluster-selected]))
+
+(defn tiny-js-model [model-num iteration]
+  [:span "foobar"])
+

@@ -2,31 +2,32 @@
   (:require [re-com.core :refer [v-box h-box box gap title info-button hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
-            [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]
+            [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]))
 
-(defn model-summaries []
+(defn model-summaries [iteration]
   [v-box
-   :children [[title :level :level3 :label "Models"]
+   :children [[title :level :level3 :label "Model summaries"]
               [h-box
                :children [
                           [:div
                            {:style {:height "400px"
                                     :width "300px"
                                     :background-color "orange"}}
-                           "one"]
+                           [tiny-js-model 0 iteration]]
                           [:div
                            {:style {:height "400px"
                                     :width "300px"
                                     :background-color "lightblue"}}
-                           "two"]
+
+                           [tiny-js-model 1 iteration]]
                           [:div
                            {:style {:height "400px"
                                     :width "300px"
                                     :background-color "lightgreen"}}
-                           "three"]]]]])
+                           [tiny-js-model 2 iteration]]]]]])
 
 (defn app
   []

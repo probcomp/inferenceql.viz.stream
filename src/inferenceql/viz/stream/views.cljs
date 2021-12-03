@@ -17,9 +17,7 @@
                :style {:border-radius "4px"
                        :overflow "hidden"}
                :children [[tiny-js-model 0 iteration]
-                          [line]
                           [tiny-js-model 1 iteration]
-                          [line]
                           [tiny-js-model 2 iteration]]]]])
 
 (defn home-page

@@ -228,7 +228,6 @@
                  :children (for [cg column-groupings]
                              (let [cg (map name cg)]
                                [:span (string/join ", " cg)]))]
-                [line]
                 [:pre {:style {:border "none"
                                :border-radius "0px"
                                :margin "0px"}

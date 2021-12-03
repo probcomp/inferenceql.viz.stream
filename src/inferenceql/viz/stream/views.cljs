@@ -124,7 +124,9 @@
     [v-box
      :children [[box
                  :style {:top 0
-                         :position "sticky"
+                         :left 0
+                         :right 0
+                         :position "fixed"
                          :padding "20px 20px 20px 20px"
                          :background "white"
                          :z-index 10000
@@ -132,7 +134,8 @@
                                           "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
                                           "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
                  :child [control/iteration]]
-                (case page
-                  :home-page [home-page]
-                  :model-page [model-page (second page-vector)])]]))
+                [box :margin "60px 0px 0px 0px"
+                     :child (case page
+                              :home-page [home-page]
+                              :model-page [model-page (second page-vector)])]]]))
 

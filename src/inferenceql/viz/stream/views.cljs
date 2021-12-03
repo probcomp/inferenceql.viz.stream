@@ -52,7 +52,8 @@
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                              :label "large" :on-click nil]]]
                 [gap :size "5px"]
-                [data-table iteration cluster-selected {}]
+                [box :width "1390px"
+                     :child [data-table iteration cluster-selected {}]]
                 [gap :size "20px"]
 
                 ;; Section 2

@@ -8,6 +8,8 @@
             [hickory.zip]
             [hickory.render]
             [goog.string :as gstring]
+            [goog.style :as gstyle]
+            [goog.dom :as gdom]
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
@@ -182,6 +184,14 @@
         (.addEventListener (:code-elem @dom-nodes)
                            "click"
                            (fn [event]
+                             ;; TODO: Add comment.
+                             (when (not= (.-target event) (:code-elem @dom-nodes))
+                               (let [clicked-node (.-target event)
+                                     cluster-node (gdom/getAncestorByClass clicked-node "cluster-clickable")
+                                     pos (gstyle/getRelativePosition cluster-node
+                                                                     (:code-elem @dom-nodes))]
+                                 (rf/dispatch [:control/set-cluster-selected-y-offset (.-y pos)])))
+                             ;; TODO: Add comment.
                              (when (= (.-target event) (:code-elem @dom-nodes))
                                (rf/dispatch [:control/clear-cluster-selection])))))
 

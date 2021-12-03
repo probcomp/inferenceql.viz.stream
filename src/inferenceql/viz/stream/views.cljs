@@ -99,7 +99,9 @@
 (defn model-page [model-num]
   (let [iteration @(rf/subscribe [:control/iteration])
         cluster-selected @(rf/subscribe [:control/cluster-selected])
-        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
+        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
+        cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])]
+
     [v-box
      :margin "30px 20px"
      :children [[hyperlink
@@ -115,11 +117,15 @@
                              :style {:overflow "hidden"
                                      :border-radius "4px"}
                              :child [js-model model-num iteration cluster-selected]]
-                            [gap :size "50px"]
+                            [gap :size "20px"]
                             (when cluster-selected
-                              [select-vs-simulate-plot cluster-selected
-                               cluster-selected-click-count iteration])
-                            [gap :size "50px"]
+                              (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
+                                [box
+                                 :style {:padding-top (str y-offset "px")}
+                                 :class "smalldot"
+                                 :child [select-vs-simulate-plot cluster-selected
+                                         cluster-selected-click-count iteration]]))
+                            [gap :size "20px"]
                             [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))
 
 (defn app

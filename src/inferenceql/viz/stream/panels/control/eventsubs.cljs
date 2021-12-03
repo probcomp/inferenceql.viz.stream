@@ -80,6 +80,19 @@
   (fn [db [_]]
     (update db :control-panel dissoc :cluster-selected)))
 
+;; Cluster selected y-offset.
+
+(rf/reg-sub
+  :control/cluster-selected-y-offset
+  (fn [db _]
+    (get-in db [:control-panel :cluster-selected-y-offset])))
+
+(rf/reg-event-db
+  :control/set-cluster-selected-y-offset
+  event-interceptors
+  (fn [db [_ new-val]]
+    (assoc-in db [:control-panel :cluster-selected-y-offset] new-val)))
+
 ;; Show plot options.
 
 (rf/reg-sub

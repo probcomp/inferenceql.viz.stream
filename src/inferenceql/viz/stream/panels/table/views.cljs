@@ -24,16 +24,13 @@
 
 (defn data-table
   "Reagent component for data table."
-  [iteration cluster-selected]
+  [iteration cluster-selected options]
   (let [xcat-model @(rf/subscribe [:app/model])
         num-points (nth num-rows-at-iter iteration)
         modeled-cols (-> (take (nth columns-at-iter iteration) col-ordering))
         hot-options {:height "400px"
                      :width "1390px"
                      :cols (map name modeled-cols)
-                     :cells (cells-fn xcat-model cluster-selected)}]
-    [:div {:style {;;:overflow "hidden"
-                   :border-radius "4px"
-                   :width "1390px"}}
-     [:div
-      [handsontable {} (take num-points rows) hot-options false]]]))
+                     :cells (cells-fn xcat-model cluster-selected)}
+        hot-options (merge hot-options options)]
+    [handsontable {} (take num-points rows) hot-options false]))

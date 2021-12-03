@@ -52,7 +52,7 @@
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                              :label "large" :on-click nil]]]
                 [gap :size "5px"]
-                [data-table iteration cluster-selected]
+                [data-table iteration cluster-selected {}]
                 [gap :size "20px"]
 
                 ;; Section 2
@@ -100,7 +100,7 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
     [v-box
-     :margin "40px"
+     :margin "30px 20px"
      :children [[hyperlink
                  :label "« back"
                  :style {:font-size "16px"}
@@ -115,7 +115,7 @@
                                      :border-radius "4px"}
                              :child [js-model model-num iteration cluster-selected]]
                             [gap :size "50px"]
-                            [data-table iteration cluster-selected]]]]]))
+                            [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))
 
 (defn app
   []

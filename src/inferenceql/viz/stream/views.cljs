@@ -112,8 +112,8 @@
         [v-box
          :margin "30px 20px"
          :children [[hyperlink
-                     :label "« back"
-                     :style {:font-size "16px"}
+                     :label "« Back"
+                     :style {:font-size "24px"}
                      :on-click #(do
                                   (rf/dispatch [:app/set-page [:home-page]])
                                   (rf/dispatch [:control/clear-cluster-selection]))]

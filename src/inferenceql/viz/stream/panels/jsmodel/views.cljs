@@ -223,7 +223,7 @@
                  :padding "10px"
                  :height "150px"
                  :style {:font-size "11px"
-                         :background-color "whitesmoke"}
+                         :background-color "#fcfcfc"}
                  :gap "10px"
                  :children (for [cg column-groupings]
                              (let [cg (map name cg)]

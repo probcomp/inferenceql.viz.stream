@@ -5,7 +5,8 @@
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
-            [inferenceql.viz.stream.store :refer [mutual-info]]))
+            [inferenceql.viz.stream.store :refer [mutual-info]]
+            [reagent.core :as reagent]))
 
 (defn model-summaries [iteration]
   [v-box
@@ -97,36 +98,42 @@
 
 
 (defn model-page [model-num]
-  (let [iteration @(rf/subscribe [:control/iteration])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])
-        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
-        cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])]
+  (reagent/create-class
+   {:component-did-mount
+    (fn [this]
+      (.scrollTo js/window 0 0))
 
-    [v-box
-     :margin "30px 20px"
-     :children [[hyperlink
-                 :label "« back"
-                 :style {:font-size "16px"}
-                 :on-click #(do
-                              (rf/dispatch [:app/set-page [:home-page]])
-                              (rf/dispatch [:control/clear-cluster-selection]))]
-                [gap :size "20px"]
-                [h-box
-                 :children [[box
-                             :width "640px"
-                             :style {:overflow "hidden"
-                                     :border-radius "4px"}
-                             :child [js-model model-num iteration cluster-selected]]
-                            [gap :size "20px"]
-                            (when cluster-selected
-                              (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
-                                [box
-                                 :style {:padding-top (str y-offset "px")}
-                                 :class "smalldot"
-                                 :child [select-vs-simulate-plot cluster-selected
-                                         cluster-selected-click-count iteration]]))
-                            [gap :size "20px"]
-                            [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))
+    :reagent-render
+    (fn [model-num]
+      (let [iteration @(rf/subscribe [:control/iteration])
+            cluster-selected @(rf/subscribe [:control/cluster-selected])
+            cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
+            cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])]
+        [v-box
+         :margin "30px 20px"
+         :children [[hyperlink
+                     :label "« back"
+                     :style {:font-size "16px"}
+                     :on-click #(do
+                                  (rf/dispatch [:app/set-page [:home-page]])
+                                  (rf/dispatch [:control/clear-cluster-selection]))]
+                    [gap :size "20px"]
+                    [h-box
+                     :children [[box
+                                 :width "640px"
+                                 :style {:overflow "hidden"
+                                         :border-radius "4px"}
+                                 :child [js-model model-num iteration cluster-selected]]
+                                [gap :size "20px"]
+                                (when cluster-selected
+                                  (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
+                                    [box
+                                     :style {:padding-top (str y-offset "px")}
+                                     :class "smalldot"
+                                     :child [select-vs-simulate-plot cluster-selected
+                                             cluster-selected-click-count iteration]]))
+                                [gap :size "20px"]
+                                [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))}))
 
 (defn app
   []

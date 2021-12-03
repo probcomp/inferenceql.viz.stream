@@ -93,6 +93,19 @@
   (fn [db [_ new-val]]
     (assoc-in db [:control-panel :cluster-selected-y-offset] new-val)))
 
+;; Cluster simulation plots.
+
+(rf/reg-sub
+  :control/show-cluster-simulation-plots
+  (fn [db _]
+    (get-in db [:control-panel :show-cluster-simulation-plots])))
+
+(rf/reg-event-db
+  :control/set-cluster-simulation-plots
+  event-interceptors
+  (fn [db [_ new-val]]
+    (assoc-in db [:control-panel :show-cluster-simulation-plots] new-val)))
+
 ;; Show plot options.
 
 (rf/reg-sub

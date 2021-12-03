@@ -1,5 +1,5 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box box gap title info-button line hyperlink]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button checkbox line hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model]]
@@ -108,7 +108,8 @@
       (let [iteration @(rf/subscribe [:control/iteration])
             cluster-selected @(rf/subscribe [:control/cluster-selected])
             cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
-            cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])]
+            cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])
+            show-cluster-simulation-plots @(rf/subscribe [:control/show-cluster-simulation-plots])]
         [v-box
          :margin "30px 20px"
          :children [[hyperlink
@@ -117,7 +118,14 @@
                      :on-click #(do
                                   (rf/dispatch [:app/set-page [:home-page]])
                                   (rf/dispatch [:control/clear-cluster-selection]))]
-                    [gap :size "20px"]
+                    [h-box
+                     :style {:margin-left "460px"}
+                     :children [[checkbox :model show-cluster-simulation-plots
+                                 :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
+                                 :label "show simulation plots"]
+                                [gap :size "5px"]
+                                [info-button :info "This allows you to..."]]]
+                    [gap :size "5px"]
                     [h-box
                      :children [[box
                                  :width "640px"
@@ -125,7 +133,7 @@
                                          :border-radius "4px"}
                                  :child [js-model model-num iteration cluster-selected]]
                                 [gap :size "20px"]
-                                (when cluster-selected
+                                (when (and cluster-selected show-cluster-simulation-plots)
                                   (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
                                     [box
                                      :style {:padding-top (str y-offset "px")}

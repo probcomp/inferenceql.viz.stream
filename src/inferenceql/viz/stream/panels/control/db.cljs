@@ -18,7 +18,8 @@
                    :marginal-types #{:1D}
                    :show-plot-options false
                    :mi-bounds mi-bounds
-                   :mi-threshold mi-initial-threshold}})
+                   :mi-threshold mi-initial-threshold
+                   :show-cluster-simulation-plots false}})
 
 (s/def ::control-panel (s/keys :req-un [::iteration
                                         ::col-selection
@@ -36,6 +37,7 @@
                               (clojure.set/subset? % #{:1D :2D})))
 (s/def ::show-plot-options boolean?)
 (s/def ::mi-threshold number?)
+(s/def ::show-cluster-simulation-plots boolean?)
 
 (s/def ::cluster-selected (s/keys :req-un [::cluster-id ::view-id]))
 (s/def ::cluster-selected-click-count integer?)

@@ -116,6 +116,10 @@
                                      :border-radius "4px"}
                              :child [js-model model-num iteration cluster-selected]]
                             [gap :size "50px"]
+                            (when cluster-selected
+                              [select-vs-simulate-plot cluster-selected
+                               cluster-selected-click-count iteration])
+                            [gap :size "50px"]
                             [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))
 
 (defn app

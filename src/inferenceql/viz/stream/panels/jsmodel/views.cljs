@@ -228,7 +228,8 @@
                  :children (for [cg column-groupings]
                              (let [cg (map name cg)]
                                [:span (string/join ", " cg)]))]
-                [:pre {:style {:border "none"
+                [:pre {:style {:border "solid #7bb0db"
+                               :border-width "0px 0px 1px 0px"
                                :border-radius "0px"
                                :margin "0px"}
                        :class "tiny-js-model"}

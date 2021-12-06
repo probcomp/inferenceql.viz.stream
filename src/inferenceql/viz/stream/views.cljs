@@ -141,15 +141,17 @@
                                  :style {:overflow "hidden"
                                          :border-radius "4px"}
                                  :child [js-model model-num iteration cluster-selected]]
-                                [gap :size "20px"]
-                                (when (and cluster-selected show-cluster-simulation-plots)
+                                (if (and cluster-selected show-cluster-simulation-plots)
                                   (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
-                                    [box
-                                     :style {:padding-top (str y-offset "px")}
-                                     :class "smalldot"
-                                     :child [select-vs-simulate-plot cluster-selected
-                                             cluster-selected-click-count iteration]]))
-                                [gap :size "20px"]
+                                    [:<>
+                                     [gap :size "20px"]
+                                     [box
+                                      :style {:padding-top (str y-offset "px")}
+                                      :class "smalldot"
+                                      :child [select-vs-simulate-plot cluster-selected
+                                              cluster-selected-click-count iteration]]
+                                     [gap :size "20px"]])
+                                  [gap :size "30px"])
                                 [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]))}))
 
 (defn app

@@ -19,17 +19,17 @@ also set styles for */
 }
 
 body::-webkit-scrollbar {
-  width: 13px;
-  border-radius: 20px;
+  width: 10px;
+  /*border-radius: 20px;*/
 }
 
 body::-webkit-scrollbar:horizontal {
-  height: 13px;
-  border-radius: 20px;
+  height: 10px;
+  /*border-radius: 20px;*/
 }
 
 body::-webkit-scrollbar-thumb:horizontal, body::-webkit-scrollbar-thumb:vertical {
-  border-radius: 20px;
+  /*border-radius: 20px; */
 }
 
 div {

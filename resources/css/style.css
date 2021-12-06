@@ -43,6 +43,14 @@ div {
   background-repeat: repeat;
 }
 
+#table-container ::-webkit-scrollbar {
+  width: 3px;
+}
+
+#table-container ::-webkit-scrollbar:horizontal {
+  height: 3px;
+}
+
 .ht_master tr td {
   font-size: 13px;
 }

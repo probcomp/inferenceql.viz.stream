@@ -2,7 +2,7 @@
   (:require [re-com.core :refer [v-box h-box box gap title info-button checkbox line hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
-            [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model]]
+            [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]
@@ -20,7 +20,10 @@
                           [gap :size "5px"]
                           [tiny-js-model 1 iteration]
                           [gap :size "5px"]
-                          [tiny-js-model 2 iteration]]]]])
+                          [tiny-js-model 2 iteration]
+                          [gap :size "5px"]
+                          [tiny-js-model-placeholder 97]]]]])
+
 
 (defn home-page
   []

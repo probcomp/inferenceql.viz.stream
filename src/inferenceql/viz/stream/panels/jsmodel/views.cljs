@@ -15,7 +15,7 @@
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.store :refer [js-program-transitions xcat-model]]
-            [re-com.core :refer [v-box h-box box gap title info-button line hyperlink]]
+            [re-com.core :refer [v-box h-box box gap title info-button line hyperlink popover-tooltip]]
             [medley.core :as medley]
             [clojure.string :as string]))
 
@@ -210,7 +210,7 @@
 (defn column-grouping-chips
   [column-groupings]
   [v-box
-   :height "200px"
+   :height "150px"
    :style {:font-size "11px"
            :overflow "hidden"}
    :gap "10px"
@@ -219,6 +219,35 @@
                  [:div.column-grouping
                   (for [col cg]
                     [:div.column-chip col])]))])
+
+(defn tiny-js-model-placeholder [num-missing-models]
+  (let [show-tooltip (r/atom false)]
+    (fn [num-missing-models]
+      [v-box
+       :width "50px"
+       :children [[column-grouping-chips []]
+                  [popover-tooltip
+                   :position :right-center
+                   :width "200px"
+                   :showing? show-tooltip
+                   :label [:div
+                           {:style {:text-align "left"}}
+                           [:span (gstring/format "%s more models not shown here." num-missing-models)]
+                           [:br]
+                           [:br]
+                           [:span (gstring/format (str "All %s models are used to produce the column "
+                                                       "dependencies plot and the select vs. simulate "
+                                                       "plots below.")
+                                                  (+ num-missing-models 3))]]
+                   :anchor [:pre {:style {:border "solid #7bb0db"
+                                          :border-width "0px 0px 1px 0px"
+                                          :border-radius "0px"
+                                          :font-size "10px"
+                                          :margin "0px"
+                                          :height "420px"}
+                                  :on-mouse-over #(reset! show-tooltip true)
+                                  :on-mouse-out #(reset! show-tooltip false)
+                                  :class "tiny-js-model"}]]]])))
 
 (defn tiny-js-model [model-num iteration]
   (let [js-model-text (get-in js-program-transitions [iteration model-num])
@@ -231,7 +260,7 @@
                               (map sort))
         highlighted-html (highlight js-model-text)]
     [v-box
-     :width "310px"
+     :width "275px"
      :children [[column-grouping-chips column-groupings]
                 [:pre {:style {:border "solid #7bb0db"
                                :border-width "0px 0px 1px 0px"

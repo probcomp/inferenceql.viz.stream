@@ -264,7 +264,7 @@
      :children [[title
                  :level :level4
                  :style {:font-size "12px"}
-                 :label (gstring/format "Program %s, modeling dependencies" model-num)]
+                 :label (gstring/format "Program %s, modeling dependencies" (inc model-num))]
                 [gap :size "10px"]
                 [column-grouping-chips column-groupings]
                 [:pre {:style {:border "solid #7bb0db"

@@ -76,7 +76,13 @@
                 [h-box
                  :children [[model-summaries iteration]
                             [gap :size "30px"]
-                            [mi-plot mutual-info iteration]]]
+                            [v-box
+                             :children [[title
+                                         :level :level3 :label "Column dependencies"
+                                         :parts {:wrapper {:style {:align-self "center"}}}
+                                         :style {:text-align "center"}]
+
+                                        [mi-plot mutual-info iteration]]]]]
                 [gap :size "20px"]
 
                 ;; Section 3

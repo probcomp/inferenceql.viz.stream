@@ -10,10 +10,7 @@
 
 (defn model-summaries [iteration]
   [v-box
-   :children [[title
-               :level :level3
-               :label "Model summaries"]
-              [h-box
+   :children [[h-box
                :style {:border-radius "4px"
                        :overflow "hidden"}
                :children [[tiny-js-model 0 iteration]

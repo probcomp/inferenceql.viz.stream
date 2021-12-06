@@ -28,7 +28,7 @@
       ;; TODO: Make this faster by passing in nodes and edges as datasets.
       [vega-lite spec options nil nil nil])))
 
-(defn select-vs-simulate-plot
+(defn cluster-select-vs-simulate-plot
   "Reagent component for select-vs-simulate plot."
   [cluster-selected _click-count iteration]
   (let [spec @(rf/subscribe [:viz/spec])
@@ -36,30 +36,41 @@
         xcat-model @(rf/subscribe [:app/model])
 
         ;; Merge in the view-cluster information only when we have to.
-        all-samples (if cluster-selected
-                      (let [row-assignments (all-row-assignments xcat-model)
-                            view-key (keyword (str "view_" (:view-id cluster-selected)))
-                            num-rows (count (filter #(= (get % view-key)
-                                                        (:cluster-id cluster-selected))
-                                                    row-assignments))
-                            view-cluster-assignments (concat row-assignments (repeat {}))
-                            observed-samples (map merge observed-samples view-cluster-assignments)
+        all-samples (let [row-assignments (all-row-assignments xcat-model)
+                          view-key (keyword (str "view_" (:view-id cluster-selected)))
+                          num-rows (count (filter #(= (get % view-key)
+                                                      (:cluster-id cluster-selected))
+                                                  row-assignments))
+                          view-cluster-assignments (concat row-assignments (repeat {}))
+                          observed-samples (map merge observed-samples view-cluster-assignments)
 
-                            view-map (xcat-view-id-map xcat-model)
-                            view-id (view-map (:view-id cluster-selected))
-                            cluster-map (xcat-cluster-id-map xcat-model view-id)
-                            cluster-id (cluster-map (:cluster-id cluster-selected))
+                          view-map (xcat-view-id-map xcat-model)
+                          view-id (view-map (:view-id cluster-selected))
+                          cluster-map (xcat-cluster-id-map xcat-model view-id)
+                          cluster-id (cluster-map (:cluster-id cluster-selected))
 
-                            virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
-                                                                      num-rows {:remove-neg true})
-                                                 (map #(assoc % :collection "virtual" :iter 0)))]
-                        (concat observed-samples virtual-samples))
-                      (concat observed-samples (virtual-samples iteration)))
+                          virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
+                                                                    num-rows {:remove-neg true})
+                                            (map #(assoc % :collection "virtual" :iter 0)))]
+                      (concat observed-samples virtual-samples))
         options {:actions false}
         data {:rows all-samples}
         params {:iter iteration
                 :cluster (:cluster-id cluster-selected)
                 :view_columns (clj->js (map name cols-in-view))
                 :view (some->> (:view-id cluster-selected) (str "view_"))}]
+    [vega-lite spec options nil data params]))
+
+(defn select-vs-simulate-plot
+  "Reagent component for select-vs-simulate plot."
+  [iteration]
+  (let [spec @(rf/subscribe [:viz/spec])
+        all-samples (concat observed-samples (virtual-samples iteration))
+        options {:actions false}
+        data {:rows all-samples}
+        params {:iter iteration
+                :cluster nil
+                :view_columns []
+                :view nil}]
     [vega-lite spec options nil data params]))
 

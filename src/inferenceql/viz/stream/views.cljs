@@ -4,7 +4,8 @@
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
-            [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
+            [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot
+                                                             cluster-select-vs-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]
             [reagent.core :as reagent]))
 
@@ -99,8 +100,7 @@
                 ;; TODO: fix plot options.
                 #_[control/plot-options]
                 [gap :size "5px"]
-                [select-vs-simulate-plot cluster-selected
-                 cluster-selected-click-count iteration]]]))
+                [select-vs-simulate-plot iteration]]]))
 
 
 (defn model-page [model-num]
@@ -145,7 +145,7 @@
                                      [box
                                       :style {:padding-top (str y-offset "px")}
                                       :class "smalldot"
-                                      :child [select-vs-simulate-plot cluster-selected
+                                      :child [cluster-select-vs-simulate-plot cluster-selected
                                               cluster-selected-click-count iteration]]
                                      [gap :size "20px"]])
                                   [gap :size "30px"])

@@ -207,6 +207,19 @@
   (let [js-model-text (get-in js-program-transitions [iteration model-num])]
     [js-code-block model-num js-model-text cluster-selected]))
 
+(defn column-grouping-chips
+  [column-groupings]
+  [v-box
+   :height "200px"
+   :style {:font-size "11px"
+           :overflow "hidden"}
+   :gap "10px"
+   :children (for [cg column-groupings]
+               (let [cg (map name cg)]
+                 [:div.column-grouping
+                  (for [col cg]
+                    [:div.column-chip col])]))])
+
 (defn tiny-js-model [model-num iteration]
   (let [js-model-text (get-in js-program-transitions [iteration model-num])
         xcat (xcat-model iteration model-num)
@@ -219,15 +232,7 @@
         highlighted-html (highlight js-model-text)]
     [v-box
      :width "310px"
-     :children [[v-box
-                 :padding "10px"
-                 :height "150px"
-                 :style {:font-size "11px"
-                         :background-color "#fcfcfc"}
-                 :gap "10px"
-                 :children (for [cg column-groupings]
-                             (let [cg (map name cg)]
-                               [:span (string/join ", " cg)]))]
+     :children [[column-grouping-chips column-groupings]
                 [:pre {:style {:border "solid #7bb0db"
                                :border-width "0px 0px 1px 0px"
                                :border-radius "0px"

@@ -112,6 +112,23 @@ div {
   background-color: lightgrey;
 }
 
+.column-chip {
+  margin-right: 3px;
+  margin-bottom: 3px;
+  border-radius: 4px;
+  color: #333;
+  background: #eee;
+  border: 1px solid #ddd;
+  padding: 0.1em 0.3em;
+  display: inline-block;
+}
+
+.column-grouping {
+  background: #fcfcfc;
+  border-radius: 4px;
+  padding: 5px;
+}
+
 /* --------------- js-model program cluster selection --------------- */
 
 .cluster-clickable {

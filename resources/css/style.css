@@ -113,9 +113,7 @@ div {
 }
 
 .column-chip {
-  margin-right: 3px;
-  margin-bottom: 3px;
-  border-radius: 4px;
+  margin-right: 2px;
   color: #333;
   background: #eee;
   border: 1px solid #ddd;
@@ -124,9 +122,8 @@ div {
 }
 
 .column-grouping {
-  background: #fcfcfc;
-  border-radius: 4px;
-  padding: 5px;
+  border-left: 1px solid #aaaaaa;
+  padding-left: 4px;
 }
 
 /* --------------- js-model program cluster selection --------------- */

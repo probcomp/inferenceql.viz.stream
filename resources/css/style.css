@@ -126,6 +126,21 @@ div {
   padding-left: 4px;
 }
 
+.column-grouping-section:after {
+  /* TODO: fix this, not working.
+  position: absolute;
+  bottom: 0;
+  height: 150px;
+  width: 275px;
+  content: "";
+  background: linear-gradient(to top,
+     rgba(255,255,255, 1) 20%,
+     rgba(255,255,255, 0) 80%
+  );
+  pointer-events: none; /* so the text is still selectable */
+  */
+}
+
 /* --------------- js-model program cluster selection --------------- */
 
 .cluster-clickable {

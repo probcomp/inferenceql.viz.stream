@@ -210,6 +210,7 @@
 (defn column-grouping-chips
   [column-groupings]
   [v-box
+   :class "column-grouping-section"
    :height "150px"
    :style {:font-size "11px"
            :overflow "hidden"}

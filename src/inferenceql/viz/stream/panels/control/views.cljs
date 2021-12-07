@@ -49,7 +49,6 @@
 
 (defn plot-options []
   (let [col-selection @(rf/subscribe [:control/col-selection])
-        plot-type @(rf/subscribe [:control/plot-type])
         marginal-types @(rf/subscribe [:control/marginal-types])
         show-plot-options @(rf/subscribe [:control/show-plot-options])]
     (when show-plot-options
@@ -58,19 +57,6 @@
        :margin "0px 0px 0px 0px"
        :children [[v-box
                    :children [[gap :size "10px"]
-                              #_[h-box
-                                 :children [[label :label "Plot type:"]
-                                            [gap :size "10px"]
-                                            [v-box
-                                             :children
-                                             (doall (for [p [:mutual-information :select-vs-simulate]]
-                                                      ^{:key p}
-                                                      [radio-button
-                                                       :label (name p)
-                                                       :value p
-                                                       :model plot-type
-                                                       :label-style (when (= p plot-type) {:font-weight "bold"})
-                                                       :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
                               [h-box
                                :children [[label :label "Marginals:"]
                                           [gap :size "10px"]

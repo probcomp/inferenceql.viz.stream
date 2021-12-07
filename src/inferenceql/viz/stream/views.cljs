@@ -28,7 +28,9 @@
   (let [iteration @(rf/subscribe [:control/iteration])
         plot-type @(rf/subscribe [:control/plot-type])
         cluster-selected @(rf/subscribe [:control/cluster-selected])
-        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])]
+        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
+        show-data-table-section @(rf/subscribe [:app/show-data-table-section])
+        show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])]
     [v-box
      :margin "20px 20px 20px 20px"
      :children [
@@ -42,7 +44,7 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                             :label "hide" :on-click nil]
+                             :label "hide" :on-click #(rf/dispatch [:app/toggle-show-data-table-section])]
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
@@ -52,11 +54,14 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                             :label "large" :on-click nil]]]
-                [gap :size "5px"]
-                [box :width "1390px"
-                     :child [data-table iteration cluster-selected {}]]
-                [gap :size "20px"]
+                             :label "large"
+                             :on-click nil]]]
+                (when show-data-table-section
+                  [:<>
+                   [gap :size "5px"]
+                   [box :width "1390px"
+                        :child [data-table iteration cluster-selected {}]]
+                   [gap :size "20px"]])
 
                 ;; Section 2
                 [h-box
@@ -68,24 +73,25 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                             :label "hide" :on-click nil]
+                             :label "hide" :on-click #(rf/dispatch [:app/toggle-show-ensemble-section])]
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
                              :label "options" :on-click #(rf/dispatch [:control/toggle-ensemble-options])]]]
-                [gap :size "5px"]
                 [control/ensemble-options]
-                [h-box
-                 :children [[model-summaries iteration]
-                            [gap :size "50px"]
-                            [v-box
-                             :children [[title
-                                         :level :level3 :label "Column dependencies"
-                                         :parts {:wrapper {:style {:align-self "center"}}}
-                                         :style {:text-align "center"}]
+                (when show-ensemble-section
+                  [:<>
+                   [h-box
+                    :children [[model-summaries iteration]
+                               [gap :size "50px"]
+                               [v-box
+                                :children [[title
+                                            :level :level3 :label "Column dependencies"
+                                            :parts {:wrapper {:style {:align-self "center"}}}
+                                            :style {:text-align "center"}]
 
-                                        [mi-plot mutual-info iteration]]]]]
-                [gap :size "20px"]
+                                           [mi-plot mutual-info iteration]]]]]
+                   [gap :size "20px"]])
 
                 ;; Section 3
                 [h-box

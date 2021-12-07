@@ -30,7 +30,8 @@
         mi-bounds @(rf/subscribe [:control/mi-bounds])]
     (when show-ensemble-options
       [v-box
-       :children [[h-box
+       :children [[gap :size "5px"]
+                  [h-box
                    :children [[label :label "Dep-prob exponential weighting:"]
                               [gap :size "10px"]
                               [box

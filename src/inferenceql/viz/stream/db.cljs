@@ -12,5 +12,7 @@
   and panel specific dbs all merged together."
   []
   (let [dbs [control-panel/default-db
-             {:app {:page [:home-page]}}]]
+             {:app {:page [:home-page]
+                    :show-data-table-section true
+                    :show-ensemble-section true}}]]
     (apply merge dbs)))

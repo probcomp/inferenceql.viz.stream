@@ -30,7 +30,8 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
         show-data-table-section @(rf/subscribe [:app/show-data-table-section])
-        show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])]
+        show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])
+        data-table-size @(rf/subscribe [:app/data-table-size])]
     [v-box
      :margin "20px 20px 20px 20px"
      :children [
@@ -48,19 +49,19 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                             :label "small" :on-click nil
+                             :label "small" :on-click #(rf/dispatch [:app/set-data-table-size "400px"])
                              :style {:padding "2px 10px"
                                      :background-color "whitesmoke"}]
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                              :label "large"
-                             :on-click nil]]]
+                             :on-click #(rf/dispatch [:app/set-data-table-size "1000px"])]]]
                 (when show-data-table-section
                   [:<>
                    [gap :size "5px"]
                    [box :width "1390px"
-                        :child [data-table iteration cluster-selected {}]]
+                        :child [data-table iteration cluster-selected {:height data-table-size}]]
                    [gap :size "20px"]])
 
                 ;; Section 2

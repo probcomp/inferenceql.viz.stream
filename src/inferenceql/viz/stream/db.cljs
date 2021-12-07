@@ -14,5 +14,6 @@
   (let [dbs [control-panel/default-db
              {:app {:page [:home-page]
                     :show-data-table-section true
-                    :show-ensemble-section true}}]]
+                    :show-ensemble-section true
+                    :data-table-size "400px"}}]]
     (apply merge dbs)))

@@ -1,5 +1,6 @@
 (ns inferenceql.viz.stream.views
-  (:require [re-com.core :refer [v-box h-box box gap title info-button checkbox line hyperlink]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button
+                                 checkbox line hyperlink popover-tooltip]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
@@ -7,7 +8,7 @@
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot
                                                              cluster-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]
-            [reagent.core :as reagent]))
+            [reagent.core :as r]))
 
 (defn model-summaries [iteration]
   [v-box
@@ -117,7 +118,7 @@
 
 
 (defn model-page [model-num]
-  (reagent/create-class
+  (r/create-class
    {:component-did-mount
     (fn [this]
       (.scrollTo js/window 0 0))
@@ -149,9 +150,22 @@
                                 [h-box
                                  :style {:align-self "flex-end"
                                          :margin-bottom "4px"}
-                                 :children [[checkbox :model show-cluster-simulation-plots
+                                 :children [[checkbox
+                                             :model show-cluster-simulation-plots
                                              :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
-                                             :label "show simulation plots"]]]]]
+                                             :label (let [show-tooltip (r/atom false)]
+                                                      [popover-tooltip
+                                                       :label (str "This shows cluster simulation plots "
+                                                                   "whenever a cluster is clicked in the "
+                                                                   "model (js-program).")
+                                                       :position :above-center
+                                                       :showing? show-tooltip
+                                                       :width "200px"
+                                                       :anchor [:div
+                                                                {:style {:z-index "10000"}
+                                                                 :on-mouse-over #(reset! show-tooltip true)
+                                                                 :on-mouse-out #(reset! show-tooltip false)}
+                                                                "show simulation plots"]])]]]]]
                     [h-box
                      :children [[box
                                  :width "640px"

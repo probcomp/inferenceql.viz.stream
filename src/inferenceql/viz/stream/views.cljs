@@ -5,7 +5,7 @@
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
             [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot
-                                                             cluster-select-vs-simulate-plot]]
+                                                             cluster-simulate-plot]]
             [inferenceql.viz.stream.store :refer [mutual-info]]
             [reagent.core :as reagent]))
 
@@ -145,7 +145,7 @@
                                      [box
                                       :style {:padding-top (str y-offset "px")}
                                       :class "smalldot"
-                                      :child [cluster-select-vs-simulate-plot cluster-selected
+                                      :child [cluster-simulate-plot cluster-selected
                                               cluster-selected-click-count iteration]]
                                      [gap :size "20px"]])
                                   [gap :size "30px"])

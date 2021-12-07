@@ -28,10 +28,10 @@
       ;; TODO: Make this faster by passing in nodes and edges as datasets.
       [vega-lite spec options nil nil nil])))
 
-(defn cluster-select-vs-simulate-plot
+(defn cluster-simulate-plot
   "Reagent component for select-vs-simulate plot."
   [cluster-selected _click-count iteration]
-  (let [spec @(rf/subscribe [:viz/spec])
+  (let [spec @(rf/subscribe [:viz/cluster-simulate-spec])
         cols-in-view @(rf/subscribe [:app/cols-in-view])
         xcat-model @(rf/subscribe [:app/model])
 
@@ -64,7 +64,7 @@
 (defn select-vs-simulate-plot
   "Reagent component for select-vs-simulate plot."
   [iteration]
-  (let [spec @(rf/subscribe [:viz/spec])
+  (let [spec @(rf/subscribe [:viz/select-vs-simulate-spec])
         all-samples (concat observed-samples (virtual-samples iteration))
         options {:actions false}
         data {:rows all-samples}

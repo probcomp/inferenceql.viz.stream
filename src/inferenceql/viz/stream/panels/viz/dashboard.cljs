@@ -484,29 +484,29 @@
                                         :scale {:domain ["observed", "virtual"]
                                                 :range [obs-data-color virtual-data-color]}}}}]}}))
 
-(defn histogram-quant-section [cols samples ranges]
+(defn histogram-quant-section [cols samples ranges num-columns]
   (when (seq cols)
     (let [specs (for [col cols] (histogram-quant col samples ranges))]
       {:concat specs
-       :columns 2
+       :columns num-columns
        :spacing {:column 50 :row 50}})))
 
-(defn histogram-nom-section [cols samples]
+(defn histogram-nom-section [cols samples num-columns]
   (when (seq cols)
     (let [specs (for [col cols] (histogram-nom col samples))]
       {:concat specs
-       :columns 2
+       :columns num-columns
        :spacing {:column 100 :row 50}})))
 
-(defn scatter-plot-section [cols ranges id-gen]
+(defn scatter-plot-section [cols ranges id-gen num-columns]
   (when (seq cols)
     (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 ranges id-gen))]
       {:concat specs
-       :columns 3
+       :columns num-columns
        :spacing {:column 50 :row 50}
        :resolve {:legend {:color "shared"}}})))
 
-(defn bubble-plot-section [cols vega-type n-cats samples]
+(defn bubble-plot-section [cols vega-type n-cats samples num-columns]
   (when (seq cols)
     (let [specs (for [col-pair cols]
                   (let [[col-1 col-2] col-pair
@@ -518,15 +518,15 @@
                     ;; Produce the bubble plot with the more optionful column on the x-dim.
                     (table-bubble-plot col-pair vega-type n-cats samples)))]
       {:concat specs
-       :columns 2
+       :columns num-columns
        :spacing {:column 50 :row 50}})))
 
-(defn strip-plot-section [cols vega-type n-cats samples ranges id-gen]
+(defn strip-plot-section [cols vega-type n-cats samples ranges id-gen num-columns]
   (when (seq cols)
     (let [specs (for [col-pair cols]
                   (strip-plot col-pair vega-type n-cats samples ranges id-gen))]
       {:concat specs
-       :columns 2
+       :columns num-columns
        :spacing {:column 100 :row 50}})))
 
 (defn top-level-spec [sections]
@@ -568,7 +568,7 @@
   Path to correlation data is optional.
   Category limit is the max number of options to include for categorical variable.
   It can be set to nil for no limit."
-  [samples schema cols category-limit marginal-types]
+  [samples schema cols category-limit marginal-types num-columns]
   (when (and (seq marginal-types) (seq cols))
     (let [vega-type (vega-type-fn schema)
 
@@ -589,25 +589,28 @@
                            (swap! c inc)
                            @c))
 
-          histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples ranges)
-          histograms-nom (histogram-nom-section (get cols-by-type "nominal") samples)
+          histograms-quant (histogram-quant-section (get cols-by-type "quantitative") samples ranges num-columns)
+          histograms-nom (histogram-nom-section (get cols-by-type "nominal") samples num-columns)
 
           select-pairs (for [x cols y cols :while (not= x y)] [x y])
           pair-types (group-by #(set (map vega-type %)) select-pairs)
 
           scatter-plots (scatter-plot-section (get pair-types #{"quantitative"})
                                               ranges
-                                              id-generator)
+                                              id-generator
+                                              num-columns)
           bubble-plots (bubble-plot-section (get pair-types #{"nominal"})
                                             vega-type
                                             category-limit
-                                            samples)
+                                            samples
+                                            num-columns)
           strip-plots (strip-plot-section (get pair-types #{"quantitative" "nominal"})
                                           vega-type
                                           category-limit
                                           samples
                                           ranges
-                                          id-generator)
+                                          id-generator
+                                          num-columns)
           sections-1D (remove nil? [histograms-quant histograms-nom])
           sections-2D (remove nil? [scatter-plots strip-plots bubble-plots])
           sections (cond-> []

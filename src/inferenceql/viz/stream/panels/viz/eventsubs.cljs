@@ -6,12 +6,17 @@
 
 
 (rf/reg-sub
-  :viz/spec
+  :viz/select-vs-simulate-spec
   :<- [:control/col-selection]
   :<- [:control/marginal-types]
-  :<- [:app/cols-in-view]
-  (fn [[col-selection marginal-types cols-in-view] _]
-    #_(.log js/console :in-viz-spec--------)
-    (let [cols (or (seq cols-in-view) col-selection)]
-      (dashboard/spec observed-samples schema cols 10 marginal-types))))
+  (fn [[col-selection marginal-types] _]
+      (dashboard/spec observed-samples schema col-selection 10 marginal-types 3)))
 
+(rf/reg-sub
+  :viz/cluster-simulate-spec
+  :<- [:app/cols-in-view]
+  (fn [cols-in-view _]
+    (let [marginal-types (if (> (count cols-in-view) 1)
+                           #{:2D}
+                           #{:1D})]
+      (dashboard/spec observed-samples schema cols-in-view 10 marginal-types 2))))

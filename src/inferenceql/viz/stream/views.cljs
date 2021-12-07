@@ -73,7 +73,7 @@
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
                              :label "options" :on-click nil]]]
-
+                [gap :size "5px"]
                 [h-box
                  :children [[model-summaries iteration]
                             [gap :size "30px"]
@@ -99,7 +99,7 @@
                              :label "options" :on-click nil]]]
                 ;; TODO: fix plot options.
                 #_[control/plot-options]
-                [gap :size "5px"]
+                [gap :size "20px"]
                 [select-vs-simulate-plot iteration]]]))
 
 

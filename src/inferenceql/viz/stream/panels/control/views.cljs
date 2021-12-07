@@ -24,14 +24,34 @@
                 [gap :size "10px"]
                 [label :label (inc iteration)]]]))
 
+(defn ensemble-options []
+  (let [show-ensemble-options @(rf/subscribe [:control/show-ensemble-options])
+        mi-threshold @(rf/subscribe [:control/mi-threshold])
+        mi-bounds @(rf/subscribe [:control/mi-bounds])]
+    (when show-ensemble-options
+      [v-box
+       :children [[h-box
+                   :children [[label :label "Dep-prob exponential weighting:"]
+                              [gap :size "10px"]
+                              [box
+                               :style {:padding-top "3px"}
+                               :child [slider
+                                       :width "200px"
+                                       :min (:min mi-bounds)
+                                       :max (:max mi-bounds)
+                                       :step (/ (- (:max mi-bounds) (:min mi-bounds))
+                                                100)
+                                       :model mi-threshold
+                                       :on-change (fn [val] (rf/dispatch [:control/set-mi-threshold val]))]]
+                              [gap :size "10px"]
+                              [label :label (format "%.5f" mi-threshold)]]]
+                  [gap :size "10px"]]])))
 
 (defn plot-options []
   (let [col-selection @(rf/subscribe [:control/col-selection])
         plot-type @(rf/subscribe [:control/plot-type])
         marginal-types @(rf/subscribe [:control/marginal-types])
-        show-plot-options @(rf/subscribe [:control/show-plot-options])
-        mi-threshold @(rf/subscribe [:control/mi-threshold])
-        mi-bounds @(rf/subscribe [:control/mi-bounds])]
+        show-plot-options @(rf/subscribe [:control/show-plot-options])]
     [v-box
      :padding "0px 0px 0px 0px"
      :margin "0px 0px 0px 0px"
@@ -51,23 +71,6 @@
                                                      :model plot-type
                                                      :label-style (when (= p plot-type) {:font-weight "bold"})
                                                      :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
-                            [h-box
-                             :children [[label :label "Dep-prob exponential weighting:"]
-                                        [gap :size "10px"]
-                                        [box
-                                         :style {:padding-top "3px"}
-                                         :child [slider
-                                                 :width "200px"
-                                                 :min (:min mi-bounds)
-                                                 :max (:max mi-bounds)
-                                                 :step (/ (- (:max mi-bounds) (:min mi-bounds))
-                                                          100)
-                                                 :model mi-threshold
-                                                 :on-change (fn [val]
-                                                              (rf/dispatch [:control/set-mi-threshold val]))]]
-                                        [gap :size "10px"]
-                                        [label :label (format "%.5f" mi-threshold)]]]
-                            [gap :size "20px"]
                             [h-box
                              :children [[label :label "Marginals:"]
                                         [gap :size "10px"]

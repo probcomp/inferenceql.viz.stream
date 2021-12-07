@@ -119,6 +119,19 @@
   (fn [db [_]]
     (update-in db [:control-panel :show-plot-options] not)))
 
+;; Show ensemble options.
+
+(rf/reg-sub
+  :control/show-ensemble-options
+  (fn [db _]
+    (get-in db [:control-panel :show-ensemble-options])))
+
+(rf/reg-event-db
+  :control/toggle-ensemble-options
+  event-interceptors
+  (fn [db [_]]
+    (update-in db [:control-panel :show-ensemble-options] not)))
+
 ;; MI threshold.
 
 (rf/reg-sub

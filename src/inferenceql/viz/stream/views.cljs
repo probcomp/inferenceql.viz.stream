@@ -72,8 +72,9 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                             :label "options" :on-click nil]]]
+                             :label "options" :on-click #(rf/dispatch [:control/toggle-ensemble-options])]]]
                 [gap :size "5px"]
+                [control/ensemble-options]
                 [h-box
                  :children [[model-summaries iteration]
                             [gap :size "30px"]

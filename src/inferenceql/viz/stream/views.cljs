@@ -26,9 +26,7 @@
 (defn home-page
   []
   (let [iteration @(rf/subscribe [:control/iteration])
-        plot-type @(rf/subscribe [:control/plot-type])
         cluster-selected @(rf/subscribe [:control/cluster-selected])
-        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
         show-data-table-section @(rf/subscribe [:app/show-data-table-section])
         show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])
         data-table-size @(rf/subscribe [:app/data-table-size])]

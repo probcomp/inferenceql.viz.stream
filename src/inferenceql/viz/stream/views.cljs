@@ -1,6 +1,7 @@
 (ns inferenceql.viz.stream.views
   (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line hyperlink popover-tooltip]]
+                                 checkbox line hyperlink popover-tooltip
+                                 horizontal-tabs]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
@@ -167,11 +168,17 @@
                                                                  :on-mouse-out #(reset! show-tooltip false)}
                                                                 "show simulation plots"]])]]]]]
                     [h-box
-                     :children [[box
+                     :children [[v-box
                                  :width "640px"
-                                 :style {:overflow "hidden"
-                                         :border-radius "4px"}
-                                 :child [js-model model-num iteration cluster-selected]]
+                                 :style {:overflow "hidden"}
+                                 :children [[horizontal-tabs
+                                             :style {:margin-bottom "-1px"}
+                                             :model model-num
+                                             :tabs [{:id 0 :label "1"}
+                                                    {:id 1 :label "2"}
+                                                    {:id 2 :label "3"}]
+                                             :on-change #(rf/dispatch [:app/set-page [:model-page %]])]
+                                            [js-model model-num iteration cluster-selected]]]
                                 (if (and cluster-selected show-cluster-simulation-plots)
                                   (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
                                     [:<>

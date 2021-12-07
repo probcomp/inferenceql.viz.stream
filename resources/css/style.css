@@ -90,6 +90,7 @@ div {
   font-size: .875rem;
   background-color: #f8f8f8;
   border: none;
+  border-radius: 0px;
   overflow: hidden;
 }
 

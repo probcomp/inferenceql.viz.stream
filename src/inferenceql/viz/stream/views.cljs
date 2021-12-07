@@ -77,7 +77,7 @@
                 [control/ensemble-options]
                 [h-box
                  :children [[model-summaries iteration]
-                            [gap :size "30px"]
+                            [gap :size "50px"]
                             [v-box
                              :children [[title
                                          :level :level3 :label "Column dependencies"

@@ -217,9 +217,13 @@
    :gap "10px"
    :children (for [cg column-groupings]
                (let [cg (map name cg)]
-                 [:div.column-grouping {:key cg}
-                  (for [col cg]
-                    [:div.column-chip {:key col} col])]))])
+                 [h-box
+                  :class "column-grouping"
+                  :style {:flex-flow "row wrap"}
+                  :children (for [col cg]
+                              [box
+                               :class "column-chip"
+                               :child col])]))])
 
 (defn tiny-js-model-placeholder [num-missing-models]
   (let [show-tooltip (r/atom false)]

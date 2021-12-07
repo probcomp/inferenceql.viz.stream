@@ -35,9 +35,7 @@
     [v-box
      :padding "0px 0px 0px 0px"
      :margin "0px 0px 0px 0px"
-     :children [[hyperlink :label (if show-plot-options "hide" "Plot options")
-                 :on-click #(rf/dispatch [:control/toggle-plot-options])]
-                [v-box
+     :children [[v-box
                  :style {:display (if show-plot-options "flex" "none")}
                  :children [[gap :size "10px"]
                             #_[h-box

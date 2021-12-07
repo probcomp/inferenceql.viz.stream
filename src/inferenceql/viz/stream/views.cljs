@@ -29,7 +29,9 @@
         cluster-selected @(rf/subscribe [:control/cluster-selected])
         show-data-table-section @(rf/subscribe [:app/show-data-table-section])
         show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])
-        data-table-size @(rf/subscribe [:app/data-table-size])]
+        data-table-size @(rf/subscribe [:app/data-table-size])
+        small-size "400px"
+        large-size "1000px"]
     [v-box
      :margin "20px 20px 20px 20px"
      :children [
@@ -47,14 +49,18 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                             :label "small" :on-click #(rf/dispatch [:app/set-data-table-size "400px"])
+                             :label "small" :on-click #(rf/dispatch [:app/set-data-table-size small-size])
                              :style {:padding "2px 10px"
-                                     :background-color "whitesmoke"}]
-                            [gap :size "20px"]
+                                     :background-color (when (= data-table-size small-size)
+                                                         "whitesmoke")}]
+                            [gap :size "10px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                              :label "large"
-                             :on-click #(rf/dispatch [:app/set-data-table-size "1000px"])]]]
+                             :on-click #(rf/dispatch [:app/set-data-table-size large-size])
+                             :style {:padding "2px 10px"
+                                     :background-color (when (= data-table-size large-size)
+                                                         "whitesmoke")}]]]
                 (when show-data-table-section
                   [:<>
                    [gap :size "5px"]

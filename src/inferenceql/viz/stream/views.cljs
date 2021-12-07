@@ -131,20 +131,27 @@
             show-cluster-simulation-plots @(rf/subscribe [:control/show-cluster-simulation-plots])]
         [v-box
          :margin "30px 20px"
-         :children [[hyperlink
-                     :label "« Back"
-                     :style {:font-size "24px"}
-                     :on-click #(do
-                                  (rf/dispatch [:app/set-page [:home-page]])
-                                  (rf/dispatch [:control/clear-cluster-selection]))]
-                    [h-box
-                     :style {:margin-left "460px"}
-                     :children [[checkbox :model show-cluster-simulation-plots
-                                 :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
-                                 :label "show simulation plots"]
-                                [gap :size "5px"]
-                                [info-button :info "This allows you to..."]]]
-                    [gap :size "5px"]
+         :children [[h-box
+                     :width "640px"
+                     :justify :between
+                     :children [[v-box
+                                 :children [[hyperlink
+                                             :label "« Back"
+                                             :style {:font-size "16px"
+                                                     :margin "0px"}
+                                             :on-click #(do
+                                                          (rf/dispatch [:app/set-page [:home-page]])
+                                                          (rf/dispatch [:control/clear-cluster-selection]))]
+                                            [gap :size "10px"]
+                                            [title :level :level2
+                                             :style {:margin-top "0px"}
+                                             :label "Program detail"]]]
+                                [h-box
+                                 :style {:align-self "flex-end"
+                                         :margin-bottom "4px"}
+                                 :children [[checkbox :model show-cluster-simulation-plots
+                                             :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
+                                             :label "show simulation plots"]]]]]
                     [h-box
                      :children [[box
                                  :width "640px"

@@ -52,45 +52,45 @@
         plot-type @(rf/subscribe [:control/plot-type])
         marginal-types @(rf/subscribe [:control/marginal-types])
         show-plot-options @(rf/subscribe [:control/show-plot-options])]
-    [v-box
-     :padding "0px 0px 0px 0px"
-     :margin "0px 0px 0px 0px"
-     :children [[v-box
-                 :style {:display (if show-plot-options "flex" "none")}
-                 :children [[gap :size "10px"]
-                            #_[h-box
-                               :children [[label :label "Plot type:"]
+    (when show-plot-options
+      [v-box
+       :padding "0px 0px 0px 0px"
+       :margin "0px 0px 0px 0px"
+       :children [[v-box
+                   :children [[gap :size "10px"]
+                              #_[h-box
+                                 :children [[label :label "Plot type:"]
+                                            [gap :size "10px"]
+                                            [v-box
+                                             :children
+                                             (doall (for [p [:mutual-information :select-vs-simulate]]
+                                                      ^{:key p}
+                                                      [radio-button
+                                                       :label (name p)
+                                                       :value p
+                                                       :model plot-type
+                                                       :label-style (when (= p plot-type) {:font-weight "bold"})
+                                                       :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
+                              [h-box
+                               :children [[label :label "Marginals:"]
                                           [gap :size "10px"]
-                                          [v-box
-                                           :children
-                                           (doall (for [p [:mutual-information :select-vs-simulate]]
-                                                    ^{:key p}
-                                                    [radio-button
-                                                     :label (name p)
-                                                     :value p
-                                                     :model plot-type
-                                                     :label-style (when (= p plot-type) {:font-weight "bold"})
-                                                     :on-change #(rf/dispatch [:control/set-plot-type %])]))]]]
-                            [h-box
-                             :children [[label :label "Marginals:"]
-                                        [gap :size "10px"]
-                                        [box
-                                         :style {:padding-top "3px"}
-                                         :child [selection-list
-                                                 :choices (vec (for [c [:1D :2D]]
-                                                                 {:id c :label (name c)}))
-                                                 :model marginal-types
-                                                 :on-change #(rf/dispatch [:control/set-marginal-types %])]]]]
-                            [gap :size "10px"]
-                            [h-box
-                             :children [[label :label "Columns:"]
-                                        [gap :size "16px"]
-                                        [box
-                                         :style {:padding-top "3px"}
-                                         :child [selection-list
-                                                 :choices (vec (for [c column-list]
-                                                                 {:id c :label (name c)}))
-                                                 :model col-selection
-                                                 :on-change #(rf/dispatch [:control/select-cols %])]]]]
-                            [gap :size "50px"]]]]]))
+                                          [box
+                                           :style {:padding-top "3px"}
+                                           :child [selection-list
+                                                   :choices (vec (for [c [:1D :2D]]
+                                                                   {:id c :label (name c)}))
+                                                   :model marginal-types
+                                                   :on-change #(rf/dispatch [:control/set-marginal-types %])]]]]
+                              [gap :size "10px"]
+                              [h-box
+                               :children [[label :label "Columns:"]
+                                          [gap :size "16px"]
+                                          [box
+                                           :style {:padding-top "3px"}
+                                           :child [selection-list
+                                                   :choices (vec (for [c column-list]
+                                                                   {:id c :label (name c)}))
+                                                   :model col-selection
+                                                   :on-change #(rf/dispatch [:control/select-cols %])]]]]
+                              [gap :size "50px"]]]]])))
 

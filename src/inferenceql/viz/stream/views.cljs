@@ -45,6 +45,7 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
+                             :style {:color (when-not show-data-table-section "darkblue")}
                              :label "hide" :on-click #(rf/dispatch [:app/toggle-show-data-table-section])]
                             [gap :size "20px"]
                             [hyperlink
@@ -78,6 +79,7 @@
                             [gap :size "20px"]
                             [hyperlink
                              :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                             :style {:color (when-not show-ensemble-section "darkblue")}
                              :label "hide" :on-click #(rf/dispatch [:app/toggle-show-ensemble-section])]
                             [gap :size "20px"]
                             [hyperlink

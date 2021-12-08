@@ -132,7 +132,7 @@
             cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])
             show-cluster-simulation-plots @(rf/subscribe [:control/show-cluster-simulation-plots])]
         [v-box
-         :margin "30px 20px"
+         :margin "20px 20px"
          :children [[h-box
                      :width "640px"
                      :justify :between
@@ -144,29 +144,28 @@
                                              :on-click #(do
                                                           (rf/dispatch [:app/set-page [:home-page]])
                                                           (rf/dispatch [:control/clear-cluster-selection]))]
-                                            [gap :size "10px"]
                                             [title :level :level2
-                                             :style {:margin-top "0px"}
-                                             :label "Program detail"]]]
-                                [h-box
+                                             :label "Ensemble detail"]
+                                            [gap :size "10px"]]]
+                                [box
                                  :style {:align-self "flex-end"
-                                         :margin-bottom "4px"}
-                                 :children [[checkbox
-                                             :model show-cluster-simulation-plots
-                                             :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
-                                             :label (let [show-tooltip (r/atom false)]
-                                                      [popover-tooltip
-                                                       :label (str "This shows cluster simulation plots "
-                                                                   "whenever a cluster is clicked in the "
-                                                                   "model (js-program).")
-                                                       :position :above-center
-                                                       :showing? show-tooltip
-                                                       :width "200px"
-                                                       :anchor [:div
-                                                                {:style {:z-index "10000"}
-                                                                 :on-mouse-over #(reset! show-tooltip true)
-                                                                 :on-mouse-out #(reset! show-tooltip false)}
-                                                                "show simulation plots"]])]]]]]
+                                         :margin-bottom "-22px"}
+                                 :child [checkbox
+                                         :model show-cluster-simulation-plots
+                                         :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
+                                         :label (let [show-tooltip (r/atom false)]
+                                                  [popover-tooltip
+                                                   :label (str "This shows cluster simulation plots "
+                                                               "whenever a cluster is clicked in the "
+                                                               "model (js-program).")
+                                                   :position :above-center
+                                                   :showing? show-tooltip
+                                                   :width "200px"
+                                                   :anchor [:div
+                                                            {:style {:z-index "10000"}
+                                                             :on-mouse-over #(reset! show-tooltip true)
+                                                             :on-mouse-out #(reset! show-tooltip false)}
+                                                            "show simulation plots"]])]]]]
                     [h-box
                      :children [[v-box
                                  :width "640px"
@@ -174,9 +173,9 @@
                                  :children [[horizontal-tabs
                                              :style {:margin-bottom "-1px"}
                                              :model model-num
-                                             :tabs [{:id 0 :label "1"}
-                                                    {:id 1 :label "2"}
-                                                    {:id 2 :label "3"}]
+                                             :tabs [{:id 0 :label "Program 1"}
+                                                    {:id 1 :label "Program 2"}
+                                                    {:id 2 :label "Program 3"}]
                                              :on-change #(rf/dispatch [:app/set-page [:model-page %]])]
                                             [js-model model-num iteration cluster-selected]]]
                                 (if (and cluster-selected show-cluster-simulation-plots)

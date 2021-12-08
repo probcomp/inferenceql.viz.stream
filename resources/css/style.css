@@ -103,6 +103,11 @@ div {
   font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
+/* Changing the height of re-com tabs component */
+.nav-tabs > li > a {
+  line-height: 0.5;
+}
+
 /* --------------- tiny js-model --------------- */
 
 .tiny-js-model {

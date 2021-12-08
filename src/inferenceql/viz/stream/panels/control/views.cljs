@@ -3,14 +3,18 @@
             [re-com.core :refer [v-box h-box box slider label gap
                                  selection-list radio-button hyperlink]]
             [goog.string :refer [format]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering num-transitions]]))
+            [inferenceql.viz.stream.store :refer [schema col-ordering num-transitions]]
+            [inferenceql.viz.config :refer [config]]))
+
 
 (def column-list (keep (set (keys schema)) col-ordering))
 
 (defn iteration []
-  (let [iteration @(rf/subscribe [:control/iteration])]
+  (let [iteration @(rf/subscribe [:control/iteration])
+        label-text (or (get-in config [:settings :slider_text])
+                       "Iteration:")]
     [h-box
-     :children [[label :label "Number of Patients:"]
+     :children [[label :label label-text]
                 [gap :size "10px"]
                 [box
                  :style {:padding-top "3px"}

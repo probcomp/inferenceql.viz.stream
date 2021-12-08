@@ -50,7 +50,9 @@
                           cluster-id (cluster-map (:cluster-id cluster-selected))
 
                           columns-in-view (set (columns-in-view xcat-model view-id))
+                          _ (.log js/console :columns columns-in-view)
                           remove-neg (not (contains? columns-in-view :inventory_delta))
+                          _ (.log js/console :remove-neg remove-neg)
                           virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
                                                                     num-rows {:remove-neg remove-neg})
                                             (map #(assoc % :collection "virtual" :iter 0)))]

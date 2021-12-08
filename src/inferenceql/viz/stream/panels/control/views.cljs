@@ -10,7 +10,7 @@
 (defn iteration []
   (let [iteration @(rf/subscribe [:control/iteration])]
     [h-box
-     :children [[label :label "Number of Patients:"]
+     :children [[label :label "Number of observed game states"]
                 [gap :size "10px"]
                 [box
                  :style {:padding-top "3px"}

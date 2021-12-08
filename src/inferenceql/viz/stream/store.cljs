@@ -96,6 +96,9 @@
        num-rows-at-iter
        (concat [0] num-rows-at-iter)))
 
+(def column-dependencies
+  (get-in config [:transitions :column-dependencies]))
+
 ;;; Settings up samples.
 
 (defn add-null-columns [row]

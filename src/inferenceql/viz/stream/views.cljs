@@ -147,7 +147,6 @@
                     [h-box
                      :children [[v-box
                                  :width "640px"
-                                 :height "4000px"
                                  :style {:overflow "hidden"}
                                  :children [[box
                                              :style {:align-self "flex-end"
@@ -175,7 +174,10 @@
                                                     {:id 1 :label "Program 2"}
                                                     {:id 2 :label "Program 3"}]
                                              :on-change #(rf/dispatch [:app/set-page [:model-page %]])]
-                                            [js-model model-num iteration cluster-selected]]]
+                                            [box
+                                             :height "4000px"
+                                             :style {:background "#f8f8f8"}
+                                             :child [js-model model-num iteration cluster-selected]]]]
                                 (if (and cluster-selected show-cluster-simulation-plots)
                                   (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
                                     [:<>

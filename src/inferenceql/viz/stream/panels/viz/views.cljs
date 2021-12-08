@@ -49,8 +49,10 @@
                           cluster-map (xcat-cluster-id-map xcat-model view-id)
                           cluster-id (cluster-map (:cluster-id cluster-selected))
 
+                          columns-in-view (set (columns-in-view xcat-model view-id))
+                          remove-neg (not (contains? columns-in-view :my-special-column)) ; Change this line
                           virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
-                                                                    num-rows {:remove-neg true})
+                                                                    num-rows {:remove-neg remove-neg})
                                             (map #(assoc % :collection "virtual" :iter 0)))]
                       (concat observed-samples virtual-samples))
         options {:actions false}

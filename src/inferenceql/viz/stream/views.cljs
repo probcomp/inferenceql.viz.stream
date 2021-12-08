@@ -150,7 +150,9 @@
                                  :style {:overflow "hidden"}
                                  :children [[box
                                              :style {:align-self "flex-end"
-                                                     :margin-bottom "-20px"}
+                                                     :position "relative"
+                                                     :margin-top "-20px"
+                                                     :bottom "-23px"}
                                              :child [checkbox
                                                      :model show-cluster-simulation-plots
                                                      :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])

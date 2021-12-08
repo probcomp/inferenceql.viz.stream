@@ -50,7 +50,7 @@
                           cluster-id (cluster-map (:cluster-id cluster-selected))
 
                           columns-in-view (set (columns-in-view xcat-model view-id))
-                          remove-neg (not (contains? columns-in-view :my-special-column)) ; Change this line
+                          remove-neg (not (contains? columns-in-view :inventory_delta))
                           virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
                                                                     num-rows {:remove-neg remove-neg})
                                             (map #(assoc % :collection "virtual" :iter 0)))]

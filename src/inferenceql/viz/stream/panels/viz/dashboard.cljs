@@ -10,6 +10,10 @@
                                                             vl5-schema]]))
 
 (def ranges {:BMI [-15 65]
+             :player_1_dist [0 100]
+             :player_2_dist [0 100]
+             :player_3_dist [0 100]
+             :inventory_delta [-20 20]
              :labtest_1 [0 15.514786623448469]
              :labtest_2 [0 11390.127776197322]
              :labtest_3 [0 16.747923871194022]

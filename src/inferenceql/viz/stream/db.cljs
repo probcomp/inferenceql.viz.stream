@@ -1,7 +1,7 @@
 (ns inferenceql.viz.stream.db
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
-            [inferenceql.viz.stream.store :refer [mutual-info starting-cols]]))
+            [inferenceql.viz.stream.store :refer [starting-cols]]))
 
 ;;; Primary DB spec.
 

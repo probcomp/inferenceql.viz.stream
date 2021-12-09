@@ -1,7 +1,8 @@
 (ns inferenceql.viz.stream.db
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
-            [inferenceql.viz.stream.store :refer [starting-cols]]))
+            [inferenceql.viz.stream.store :refer [starting-cols]]
+            [inferenceql.viz.config :refer [config]]))
 
 ;;; Primary DB spec.
 
@@ -30,7 +31,8 @@
 
 
    :control-panel {:iteration 0
-                   :show-cluster-simulation-plots false}})
+                   :slider-label (or (get-in config [:settings :slider_text])
+                                     "Iteration: ")}})
 
 ;; Specs
 

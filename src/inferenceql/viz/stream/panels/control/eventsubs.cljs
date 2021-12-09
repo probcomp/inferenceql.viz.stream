@@ -14,3 +14,10 @@
   event-interceptors
   (fn [db [_ new-val]]
     (assoc-in db [:control-panel :iteration] new-val)))
+
+;; Slider label.
+
+(rf/reg-sub
+  :control/slider-label
+  (fn [db _]
+    (get-in db [:control-panel :slider-label])))

@@ -1,6 +1,8 @@
 (ns inferenceql.viz.stream.page.model.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.events.interceptors :refer [event-interceptors]]))
+            [inferenceql.viz.events.interceptors :refer [event-interceptors]]
+            [inferenceql.viz.stream.store :refer [xcat-model]]
+            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view]]))
 
 ;; Cluster selected.
 
@@ -53,3 +55,21 @@
   event-interceptors
   (fn [db [_ new-val]]
     (assoc-in db [:model-page :show-cluster-simulation-plots] new-val)))
+
+;; Model from cluster selected.
+
+(rf/reg-sub
+  :model-page/model
+  :<- [:control/iteration]
+  :<- [:model-page/cluster-selected]
+  (fn [[iteration cluster-selected] _]
+    (when cluster-selected
+      (xcat-model iteration (:model-id cluster-selected)))))
+
+(rf/reg-sub
+  :model-page/cols-in-view
+  :<- [:model-page/model]
+  :<- [:model-page/cluster-selected]
+  (fn [[model cluster-selected] _]
+    (set (columns-in-view model (:view-id cluster-selected)))))
+

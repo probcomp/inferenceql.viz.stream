@@ -25,7 +25,7 @@
 (defn data-table
   "Reagent component for data table."
   [iteration cluster-selected options]
-  (let [xcat-model @(rf/subscribe [:app/model])
+  (let [xcat-model @(rf/subscribe [:model-page/model])
         num-points (nth num-rows-at-iter iteration)
         modeled-cols (-> (take (nth columns-at-iter iteration) col-ordering))
         hot-options {:height "400px"

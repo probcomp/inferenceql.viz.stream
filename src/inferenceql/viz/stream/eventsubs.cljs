@@ -11,21 +11,6 @@
  (fn [_ _]
    (db/default-db)))
 
-(rf/reg-sub
-  :app/model
-  :<-[:control/iteration]
-  :<-[:model-page/cluster-selected]
-  (fn [[iteration cluster-selected] _]
-    (when cluster-selected
-      (xcat-model iteration (:model-id cluster-selected)))))
-
-(rf/reg-sub
-  :app/cols-in-view
-  :<-[:app/model]
-  :<-[:model-page/cluster-selected]
-  (fn [[model cluster-selected] _]
-    (set (columns-in-view model (:view-id cluster-selected)))))
-
 ;; Page selection
 
 (rf/reg-sub

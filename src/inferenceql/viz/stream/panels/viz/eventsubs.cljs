@@ -14,7 +14,7 @@
 
 (rf/reg-sub
   :viz/cluster-simulate-spec
-  :<- [:app/cols-in-view]
+  :<- [:model-page/cols-in-view]
   (fn [cols-in-view _]
     (let [marginal-types (if (> (count cols-in-view) 1)
                            #{:2D}

@@ -95,7 +95,6 @@
                                  :level :level3 :label "Column dependencies"
                                  :parts {:wrapper {:style {:align-self "center"}}}
                                  :style {:text-align "center"}]
-
                                 [mi-plot mutual-info iteration]]]]]
         [gap :size "20px"]])]))
 

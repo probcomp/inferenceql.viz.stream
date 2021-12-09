@@ -2,6 +2,7 @@
   "Defs for extracting information from XCat records."
   (:require [medley.core :as medley]
             [clojure.edn :as edn]
+            [clojure.set]
             [inferenceql.inference.gpm :as gpm]
             [inferenceql.inference.gpm.column :refer [crosscat-simulate]]))
 
@@ -88,7 +89,7 @@
   "Samples all targets from an XCat gpm. `n` is the number of samples."
   ([xcat n]
    (sample-xcat xcat n {}))
-  ([xcat n {:keys [remove-neg]}]
+  ([xcat n {:keys [allow-neg]}]
    (let [targets (gpm/variables xcat)
          simulate #(gpm/simulate xcat targets {})
 
@@ -100,17 +101,21 @@
                          (some neg? vals))))
 
          neg-row? (cond
-                    (= remove-neg nil) (constantly false)
-                    (= remove-neg false) (constantly false)
-                    (= remove-neg true) (neg-check (numerical-columns xcat))
-                    (seq remove-neg) (neg-check remove-neg))]
-    (take n (remove neg-row? (repeatedly simulate))))))
+                    (= allow-neg nil) (neg-check (numerical-columns xcat))
+                    (= allow-neg false) (neg-check (numerical-columns xcat))
+                    (= allow-neg true) (constantly false)
+                    (seq allow-neg) (let [cols-to-check
+                                          (clojure.set/difference
+                                           (set (numerical-columns xcat))
+                                           (set allow-neg))]
+                                      (neg-check cols-to-check)))]
+     (take n (remove neg-row? (repeatedly simulate))))))
 
 (defn sample-xcat-cluster
   "Samples all targets from a cluster in an XCat gpm. `n` is the number of samples."
   ([xcat view-id cluster-id n]
    (sample-xcat-cluster xcat view-id cluster-id n {}))
-  ([xcat view-id cluster-id n {:keys [remove-neg]}]
+  ([xcat view-id cluster-id n {:keys [allow-neg]}]
    (let [column-gpms (-> xcat :views view-id :columns)
          simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
                                           column-gpms))
@@ -123,10 +128,14 @@
                          (some neg? vals))))
 
          neg-row? (cond
-                    (= remove-neg nil) (constantly false)
-                    (= remove-neg false) (constantly false)
-                    (= remove-neg true) (neg-check (numerical-columns xcat))
-                    (seq remove-neg) (neg-check remove-neg))]
+                    (= allow-neg nil) (neg-check (numerical-columns xcat))
+                    (= allow-neg false) (neg-check (numerical-columns xcat))
+                    (= allow-neg true) (constantly false)
+                    (seq allow-neg) (let [cols-to-check
+                                          (clojure.set/difference
+                                           (set (numerical-columns xcat))
+                                           (set allow-neg))]
+                                      (neg-check cols-to-check)))]
      (take n (remove neg-row? (repeatedly simulate))))))
 
 

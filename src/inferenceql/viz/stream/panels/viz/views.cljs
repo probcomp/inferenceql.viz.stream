@@ -51,9 +51,9 @@
                           cluster-id (cluster-map (:cluster-id cluster-selected))
 
 
-                          remove-neg (get-in config [:settings :negative_simulation_values])
+                          allow-neg (get-in config [:settings :allow_negative_simulations])
                           virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
-                                                                    num-rows {:remove-neg remove-neg})
+                                                                    num-rows {:allow-neg allow-neg})
                                             (map #(assoc % :collection "virtual" :iter 0)))]
                       (concat observed-samples virtual-samples))
         options {:actions false}

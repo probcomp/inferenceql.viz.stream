@@ -4,12 +4,10 @@
                                  horizontal-tabs]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.control.views :as control]
-            [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model tiny-js-model tiny-js-model-placeholder]]
+            [inferenceql.viz.stream.panels.jsmodel.views :refer [tiny-js-model tiny-js-model-placeholder]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
-            [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot
-                                                             cluster-simulate-plot]]
-            [inferenceql.viz.stream.store :refer [mutual-info]]
-            [reagent.core :as r]))
+            [inferenceql.viz.stream.panels.viz.views :refer [mi-plot select-vs-simulate-plot]]
+            [inferenceql.viz.stream.store :refer [mutual-info]]))
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])

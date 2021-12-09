@@ -196,23 +196,13 @@
                                  :margin "28px 0px 0px 0px"
                                  :child [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]]]]]))}))
 
+
 (defn app
   []
   (let [page-vector @(rf/subscribe [:app/page])
         page (first page-vector)]
     [v-box
-     :children [[box
-                 :style {:top 0
-                         :left 0
-                         :right 0
-                         :position "fixed"
-                         :padding "20px 20px 20px 20px"
-                         :background "white"
-                         :z-index 10000
-                         :box-shadow (str "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px, "
-                                          "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
-                                          "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
-                 :child [control/iteration]]
+     :children [[control/iteration-slider-section]
                 [box :margin "60px 0px 0px 0px"
                      :child (case page
                               :home-page [home-page]

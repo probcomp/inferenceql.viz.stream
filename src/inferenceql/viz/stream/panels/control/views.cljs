@@ -9,7 +9,7 @@
 
 (def column-list (keep (set (keys schema)) col-ordering))
 
-(defn iteration []
+(defn iteration-slider []
   (let [iteration @(rf/subscribe [:control/iteration])
         label-text (or (get-in config [:settings :slider_text])
                        "Iteration:")]
@@ -27,6 +27,20 @@
                                       (rf/dispatch [:control/set-iteration iter]))]]
                 [gap :size "10px"]
                 [label :label (inc iteration)]]]))
+
+(defn iteration-slider-section []
+  [box
+   :style {:top 0
+           :left 0
+           :right 0
+           :position "fixed"
+           :padding "20px 20px 20px 20px"
+           :background "white"
+           :z-index 10000
+           :box-shadow (str "rgba(0, 0, 0, 0.05) 0px 1px 2px 0px, "
+                            "rgba(0, 0, 0, 0.05) 0px 1px 4px 0px, "
+                            "rgba(0, 0, 0, 0.05) 0px 2px 8px 0px")}
+   :child [iteration-slider]])
 
 (defn ensemble-options []
   (let [show-ensemble-options @(rf/subscribe [:control/show-ensemble-options])

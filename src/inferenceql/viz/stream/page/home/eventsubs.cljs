@@ -1,9 +1,6 @@
 (ns inferenceql.viz.stream.page.home.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.stream.db :as db]
-            [inferenceql.viz.events.interceptors :refer [event-interceptors]]
-            [inferenceql.viz.stream.store :refer [xcat-model]]
-            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view]]))
+            [inferenceql.viz.events.interceptors :refer [event-interceptors]]))
 
 ;; Hide/show sections
 

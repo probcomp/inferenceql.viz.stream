@@ -15,45 +15,6 @@
   (fn [db [_ new-val]]
     (assoc-in db [:control-panel :iteration] new-val)))
 
-;; Column selection.
-
-(rf/reg-sub
-  :control/col-selection
-  (fn [db _]
-    (get-in db [:control-panel :col-selection])))
-
-(rf/reg-event-db
-  :control/select-cols
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :col-selection] new-val)))
-
-;; Plot type.
-
-(rf/reg-sub
-  :control/plot-type
-  (fn [db _]
-    (get-in db [:control-panel :plot-type])))
-
-(rf/reg-event-db
-  :control/set-plot-type
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :plot-type] new-val)))
-
-;; Marginal types.
-
-(rf/reg-sub
-  :control/marginal-types
-  (fn [db _]
-    (get-in db [:control-panel :marginal-types])))
-
-(rf/reg-event-db
-  :control/set-marginal-types
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :marginal-types] new-val)))
-
 ;; Cluster selected.
 
 (rf/reg-sub
@@ -105,47 +66,3 @@
   event-interceptors
   (fn [db [_ new-val]]
     (assoc-in db [:control-panel :show-cluster-simulation-plots] new-val)))
-
-;; Show plot options.
-
-(rf/reg-sub
-  :control/show-plot-options
-  (fn [db _]
-    (get-in db [:control-panel :show-plot-options])))
-
-(rf/reg-event-db
-  :control/toggle-plot-options
-  event-interceptors
-  (fn [db [_]]
-    (update-in db [:control-panel :show-plot-options] not)))
-
-;; Show ensemble options.
-
-(rf/reg-sub
-  :control/show-ensemble-options
-  (fn [db _]
-    (get-in db [:control-panel :show-ensemble-options])))
-
-(rf/reg-event-db
-  :control/toggle-ensemble-options
-  event-interceptors
-  (fn [db [_]]
-    (update-in db [:control-panel :show-ensemble-options] not)))
-
-;; MI threshold.
-
-(rf/reg-sub
-  :control/mi-threshold
-  (fn [db _]
-    (get-in db [:control-panel :mi-threshold])))
-
-(rf/reg-sub
-  :control/mi-bounds
-  (fn [db _]
-    (get-in db [:control-panel :mi-bounds])))
-
-(rf/reg-event-db
-  :control/set-mi-threshold
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :mi-threshold] new-val)))

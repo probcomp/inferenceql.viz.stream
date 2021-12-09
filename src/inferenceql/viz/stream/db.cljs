@@ -19,15 +19,19 @@
 
    :home-page {:show-data-table-section true
                :show-ensemble-section true
-               :data-table-size "400px"}
+               :data-table-size "400px"
+
+               :col-selection (set starting-cols)
+               :plot-type :select-vs-simulate
+
+               :marginal-types #{:1D}
+               :show-plot-options false
+               :show-ensemble-options false
+
+               :mi-bounds mi-bounds
+               :mi-threshold mi-initial-threshold}
 
    :control-panel {:iteration 0
-                   :col-selection (set starting-cols)
-                   :plot-type :select-vs-simulate
-                   :marginal-types #{:1D}
-                   :show-plot-options false
-                   :mi-bounds mi-bounds
-                   :mi-threshold mi-initial-threshold
                    :show-cluster-simulation-plots false}})
 
 ;; Specs

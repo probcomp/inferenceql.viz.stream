@@ -39,39 +39,3 @@
   (fn [db [_ new-val]]
     (assoc-in db [:app :page] new-val)))
 
-;; Hide/show sections
-
-(rf/reg-sub
-  :app/show-data-table-section
-  (fn [db _]
-    (get-in db [:app :show-data-table-section])))
-
-(rf/reg-event-db
-  :app/toggle-show-data-table-section
-  event-interceptors
-  (fn [db [_]]
-    (update-in db [:app :show-data-table-section] not)))
-
-(rf/reg-sub
-  :app/show-ensemble-section
-  (fn [db _]
-    (get-in db [:app :show-ensemble-section])))
-
-(rf/reg-event-db
-  :app/toggle-show-ensemble-section
-  event-interceptors
-  (fn [db [_]]
-    (update-in db [:app :show-ensemble-section] not)))
-
-;; Data table size
-
-(rf/reg-sub
-  :app/data-table-size
-  (fn [db _]
-    (get-in db [:app :data-table-size])))
-
-(rf/reg-event-db
-  :app/set-data-table-size
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:app :data-table-size] new-val)))

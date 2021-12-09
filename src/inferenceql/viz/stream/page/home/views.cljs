@@ -12,8 +12,8 @@
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])
         cluster-selected @(rf/subscribe [:control/cluster-selected])
-        show-data-table-section @(rf/subscribe [:app/show-data-table-section])
-        data-table-size @(rf/subscribe [:app/data-table-size])
+        show-data-table-section @(rf/subscribe [:home-page/show-data-table-section])
+        data-table-size @(rf/subscribe [:home-page/data-table-size])
         small-size "400px"
         large-size "1000px"]
     [:<>
@@ -27,11 +27,11 @@
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                   :style {:color (when-not show-data-table-section "darkblue")}
-                  :label "hide" :on-click #(rf/dispatch [:app/toggle-show-data-table-section])]
+                  :label "hide" :on-click #(rf/dispatch [:home-page/toggle-show-data-table-section])]
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                  :label "small" :on-click #(rf/dispatch [:app/set-data-table-size small-size])
+                  :label "small" :on-click #(rf/dispatch [:home-page/set-data-table-size small-size])
                   :style {:padding "2px 10px"
                           :background-color (when (= data-table-size small-size)
                                               "whitesmoke")}]
@@ -39,7 +39,7 @@
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
                   :label "large"
-                  :on-click #(rf/dispatch [:app/set-data-table-size large-size])
+                  :on-click #(rf/dispatch [:home-page/set-data-table-size large-size])
                   :style {:padding "2px 10px"
                           :background-color (when (= data-table-size large-size)
                                               "whitesmoke")}]]]
@@ -65,7 +65,7 @@
 
 (defn ensemble-section []
   (let [iteration @(rf/subscribe [:control/iteration])
-        show-ensemble-section @(rf/subscribe [:app/show-ensemble-section])]
+        show-ensemble-section @(rf/subscribe [:home-page/show-ensemble-section])]
     [:<>
      [h-box
       :children [[title :level :level2 :label "Ensemble"]
@@ -77,7 +77,7 @@
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
                   :style {:color (when-not show-ensemble-section "darkblue")}
-                  :label "hide" :on-click #(rf/dispatch [:app/toggle-show-ensemble-section])]
+                  :label "hide" :on-click #(rf/dispatch [:home-page/toggle-show-ensemble-section])]
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}

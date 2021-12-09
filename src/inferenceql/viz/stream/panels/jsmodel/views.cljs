@@ -13,7 +13,6 @@
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
-            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.store :refer [js-program-transitions column-dependencies]]
             [re-com.core :refer [v-box h-box box gap title info-button line hyperlink popover-tooltip]]
             [medley.core :as medley]

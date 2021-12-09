@@ -20,7 +20,7 @@
                          :max (dec num-transitions)
                          :model iteration
                          :on-change (fn [iter]
-                                      (rf/dispatch [:control/clear-cluster-selection])
+                                      (rf/dispatch [:model-page/clear-cluster-selection])
                                       (rf/dispatch [:control/set-iteration iter]))]]
                 [gap :size "10px"]
                 [label :label (inc iteration)]]]))

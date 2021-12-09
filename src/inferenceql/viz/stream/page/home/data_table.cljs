@@ -7,7 +7,7 @@
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])
+        cluster-selected @(rf/subscribe [:model-page/cluster-selected])
         show-data-table-section @(rf/subscribe [:home-page/show-data-table-section])
         data-table-size @(rf/subscribe [:home-page/data-table-size])
         small-size "400px"

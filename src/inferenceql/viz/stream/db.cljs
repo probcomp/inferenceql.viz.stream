@@ -14,14 +14,20 @@
                :show-ensemble-section true
                :data-table-size "400px"
 
+               :show-plot-options false
+               :marginal-types #{:1D}
                :col-selection (set starting-cols)
 
-               :marginal-types #{:1D}
-               :show-plot-options false
                :show-ensemble-options false
-
                :mi-bounds {:min 0 :max 10}
                :mi-threshold 3}
+
+   :model-page {:cluster-selected nil
+                :cluster-selected-click-count nil
+                :cluster-selected-y-offset nil
+                :show-cluster-simulation-plots false}
+
+
 
    :control-panel {:iteration 0
                    :show-cluster-simulation-plots false}})

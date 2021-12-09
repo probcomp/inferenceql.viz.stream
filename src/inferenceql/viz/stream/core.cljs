@@ -6,7 +6,8 @@
             [inferenceql.viz.stream.eventsubs]
             [inferenceql.viz.stream.panels.control.eventsubs]
             [inferenceql.viz.stream.panels.viz.eventsubs]
-            [inferenceql.viz.stream.page.home.eventsubs]))
+            [inferenceql.viz.stream.page.home.eventsubs]
+            [inferenceql.viz.stream.page.model.eventsubs]))
 
 (enable-console-print!)
 (set! *warn-on-infer* true)

@@ -118,7 +118,7 @@
                          (into [:span {:class ["cluster-clickable"
                                                (when current-selected "cluster-selected")
                                                (when current-selected "no-select")]
-                                       :onClick #(rf/dispatch [:control/select-cluster current])}]
+                                       :onClick #(rf/dispatch [:model-page/select-cluster current])}]
                                cluster-nodes)))
             loc))
 
@@ -190,10 +190,10 @@
                                      cluster-node (gdom/getAncestorByClass clicked-node "cluster-clickable")
                                      pos (gstyle/getRelativePosition cluster-node
                                                                      (:code-elem @dom-nodes))]
-                                 (rf/dispatch [:control/set-cluster-selected-y-offset (.-y pos)])))
+                                 (rf/dispatch [:model-page/set-cluster-selected-y-offset (.-y pos)])))
                              ;; TODO: Add comment.
                              (when (= (.-target event) (:code-elem @dom-nodes))
-                               (rf/dispatch [:control/clear-cluster-selection])))))
+                               (rf/dispatch [:model-page/clear-cluster-selection])))))
 
       :reagent-render
       (fn [model-num js-code cluster-selected]

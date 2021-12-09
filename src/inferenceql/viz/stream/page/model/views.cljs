@@ -15,12 +15,12 @@
            :margin "0px"}
    :on-click #(do
                 (rf/dispatch [:app/set-page [:home-page]])
-                (rf/dispatch [:control/clear-cluster-selection]))])
+                (rf/dispatch [:model-page/clear-cluster-selection]))])
 
 (defn program-section [model-num]
   (let [iteration @(rf/subscribe [:control/iteration])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])
-        show-cluster-simulation-plots @(rf/subscribe [:control/show-cluster-simulation-plots])]
+        cluster-selected @(rf/subscribe [:model-page/cluster-selected])
+        show-cluster-simulation-plots @(rf/subscribe [:model-page/show-cluster-simulation-plots])]
     [v-box
      :width "640px"
      :style {:overflow "hidden"}
@@ -31,7 +31,7 @@
                          :bottom "-23px"}
                  :child [checkbox
                          :model show-cluster-simulation-plots
-                         :on-change #(rf/dispatch [:control/set-cluster-simulation-plots %])
+                         :on-change #(rf/dispatch [:model-page/set-cluster-simulation-plots %])
                          :label (let [show-tooltip (r/atom false)]
                                   [popover-tooltip
                                    :label (str "This shows cluster simulation plots "
@@ -59,10 +59,10 @@
 
 (defn cluster-simulation-section []
   (let [iteration @(rf/subscribe [:control/iteration])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])
-        cluster-selected-click-count @(rf/subscribe [:control/cluster-selected-click-count])
-        cluster-selected-y-offset @(rf/subscribe [:control/cluster-selected-y-offset])
-        show-cluster-simulation-plots @(rf/subscribe [:control/show-cluster-simulation-plots])]
+        cluster-selected @(rf/subscribe [:model-page/cluster-selected])
+        cluster-selected-click-count @(rf/subscribe [:model-page/cluster-selected-click-count])
+        cluster-selected-y-offset @(rf/subscribe [:model-page/cluster-selected-y-offset])
+        show-cluster-simulation-plots @(rf/subscribe [:model-page/show-cluster-simulation-plots])]
     (if (and cluster-selected show-cluster-simulation-plots)
       (let [y-offset (max 0 (- cluster-selected-y-offset 10))]
         [:<>
@@ -77,7 +77,7 @@
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])
-        cluster-selected @(rf/subscribe [:control/cluster-selected])]
+        cluster-selected @(rf/subscribe [:model-page/cluster-selected])]
     [box
      :margin "28px 0px 0px 0px"
      :child [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]))

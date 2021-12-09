@@ -97,8 +97,7 @@
          ;; provided as `cols`.
          neg-check (fn [cols]
                      (fn [row]
-                       (let [vals (select-keys row cols)]
-                         (some neg? vals))))
+                       (some neg? (vals (select-keys row cols)))))
 
          neg-row? (cond
                     (= allow-neg nil) (neg-check (numerical-columns xcat))
@@ -124,8 +123,7 @@
          ;; provided as `cols`.
          neg-check (fn [cols]
                      (fn [row]
-                       (let [vals (select-keys row cols)]
-                         (some neg? vals))))
+                       (some neg? (vals (select-keys row cols)))))
 
          neg-row? (cond
                     (= allow-neg nil) (neg-check (numerical-columns xcat))

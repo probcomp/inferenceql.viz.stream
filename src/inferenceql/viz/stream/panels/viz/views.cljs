@@ -6,6 +6,7 @@
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
+            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.store :refer [schema col-ordering
                                                   observed-samples virtual-samples]]))
 
@@ -49,8 +50,10 @@
                           cluster-map (xcat-cluster-id-map xcat-model view-id)
                           cluster-id (cluster-map (:cluster-id cluster-selected))
 
+
+                          remove-neg (get-in config [:settings :negative_simulation_values])
                           virtual-samples (->> (sample-xcat-cluster xcat-model view-id cluster-id
-                                                                    num-rows {:remove-neg true})
+                                                                    num-rows {:remove-neg remove-neg})
                                             (map #(assoc % :collection "virtual" :iter 0)))]
                       (concat observed-samples virtual-samples))
         options {:actions false}

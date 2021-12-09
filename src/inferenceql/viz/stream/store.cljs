@@ -15,7 +15,6 @@
             [inferenceql.inference.gpm.primitive-gpms.categorical :as categorical]
             [inferenceql.inference.gpm.primitive-gpms.gaussian :as gaussian]
             [inferenceql.inference.gpm.view :as view]
-
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]))
 
 ;; Stuff related to transit.

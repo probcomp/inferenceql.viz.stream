@@ -41,6 +41,12 @@
         columns-in-view (fn [view] (-> view :columns keys))]
     (mapcat columns-in-view views)))
 
+(defn numerical-columns [xcat]
+  "Returns columns names with type :gaussian in `xcat`."
+  (let [col-gpms (->> xcat :views vals (map :columns) (apply merge))
+        col-types (medley/map-vals :stattype col-gpms)]
+    (keys (medley/filter-vals #{:gaussian} col-types))))
+
 (defn rows-in-view-cluster [xcat view-id cluster-id]
   (let [view-map (xcat-view-id-map xcat)
         ;; View-name-kw used in xcat model.
@@ -78,32 +84,27 @@
     (apply map (fn [& a] (zipmap (keys view-cluster-assignemnts) a))
            (vals view-cluster-assignemnts))))
 
-(defn row-has-negatives?
-  "Returns true if `row` has any negative values for :gaussian columns.
-  Otherwise, returns nil. `xcat` model is used to determine which columns
-  are numerical columns."
-  [xcat row]
-  (let [col-gpms (->> xcat :views vals (map :columns) (apply merge))
-        col-types (medley/map-vals :stattype col-gpms)
-        numer-cols (keys (medley/filter-vals #{:gaussian} col-types))
-        numer-vals (vals (select-keys row numer-cols))]
-    (some neg? numer-vals)))
-
-(defn simulate-n
-  "Runs `simulate` to produce `n` samples."
-  [xcat simulate n remove-neg]
-  (let [samples (cond->> (repeatedly simulate)
-                  remove-neg (remove #(row-has-negatives? xcat %)))]
-    (take n samples)))
-
 (defn sample-xcat
   "Samples all targets from an XCat gpm. `n` is the number of samples."
   ([xcat n]
    (sample-xcat xcat n {}))
   ([xcat n {:keys [remove-neg]}]
    (let [targets (gpm/variables xcat)
-         simulate #(gpm/simulate xcat targets {})]
-     (simulate-n xcat simulate n remove-neg))))
+         simulate #(gpm/simulate xcat targets {})
+
+         ;; Returns a function that checks `row` for negative values in the keys
+         ;; provided as `cols`.
+         neg-check (fn [cols]
+                     (fn [row]
+                       (let [vals (select-keys row cols)]
+                         (some neg? vals))))
+
+         neg-row? (cond
+                    (= remove-neg nil) (constantly false)
+                    (= remove-neg false) (constantly false)
+                    (= remove-neg true) (neg-check (numerical-columns xcat))
+                    (seq remove-neg) (neg-check remove-neg))]
+    (take n (remove neg-row? (repeatedly simulate))))))
 
 (defn sample-xcat-cluster
   "Samples all targets from a cluster in an XCat gpm. `n` is the number of samples."
@@ -112,5 +113,20 @@
   ([xcat view-id cluster-id n {:keys [remove-neg]}]
    (let [column-gpms (-> xcat :views view-id :columns)
          simulate (fn [] (medley/map-vals #(crosscat-simulate % cluster-id)
-                                          column-gpms))]
-     (simulate-n xcat simulate n remove-neg))))
+                                          column-gpms))
+
+         ;; Returns a function that checks `row` for negative values in the keys
+         ;; provided as `cols`.
+         neg-check (fn [cols]
+                     (fn [row]
+                       (let [vals (select-keys row cols)]
+                         (some neg? vals))))
+
+         neg-row? (cond
+                    (= remove-neg nil) (constantly false)
+                    (= remove-neg false) (constantly false)
+                    (= remove-neg true) (neg-check (numerical-columns xcat))
+                    (seq remove-neg) (neg-check remove-neg))]
+     (take n (remove neg-row? (repeatedly simulate))))))
+
+

@@ -106,7 +106,7 @@
                     (seq allow-neg) (let [cols-to-check
                                           (clojure.set/difference
                                            (set (numerical-columns xcat))
-                                           (set allow-neg))]
+                                           (set (map keyword allow-neg)))]
                                       (neg-check cols-to-check)))]
      (take n (remove neg-row? (repeatedly simulate))))))
 
@@ -132,7 +132,7 @@
                     (seq allow-neg) (let [cols-to-check
                                           (clojure.set/difference
                                            (set (numerical-columns xcat))
-                                           (set allow-neg))]
+                                           (set (map keyword allow-neg)))]
                                       (neg-check cols-to-check)))]
      (take n (remove neg-row? (repeatedly simulate))))))
 

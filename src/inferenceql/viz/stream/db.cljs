@@ -1,19 +1,56 @@
 (ns inferenceql.viz.stream.db
   (:require [clojure.spec.alpha :as s]
-            [inferenceql.viz.stream.panels.control.db :as control-panel]))
+            [clojure.set]
+            [inferenceql.viz.stream.store :refer [mutual-info starting-cols]]))
 
 ;;; Primary DB spec.
 
-(s/def ::db (s/keys :req-un [::control-panel/control-panel]))
+(def mi-bounds
+  {:min 0
+   :max 10})
+
+(def mi-initial-threshold
+  3)
 
 (defn default-db
-  "When the application starts, this will be the value put in `app-db`.
-  It consists of keys and values from the general db
-  and panel specific dbs all merged together."
+  "When the application starts, this will be the value put in `app-db`."
   []
-  (let [dbs [control-panel/default-db
-             {:app {:page [:home-page]
-                    :show-data-table-section true
-                    :show-ensemble-section true
-                    :data-table-size "400px"}}]]
-    (apply merge dbs)))
+  {:app {:page [:home-page]}
+
+   :home-page {:show-data-table-section true
+               :show-ensemble-section true
+               :data-table-size "400px"}
+
+   :control-panel {:iteration 0
+                   :col-selection (set starting-cols)
+                   :plot-type :select-vs-simulate
+                   :marginal-types #{:1D}
+                   :show-plot-options false
+                   :mi-bounds mi-bounds
+                   :mi-threshold mi-initial-threshold
+                   :show-cluster-simulation-plots false}})
+
+;; Specs
+
+(s/def ::control-panel (s/keys :req-un [::iteration
+                                        ::col-selection
+                                        ::plot-type
+                                        ::marginal-types
+                                        ::show-plot-options
+                                        ::mi-threshold]
+                               :opt-un [::cluster-selected
+                                        ::cluster-selected-click-count]))
+
+(s/def ::iteration integer?)
+(s/def ::col-selection set?)
+(s/def ::plot-type #{:select-vs-simulate :mutual-information})
+(s/def ::marginal-types #(and (set? %)
+                              (clojure.set/subset? % #{:1D :2D})))
+(s/def ::show-plot-options boolean?)
+(s/def ::mi-threshold number?)
+(s/def ::show-cluster-simulation-plots boolean?)
+
+(s/def ::cluster-selected (s/keys :req-un [::cluster-id ::view-id]))
+(s/def ::cluster-selected-click-count integer?)
+(s/def ::cluster-id integer?)
+(s/def ::view-id integer?)

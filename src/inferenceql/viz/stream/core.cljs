@@ -2,13 +2,11 @@
   (:require [goog.dom :as dom]
             [re-frame.core :as rf]
             [reagent.dom :as rdom]
-            ;; Core
-            [inferenceql.viz.stream.eventsubs]
             [inferenceql.viz.stream.views :as views]
-            ;; Control
+            [inferenceql.viz.stream.eventsubs]
             [inferenceql.viz.stream.panels.control.eventsubs]
-            ;; Viz
-            [inferenceql.viz.stream.panels.viz.eventsubs]))
+            [inferenceql.viz.stream.panels.viz.eventsubs]
+            [inferenceql.viz.stream.page.home.eventsubs]))
 
 (enable-console-print!)
 (set! *warn-on-infer* true)

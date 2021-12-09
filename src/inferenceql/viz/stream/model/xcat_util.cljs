@@ -133,6 +133,8 @@
                                           (clojure.set/difference
                                            (set (numerical-columns xcat))
                                            (set (map keyword allow-neg)))]
+                                      (.log js/console "here")
+                                      (.log js/console "cols" cols-to-check)
                                       (neg-check cols-to-check)))]
      (take n (remove neg-row? (repeatedly simulate))))))
 

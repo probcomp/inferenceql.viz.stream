@@ -5,13 +5,6 @@
 
 ;;; Primary DB spec.
 
-(def mi-bounds
-  {:min 0
-   :max 10})
-
-(def mi-initial-threshold
-  3)
-
 (defn default-db
   "When the application starts, this will be the value put in `app-db`."
   []
@@ -22,14 +15,13 @@
                :data-table-size "400px"
 
                :col-selection (set starting-cols)
-               :plot-type :select-vs-simulate
 
                :marginal-types #{:1D}
                :show-plot-options false
                :show-ensemble-options false
 
-               :mi-bounds mi-bounds
-               :mi-threshold mi-initial-threshold}
+               :mi-bounds {:min 0 :max 10}
+               :mi-threshold 3}
 
    :control-panel {:iteration 0
                    :show-cluster-simulation-plots false}})
@@ -38,7 +30,6 @@
 
 (s/def ::control-panel (s/keys :req-un [::iteration
                                         ::col-selection
-                                        ::plot-type
                                         ::marginal-types
                                         ::show-plot-options
                                         ::mi-threshold]
@@ -47,7 +38,6 @@
 
 (s/def ::iteration integer?)
 (s/def ::col-selection set?)
-(s/def ::plot-type #{:select-vs-simulate :mutual-information})
 (s/def ::marginal-types #(and (set? %)
                               (clojure.set/subset? % #{:1D :2D})))
 (s/def ::show-plot-options boolean?)

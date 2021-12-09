@@ -45,75 +45,64 @@
 ;;; Ensemble section.
 
 (rf/reg-sub
-  :control/show-ensemble-options
+  :home-page/show-ensemble-options
   (fn [db _]
-    (get-in db [:control-panel :show-ensemble-options])))
+    (get-in db [:home-page :show-ensemble-options])))
 
 (rf/reg-event-db
-  :control/toggle-ensemble-options
+  :home-page/toggle-ensemble-options
   event-interceptors
   (fn [db [_]]
-    (update-in db [:control-panel :show-ensemble-options] not)))
+    (update-in db [:home-page :show-ensemble-options] not)))
 
 (rf/reg-sub
-  :control/mi-threshold
+  :home-page/mi-threshold
   (fn [db _]
-    (get-in db [:control-panel :mi-threshold])))
+    (get-in db [:home-page :mi-threshold])))
 
 (rf/reg-sub
-  :control/mi-bounds
+  :home-page/mi-bounds
   (fn [db _]
-    (get-in db [:control-panel :mi-bounds])))
+    (get-in db [:home-page :mi-bounds])))
 
 (rf/reg-event-db
-  :control/set-mi-threshold
+  :home-page/set-mi-threshold
   event-interceptors
   (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :mi-threshold] new-val)))
+    (assoc-in db [:home-page :mi-threshold] new-val)))
 
 ;; Select-vs-simulate selection.
 
 (rf/reg-sub
-  :control/show-plot-options
+  :home-page/show-plot-options
   (fn [db _]
-    (get-in db [:control-panel :show-plot-options])))
+    (get-in db [:home-page :show-plot-options])))
 
 (rf/reg-event-db
-  :control/toggle-plot-options
+  :home-page/toggle-plot-options
   event-interceptors
   (fn [db [_]]
-    (update-in db [:control-panel :show-plot-options] not)))
+    (update-in db [:home-page :show-plot-options] not)))
 
 (rf/reg-sub
-  :control/col-selection
+  :home-page/col-selection
   (fn [db _]
-    (get-in db [:control-panel :col-selection])))
+    (get-in db [:home-page :col-selection])))
 
 (rf/reg-event-db
-  :control/select-cols
+  :home-page/select-cols
   event-interceptors
   (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :col-selection] new-val)))
+    (assoc-in db [:home-page :col-selection] new-val)))
 
 (rf/reg-sub
-  :control/plot-type
+  :home-page/marginal-types
   (fn [db _]
-    (get-in db [:control-panel :plot-type])))
+    (get-in db [:home-page :marginal-types])))
 
 (rf/reg-event-db
-  :control/set-plot-type
+  :home-page/set-marginal-types
   event-interceptors
   (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :plot-type] new-val)))
-
-(rf/reg-sub
-  :control/marginal-types
-  (fn [db _]
-    (get-in db [:control-panel :marginal-types])))
-
-(rf/reg-event-db
-  :control/set-marginal-types
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:control-panel :marginal-types] new-val)))
+    (assoc-in db [:home-page :marginal-types] new-val)))
 

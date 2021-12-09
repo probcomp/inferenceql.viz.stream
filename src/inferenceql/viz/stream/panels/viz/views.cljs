@@ -14,7 +14,7 @@
   "Reagent component for circle viz for mutual info."
   [mi-data iteration]
   (when (seq mi-data)
-    (let [mi-threshold @(rf/subscribe [:control/mi-threshold])
+    (let [mi-threshold @(rf/subscribe [:home-page/mi-threshold])
           mi-data (nth mi-data iteration)
           nodes (-> (set (keys mi-data))
                     ;; Get nodes in consistent order by picking from col-ordering.

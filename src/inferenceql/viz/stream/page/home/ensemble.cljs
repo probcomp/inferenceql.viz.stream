@@ -23,9 +23,9 @@
                           [tiny-js-model-placeholder 97]]]]])
 
 (defn ensemble-options []
-  (let [show-ensemble-options @(rf/subscribe [:control/show-ensemble-options])
-        mi-threshold @(rf/subscribe [:control/mi-threshold])
-        mi-bounds @(rf/subscribe [:control/mi-bounds])]
+  (let [show-ensemble-options @(rf/subscribe [:home-page/show-ensemble-options])
+        mi-threshold @(rf/subscribe [:home-page/mi-threshold])
+        mi-bounds @(rf/subscribe [:home-page/mi-bounds])]
     (when show-ensemble-options
       [v-box
        :children [[gap :size "5px"]
@@ -41,7 +41,7 @@
                                        :step (/ (- (:max mi-bounds) (:min mi-bounds))
                                                 100)
                                        :model mi-threshold
-                                       :on-change (fn [val] (rf/dispatch [:control/set-mi-threshold val]))]]
+                                       :on-change (fn [val] (rf/dispatch [:home-page/set-mi-threshold val]))]]
                               [gap :size "10px"]
                               [label :label (format "%.5f" mi-threshold)]]]
                   [gap :size "10px"]]])))
@@ -64,7 +64,7 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                  :label "options" :on-click #(rf/dispatch [:control/toggle-ensemble-options])]]]
+                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-ensemble-options])]]]
      [ensemble-options]
      (when show-ensemble-section
        [:<>

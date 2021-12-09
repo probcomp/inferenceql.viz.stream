@@ -7,8 +7,8 @@
 
 (rf/reg-sub
   :viz/select-vs-simulate-spec
-  :<- [:control/col-selection]
-  :<- [:control/marginal-types]
+  :<- [:home-page/col-selection]
+  :<- [:home-page/marginal-types]
   (fn [[col-selection marginal-types] _]
       (dashboard/spec observed-samples schema col-selection 10 marginal-types 3)))
 

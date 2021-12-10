@@ -29,8 +29,7 @@
 
 
 
-   :control-panel {:iteration 0
-                   :show-cluster-simulation-plots false}})
+   :control-panel {:iteration 0}})
 
 ;; Specs
 

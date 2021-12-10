@@ -27,7 +27,7 @@
 
 (s/def ::transitions (s/keys :req-un [::count
                                       ::columns-at-iter
-                                      ::num-row-at-iter
+                                      ::num-rows-at-iter
                                       ::column-ordering
                                       ::column-dependencies
                                       ::options]))

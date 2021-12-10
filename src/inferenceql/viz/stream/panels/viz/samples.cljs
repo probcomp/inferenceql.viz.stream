@@ -1,10 +1,17 @@
 (ns inferenceql.viz.stream.panels.viz.samples
   "Defs for properly tagging samples for use in vega-lite specs."
-  (:require [inferenceql.viz.stream.store :refer [rows schema
-                                                  samples
-                                                  num-rows-required]]))
+  (:require [inferenceql.viz.stream.store :refer [rows schema samples]]
+            [inferenceql.viz.config :refer [config]]))
+
 
 ;;; Observed samples.
+
+(def num-rows-required
+  "Number of new rows incorporated at each model iteration."
+  (let [num-rows-at-iter (get-in config [:transitions :num-rows-at-iter])]
+    (map -
+         num-rows-at-iter
+         (concat [0] num-rows-at-iter))))
 
 (defn add-null-columns [row]
   (let [columns (keys schema)

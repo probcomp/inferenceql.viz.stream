@@ -1,7 +1,6 @@
 (ns inferenceql.viz.stream.panels.table.views
-  (:require [inferenceql.viz.stream.store :refer [rows col-ordering
-                                                  columns-at-iter
-                                                  num-rows-at-iter]]
+  (:require [inferenceql.viz.stream.store :refer [rows]]
+            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.model.xcat-util :as xcat-util]
             [inferenceql.viz.panels.table.views-simple :refer [handsontable]]
             [re-frame.core :as rf]))
@@ -26,8 +25,12 @@
   "Reagent component for data table."
   [iteration cluster-selected options]
   (let [xcat-model @(rf/subscribe [:model-page/model])
-        num-points (nth num-rows-at-iter iteration)
-        modeled-cols (-> (take (nth columns-at-iter iteration) col-ordering))
+        num-points (get-in config [:transitions :num-rows-at-iter iteration])
+
+        num-columns (get-in config [:transitions :columns-at-iter iteration])
+        col-ordering (get-in config [:transitions :column-ordering])
+        modeled-cols (take num-columns col-ordering)
+
         hot-options {:height "400px"
                      :width "1390px"
                      :cols (map name modeled-cols)

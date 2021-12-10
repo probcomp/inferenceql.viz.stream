@@ -56,27 +56,7 @@
         options {:options (get-in config [:transitions :options])}]
     (xcat/construct-xcat-from-latents spec latents data options)))
 
-;;; Secondary defs built off of xcat model iterations.
-
+;; TODO: remove this.
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."
   (get-in config [:transitions :column-ordering]))
-
-(def columns-at-iter
-  "Number of columns incorporated at each iteration."
-  (get-in config [:transitions :columns-at-iter]))
-
-(def starting-cols
-  "Columns incorporated at start of iterations."
-  (let [num-cols (nth columns-at-iter 0)]
-    (take num-cols col-ordering)))
-
-(def num-rows-at-iter
-  "Number of rows used at each model iteration."
-  (get-in config [:transitions :num-rows-at-iter]))
-
-(def num-rows-required
-  "Number of new rows incorporated at this model iteration."
-  (map -
-       num-rows-at-iter
-       (concat [0] num-rows-at-iter)))

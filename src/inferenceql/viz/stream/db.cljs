@@ -1,7 +1,13 @@
 (ns inferenceql.viz.stream.db
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
-            [inferenceql.viz.stream.store :refer [starting-cols]]))
+            [inferenceql.viz.config :refer [config]]))
+
+(def starting-cols
+  "Columns incorporated at start of iterations."
+  (let [num-cols (get-in config [:transitions :columns-at-iter 0])
+        col-ordering (get-in config [:transitions :column-ordering])]
+    (take num-cols col-ordering)))
 
 ;;; Primary DB spec.
 

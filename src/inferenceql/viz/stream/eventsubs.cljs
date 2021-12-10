@@ -1,7 +1,7 @@
 (ns inferenceql.viz.stream.eventsubs
   (:require [re-frame.core :as rf]
             [inferenceql.viz.stream.db :as db]
-            [inferenceql.viz.events.interceptors :refer [event-interceptors]]))
+            [inferenceql.viz.stream.interceptors :refer [event-interceptors]]))
 
 (rf/reg-event-db
  :app/initialize-db

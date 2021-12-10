@@ -1,6 +1,6 @@
 (ns inferenceql.viz.stream.page.home.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.events.interceptors :refer [event-interceptors]]))
+            [inferenceql.viz.stream.interceptors :refer [event-interceptors]]))
 
 ;; Hide/show sections
 

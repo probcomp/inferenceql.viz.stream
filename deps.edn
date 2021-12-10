@@ -27,7 +27,7 @@
                                     :sha "0241ee57e059f618ae55b2ae8822986d778b0d68"}
         ;; This is branch: htella/20211025-for-iql-stream
         probcomp/inferenceql.viz {:git/url "git@github.com:probcomp/inferenceql.viz.git"
-                                  :sha "5664d9901f6c0deebf5736d276d616a20d7ac81d"}
+                                  :sha "6fb5fc10edda0d13fc6531019191d681ea8437e4"}
         probcomp/metaprob {:git/url "https://github.com/probcomp/metaprob.git"
                            :sha "8dc9d09f747c1e29886bb9628a0110c6f6bc6f5a"}}
  :paths ["src"

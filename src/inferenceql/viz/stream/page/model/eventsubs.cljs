@@ -1,6 +1,6 @@
 (ns inferenceql.viz.stream.page.model.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.events.interceptors :refer [event-interceptors]]
+            [inferenceql.viz.stream.interceptors :refer [event-interceptors]]
             [inferenceql.viz.stream.store :refer [xcat-model]]
             [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view]]))
 

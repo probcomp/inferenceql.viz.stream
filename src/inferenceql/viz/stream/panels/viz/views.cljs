@@ -7,8 +7,9 @@
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
             [inferenceql.viz.config :refer [config]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering
-                                                  observed-samples virtual-samples]]))
+            [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]
+            [inferenceql.viz.stream.store :refer [schema col-ordering]]))
+
 
 (defn mi-plot
   "Reagent component for circle viz for mutual info."

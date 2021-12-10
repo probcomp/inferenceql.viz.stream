@@ -13,7 +13,7 @@
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
-            [inferenceql.viz.stream.store :refer [js-program-transitions column-dependencies]]
+            [inferenceql.viz.stream.store :refer [js-programs column-dependencies]]
             [re-com.core :refer [v-box h-box box gap title info-button line hyperlink popover-tooltip]]
             [medley.core :as medley]
             [clojure.string :as string]))
@@ -203,7 +203,7 @@
 (defn js-model
   "Reagent component for js-model."
   [model-num iteration cluster-selected]
-  (let [js-model-text (get-in js-program-transitions [iteration model-num])]
+  (let [js-model-text (get-in js-programs [iteration model-num])]
     [js-code-block model-num js-model-text cluster-selected]))
 
 (defn column-grouping-chips
@@ -254,7 +254,7 @@
                                   :class "tiny-js-model"}]]]])))
 
 (defn tiny-js-model [model-num iteration]
-  (let [js-model-text (get-in js-program-transitions [iteration model-num])
+  (let [js-model-text (get-in js-programs [iteration model-num])
         column-groupings (get-in column-dependencies [iteration model-num])
         highlighted-html (highlight js-model-text)]
     [v-box

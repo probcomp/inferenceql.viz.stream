@@ -3,45 +3,12 @@
   Contains defs for model iterations and samples to be used in visualizations."
   (:require [clojure.set]
             [cljs-bean.core :refer [->clj]]
-            [cognitect.transit :as t]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.csv :refer [clean-csv-maps]]
             [inferenceql.viz.util :refer [keywordize-kv]]
-            [inferenceql.inference.gpm :as gpm]
-            [inferenceql.inference.gpm.column :as column]
-            [inferenceql.inference.gpm.compositional :as compositional]
-            [inferenceql.inference.gpm.crosscat :as xcat]
-            [inferenceql.inference.gpm.primitive-gpms.bernoulli :as bernoulli]
-            [inferenceql.inference.gpm.primitive-gpms.categorical :as categorical]
-            [inferenceql.inference.gpm.primitive-gpms.gaussian :as gaussian]
-            [inferenceql.inference.gpm.view :as view]
-            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]))
-
-;; Stuff related to transit.
-;; TODO: Move this to iql.inference or another ns
-
-(def readers
-  (let [class-names ["inferenceql.inference.gpm.column.Column"
-                     "inferenceql.inference.gpm.compositional.Compositional"
-                     "inferenceql.inference.gpm.crosscat.XCat"
-                     "inferenceql.inference.gpm.primitive_gpms.bernoulli.Bernoulli"
-                     "inferenceql.inference.gpm.primitive_gpms.categorical.Categorical"
-                     "inferenceql.inference.gpm.primitive_gpms.gaussian.Gaussian"
-                     "inferenceql.inference.gpm.view.View"]
-        constructors [column/map->Column
-                      compositional/map->Compositional
-                      xcat/map->XCat
-                      bernoulli/map->Bernoulli
-                      categorical/map->Categorical
-                      gaussian/map->Gaussian
-                      view/map->View]
-        read-handlers (map t/read-handler constructors)]
-    (zipmap class-names read-handlers)))
-
-(def transit-reader (t/reader :json {:handlers readers}))
-
-(defn read-transit-string [string]
-  (t/read transit-reader string))
+            [inferenceql.viz.stream.transit :refer [read-transit-string]]
+            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]
+            [inferenceql.inference.gpm.crosscat :as xcat]))
 
 ;;; Compiled-in elements from config.
 
@@ -49,14 +16,34 @@
   ;; Coerce schema to contain columns names and datatyptes as keywords.
   (keywordize-kv (:schema config)))
 
-(def rows (clean-csv-maps schema (:data config)))
+(def rows
+  (clean-csv-maps schema (:data config)))
 
-;; Data obtained from the global js namespace, placed there by scripts tags in index.html.
+;; Data obtained from the global js namespace, placed there by script tags in index.html.
 
-(def transitions-samples (read-transit-string (.decompress js/LZString js/transitions_samples)))
-(def mutual-info (->clj js/mutual_info))
-(def xcat-models (->clj js/transitions))
-(def js-program-transitions (->clj js/js_program_transitions))
+(def samples
+  "Collection of samples at each iteration. Needs to be decompressed, then read in as a
+  large transit string. Produces a CLJS collection."
+  (read-transit-string (.decompress js/LZString js/transitions_samples)))
+
+(def mutual-info
+  "Mutual info between columns at every iteration. Present in js namespace as a JS object.
+  Needs use of ->clj to behave like a CLJS object."
+  (->clj js/mutual_info))
+
+(def xcat-models
+  "Collection of ensembles one for each iteration. Each ensemble consists of three
+  transit-encoded strings. Present in js namespace as a JS object.
+  Needs use of ->clj to behave like a CLJS object."
+  (->clj js/transitions))
+
+(def js-programs
+  "Collection of js-program strings representing the ensemble at each iteration.
+  Each ensemble consists of three strings. Present in js namespace as a JS object.
+  Needs use of ->clj to behave like a CLJS object."
+  (->clj js/js_program_transitions))
+
+;; Helper functions for accessing store data.
 
 (defn xcat-model
   "Reifies model at given iteration and model-id."
@@ -98,34 +85,3 @@
 (def column-dependencies
   (get-in config [:transitions :column-dependencies]))
 
-;;; Settings up samples.
-
-(defn add-null-columns [row]
-  (let [columns (keys schema)
-        null-kvs (zipmap columns (repeat nil))]
-    (merge null-kvs row)))
-
-(def iteration-tags
-  (mapcat (fn [iter count]
-            (repeat count {:iter iter}))
-          (range)
-          num-rows-required))
-
-(def observed-samples
-  (->> rows
-       (map #(assoc % :collection "observed"))
-       (map add-null-columns)
-       (map merge iteration-tags)))
-
-;; NOTE: this samples from the model. It is too slow, however.
-#_(defn virtual-samples [iteration]
-    (->> (sample-xcat (nth xcat-models iteration) 1000)
-         (map #(assoc % :collection "virtual"))
-         (map add-null-columns)
-         (map #(assoc % :iter 0))))
-
-(defn virtual-samples [iteration]
-  ;; TODO: are this being read in as a simple js objects. Should I surround in ->clj?
-  (->> (nth transitions-samples iteration)
-       (map #(assoc % :collection "virtual"
-                      :iter 0))))

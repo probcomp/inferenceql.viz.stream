@@ -84,5 +84,5 @@
 (s/def ::view-id integer?)
 (s/def ::cluster-id integer?)
 (s/def ::cluster-selected-click-count integer?)
-(s/def ::cluster-selected-y-offset integer?)
+(s/def ::cluster-selected-y-offset number?)
 (s/def ::show-cluster-simulation-plots boolean?)

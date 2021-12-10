@@ -7,9 +7,7 @@
                                                             xcat-view-id-map xcat-cluster-id-map
                                                             sample-xcat-cluster]]
             [inferenceql.viz.config :refer [config]]
-            [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering]]))
-
+            [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]))
 
 (defn mi-plot
   "Reagent component for circle viz for mutual info."
@@ -17,9 +15,9 @@
   (when (seq mi-data)
     (let [mi-threshold @(rf/subscribe [:home-page/mi-threshold])
           mi-data (nth mi-data iteration)
-          nodes (-> (set (keys mi-data))
-                    ;; Get nodes in consistent order by picking from col-ordering.
-                    (keep col-ordering))
+          ;; Get nodes in consistent order by picking from column-ordering.
+          nodes (keep (set (keys mi-data))
+                      (get-in config [:transitions :column-ordering]))
           edges (map (fn [[col-1 col-2]]
                        {:targets [col-1 col-2]
                         :val (get-in mi-data [col-1 col-2])})

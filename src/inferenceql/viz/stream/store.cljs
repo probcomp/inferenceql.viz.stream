@@ -55,8 +55,3 @@
         data (zipmap (range) (take num-rows rows))
         options {:options (get-in config [:transitions :options])}]
     (xcat/construct-xcat-from-latents spec latents data options)))
-
-;; TODO: remove this.
-(def col-ordering
-  "Ordering of columns as they appear in the sequence of model iterations."
-  (get-in config [:transitions :column-ordering]))

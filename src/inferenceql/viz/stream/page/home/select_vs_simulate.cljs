@@ -5,10 +5,10 @@
                                  label
                                  horizontal-tabs]]
             [re-frame.core :as rf]
-            [inferenceql.viz.stream.panels.viz.views :refer [select-vs-simulate-plot]]
-            [inferenceql.viz.stream.store :refer [schema col-ordering]]))
+            [inferenceql.viz.config :refer [config]]
+            [inferenceql.viz.stream.panels.viz.views :refer [select-vs-simulate-plot]]))
 
-(def column-list (keep (set (keys schema)) col-ordering))
+(def column-list (get-in config [:transitions :column-ordering]))
 
 (defn plot-options []
   (let [col-selection @(rf/subscribe [:home-page/col-selection])

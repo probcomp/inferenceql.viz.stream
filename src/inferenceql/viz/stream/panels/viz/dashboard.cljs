@@ -104,8 +104,7 @@
                                         :legend {:orient "top"
                                                  :title nil}}}}
                     {:transform [{:filter {:or [{:field "collection" :equal "virtual"}
-                                                {:and ["datum[view] == cluster"
-                                                       (format "indexof(view_columns, '%s') != -1" (name col))]}]}}]
+                                                "datum[view] == cluster"]}}]
                      :mark {:type "bar"
                             :clip true}
                      :encoding {:x {:bin bin-config
@@ -532,15 +531,16 @@
    :vconcat sections
    :spacing 100
    :data {:name "rows"}
-   :params [{:name "iter"
+   :params [;; The current iteration. Filters out data that has not been incorporated
+            ;; by this iteration.
+            {:name "iter"
              :value 0}
+            ;; Observed data with this view-id will be highlighted.
             {:name "view"
              :value nil}
-            {:name "view_columns"
-             :value []}
+            ;; Observed data with this cluster-id will be highlighted.
             {:name "cluster"
              :value nil}
-            ;;----------------
             {:name "splomAlphaObserved"
              :value 0.7}
             {:name "splomAlphaVirtual"
@@ -572,10 +572,10 @@
           ;; If not specified, visualize columns found in schema.
           cols (->> (or cols
                         (keys schema))
-                 (map keyword)
-                 (take 8) ; Either way we will visualize at most 8 columns.
-                 (filter vega-type) ; Only keep the columns that we can determine a vega-type for.
-                 (sort))
+                    (map keyword)
+                    (take 8) ; Either way we will visualize at most 8 columns.
+                    (filter vega-type) ; Only keep the columns that we can determine a vega-type for.
+                    (sort))
 
           cols-by-type (group-by vega-type cols)
 

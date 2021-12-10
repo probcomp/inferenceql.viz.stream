@@ -59,7 +59,6 @@
         data {:rows all-samples}
         params {:iter iteration
                 :cluster (:cluster-id cluster-selected)
-                :view_columns (map name cols-in-view)
                 :view (some->> (:view-id cluster-selected)
                                (str "view_"))}]
     [vega-lite spec options nil data params]))

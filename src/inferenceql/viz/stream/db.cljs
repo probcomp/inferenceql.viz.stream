@@ -17,19 +17,17 @@
   []
   {:app {:page [:home-page]}
    :control-panel {:iteration 0}
-
    :home-page {:show-data-table-section true
                :show-ensemble-section true
                :data-table-size "400px"
-
+               ;;--
                :show-plot-options false
                :marginal-types #{:1D}
                :col-selection (set starting-cols)
-
+               ;;--
                :show-ensemble-options false
                :mi-bounds {:min 0 :max 10}
                :mi-threshold 3}
-
    :model-page {:show-cluster-simulation-plots false
                 :cluster-selected-click-count 0}})
 
@@ -54,11 +52,11 @@
 (s/def ::home-page (s/keys :req-un [::show-data-table-section
                                     ::show-ensemble-section
                                     ::data-table-size
-
+                                    ;;--
                                     ::show-plot-options
                                     ::marginal-types
                                     ::col-selection
-
+                                    ;;--
                                     ::show-ensemble-options
                                     ::mi-bounds
                                     ::mi-threshold]))

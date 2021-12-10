@@ -534,13 +534,12 @@
    :data {:name "rows"}
    :params [{:name "iter"
              :value 0}
-            ;;----------------
             {:name "view"
-             :value "view_1"}
+             :value nil}
             {:name "view_columns"
-             :value ["BMI" "age" "blah"]}
+             :value []}
             {:name "cluster"
-             :value 1}
+             :value nil}
             ;;----------------
             {:name "splomAlphaObserved"
              :value 0.7}

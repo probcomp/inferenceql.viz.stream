@@ -35,8 +35,8 @@
         cols-in-view @(rf/subscribe [:model-page/cols-in-view])
         xcat-model @(rf/subscribe [:model-page/model])
 
-        ;; Merge in the view-cluster information only when we have to.
-        all-samples (let [row-assignments (all-row-assignments xcat-model)
+        all-samples (let [;; Merge in the view-cluster assignment information on observed rows.
+                          row-assignments (all-row-assignments xcat-model)
                           view-key (keyword (str "view_" (:view-id cluster-selected)))
                           num-rows (count (filter #(= (get % view-key)
                                                       (:cluster-id cluster-selected))
@@ -44,10 +44,10 @@
                           view-cluster-assignments (concat row-assignments (repeat {}))
                           observed-samples (map merge observed-samples view-cluster-assignments)
 
-                          view-map (xcat-view-id-map xcat-model)
-                          view-id (view-map (:view-id cluster-selected))
-                          cluster-map (xcat-cluster-id-map xcat-model view-id)
-                          cluster-id (cluster-map (:cluster-id cluster-selected))
+                          view-id (get (xcat-view-id-map xcat-model)
+                                       (:view-id cluster-selected))
+                          cluster-id (get (xcat-cluster-id-map xcat-model view-id)
+                                          (:cluster-id cluster-selected))
 
 
                           allow-neg (get-in config [:settings :allow_negative_simulations])
@@ -59,8 +59,9 @@
         data {:rows all-samples}
         params {:iter iteration
                 :cluster (:cluster-id cluster-selected)
-                :view_columns (clj->js (map name cols-in-view))
-                :view (some->> (:view-id cluster-selected) (str "view_"))}]
+                :view_columns (map name cols-in-view)
+                :view (some->> (:view-id cluster-selected)
+                               (str "view_"))}]
     [vega-lite spec options nil data params]))
 
 (defn select-vs-simulate-plot
@@ -70,9 +71,6 @@
         all-samples (concat observed-samples (virtual-samples iteration))
         options {:actions false}
         data {:rows all-samples}
-        params {:iter iteration
-                :cluster nil
-                :view_columns []
-                :view nil}]
+        params {:iter iteration}]
     [vega-lite spec options nil data params]))
 

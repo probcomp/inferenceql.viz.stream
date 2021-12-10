@@ -58,17 +58,16 @@
 
 ;;; Secondary defs built off of xcat model iterations.
 
-(def num-transitions
-  (get-in config [:transitions :count]))
-
 (def col-ordering
   "Ordering of columns as they appear in the sequence of model iterations."
   (get-in config [:transitions :column-ordering]))
 
 (def columns-at-iter
+  "Number of columns incorporated at each iteration."
   (get-in config [:transitions :columns-at-iter]))
 
 (def starting-cols
+  "Columns incorporated at start of iterations."
   (let [num-cols (nth columns-at-iter 0)]
     (take num-cols col-ordering)))
 
@@ -81,7 +80,3 @@
   (map -
        num-rows-at-iter
        (concat [0] num-rows-at-iter)))
-
-(def column-dependencies
-  (get-in config [:transitions :column-dependencies]))
-

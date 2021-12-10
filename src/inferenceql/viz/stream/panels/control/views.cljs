@@ -3,7 +3,6 @@
             [re-com.core :refer [v-box h-box box slider label gap
                                  selection-list radio-button hyperlink]]
             [goog.string :refer [format]]
-            [inferenceql.viz.stream.store :refer [num-transitions]]
             [inferenceql.viz.config :refer [config]]))
 
 (defn iteration-slider []
@@ -16,7 +15,7 @@
                  :style {:padding-top "3px"}
                  :child [slider
                          :min 0
-                         :max (dec num-transitions)
+                         :max (dec (get-in config [:transitions :count]))
                          :model iteration
                          :on-change (fn [iter]
                                       (rf/dispatch [:model-page/clear-cluster-selection])

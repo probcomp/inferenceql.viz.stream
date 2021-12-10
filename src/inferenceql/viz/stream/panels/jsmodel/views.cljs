@@ -13,7 +13,8 @@
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
             [inferenceql.viz.panels.jsmodel.multimix :as multimix]
-            [inferenceql.viz.stream.store :refer [js-programs column-dependencies]]
+            [inferenceql.viz.stream.store :refer [js-programs]]
+            [inferenceql.viz.config :refer [config]]
             [re-com.core :refer [v-box h-box box gap title info-button line hyperlink popover-tooltip]]
             [medley.core :as medley]
             [clojure.string :as string]))
@@ -255,7 +256,7 @@
 
 (defn tiny-js-model [model-num iteration]
   (let [js-model-text (get-in js-programs [iteration model-num])
-        column-groupings (get-in column-dependencies [iteration model-num])
+        column-groupings (get-in config [:transitions :column-dependencies iteration model-num])
         highlighted-html (highlight js-model-text)]
     [v-box
      :width "275px"

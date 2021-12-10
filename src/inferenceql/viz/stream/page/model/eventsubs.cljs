@@ -22,7 +22,7 @@
   (fn [db [_ new-selection]]
     (-> db
         (assoc-in [:model-page :cluster-selected] new-selection)
-        (update-in [:model-page :cluster-selected-click-count] fnil inc 1))))
+        (update-in [:model-page :cluster-selected-click-count] inc 1))))
 
 (rf/reg-event-db
   :model-page/clear-cluster-selection

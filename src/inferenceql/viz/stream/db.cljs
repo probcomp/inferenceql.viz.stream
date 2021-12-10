@@ -30,43 +30,61 @@
                :mi-bounds {:min 0 :max 10}
                :mi-threshold 3}
 
-   :model-page {:cluster-selected nil
-                :cluster-selected-click-count nil
-                :cluster-selected-y-offset nil
-                :show-cluster-simulation-plots false}})
-
-
-;; Specs
+   :model-page {:show-cluster-simulation-plots false
+                :cluster-selected-click-count 0}})
 
 (s/def ::db (s/keys :req-un [::app
                              ::control-panel
                              ::home-page
                              ::model-page]))
 
-(s/def ::app any?)
-(s/def ::control-panel any?)
-(s/def ::home-page any?)
-(s/def ::model-page any?)
+;;; App section.
 
+(s/def ::app (s/keys :req-un [::page]))
+(s/def ::page (s/cat :page-name #{:home-page :model-page}
+                     :model-num (s/? integer?)))
 
-(comment
-  (s/def ::control-panel (s/keys :req-un [::iteration
-                                          ::col-selection
-                                          ::marginal-types
-                                          ::show-plot-options
-                                          ::mi-threshold]
-                                 :opt-un [::cluster-selected
-                                          ::cluster-selected-click-count]))
+;;; Control-panel section.
 
-  (s/def ::iteration integer?)
-  (s/def ::col-selection set?)
-  (s/def ::marginal-types #(and (set? %)
-                                (clojure.set/subset? % #{:1D :2D})))
-  (s/def ::show-plot-options boolean?)
-  (s/def ::mi-threshold number?)
-  (s/def ::show-cluster-simulation-plots boolean?)
+(s/def ::control-panel (s/keys :req-un [::iteration]))
+(s/def ::iteration integer?)
 
-  (s/def ::cluster-selected (s/keys :req-un [::cluster-id ::view-id]))
-  (s/def ::cluster-selected-click-count integer?)
-  (s/def ::cluster-id integer?)
-  (s/def ::view-id integer?))
+;;; Home-page section.
+
+(s/def ::home-page (s/keys :req-un [::show-data-table-section
+                                    ::show-ensemble-section
+                                    ::data-table-size
+
+                                    ::show-plot-options
+                                    ::marginal-types
+                                    ::col-selection
+
+                                    ::show-ensemble-options
+                                    ::mi-bounds
+                                    ::mi-threshold]))
+(s/def ::show-data-table-section boolean?)
+(s/def ::show-ensemble-section boolean?)
+(s/def ::data-table-size string?)
+(s/def ::show-plot-options boolean?)
+(s/def ::marginal-types #(clojure.set/subset? % #{:1D :2D}))
+(s/def ::col-selection (s/coll-of ::column-name :kind set?))
+(s/def ::column-name keyword?)
+(s/def ::show-ensemble-options boolean?)
+(s/def ::mi-bounds (s/keys :req-un [::min ::max]))
+(s/def ::min number?)
+(s/def ::max number?)
+(s/def ::mi-threshold number?)
+
+;;; Model-page section.
+
+(s/def ::model-page (s/keys :req-un [::show-cluster-simulation-plots]
+                            :opt-un [::cluster-selected
+                                     ::cluster-selected-click-count
+                                     ::cluster-selected-y-offset]))
+(s/def ::cluster-selected (s/keys :req-un [::model-id ::view-id ::cluster-id]))
+(s/def ::model-id integer?)
+(s/def ::view-id integer?)
+(s/def ::cluster-id integer?)
+(s/def ::cluster-selected-click-count integer?)
+(s/def ::cluster-selected-y-offset integer?)
+(s/def ::show-cluster-simulation-plots boolean?)

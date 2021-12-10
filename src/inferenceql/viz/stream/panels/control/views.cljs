@@ -8,8 +8,7 @@
 
 (defn iteration-slider []
   (let [iteration @(rf/subscribe [:control/iteration])
-        label-text (or (get-in config [:settings :slider_text])
-                       "Iteration:")]
+        label-text (get-in config [:settings :slider_text] "Iteration:")]
     [h-box
      :children [[label :label label-text]
                 [gap :size "10px"]

@@ -48,8 +48,8 @@
                                    ::allow_negative_simulations
                                    ::numerical_ranges]))
 (s/def ::slider_text string?)
-(s/def ::allow_negative_simulations (or boolean? (s/coll-of ::column-name-string)))
-(s/def ::column-name-string string?)
+(s/def ::allow_negative_simulations (s/or :bool boolean?
+                                          :column-names (s/coll-of string?)))
 (s/def ::numerical_ranges (s/map-of ::column-name
                                     (s/cat :start number? :end number?)))
 

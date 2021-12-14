@@ -77,6 +77,6 @@
   "Reagent component for select-vs-simulate plot."
   [iteration]
   (let [spec @(rf/subscribe [:viz/inferences-spec])
-        options {:actions false :mode "vega" :renderer "canvas"}
+        options {:actions false :renderer "canvas"}
         data {:rows (virtual-samples iteration)}]
     [vega-lite spec options nil data nil]))

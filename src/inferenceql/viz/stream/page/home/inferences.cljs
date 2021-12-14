@@ -44,8 +44,7 @@
                               [gap :size "50px"]]]]])))
 
 (defn inferences-section []
-  (let [iteration @(rf/subscribe [:control/iteration])
-        column-pairs @(rf/subscribe [:home-page/inferences-column-pairs])]
+  (let [iteration @(rf/subscribe [:control/iteration])]
     [:<>
      [h-box
       :children [[title :level :level2 :label "Inferences"]
@@ -59,6 +58,4 @@
                   :label "options" :on-click #(rf/dispatch [:home-page/toggle-plot-options])]]]
      [plot-options]
      [gap :size "20px"]
-     (if (seq column-pairs)
-       [inferences-plot iteration]
-       [:span "This section will show when there is more than one numerical column."])]))
+     [inferences-plot iteration]]))

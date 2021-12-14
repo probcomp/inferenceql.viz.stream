@@ -1,7 +1,5 @@
 (ns inferenceql.viz.stream.page.home.eventsubs
   (:require [re-frame.core :as rf]
-            [medley.core :as medley]
-            [clojure.math.combinatorics :refer [combinations]]
             [inferenceql.viz.stream.store :refer [schema]]
             [inferenceql.viz.stream.interceptors :refer [event-interceptors]]))
 
@@ -45,13 +43,10 @@
 ;;; Inferences section
 
 (rf/reg-sub
-  :home-page/inferences-column-pairs
+  :home-page/inferences-columns
   (fn [db _]
     ;; TODO: make use of which columns are selected.
-    (let [numerical-cols (->> schema
-                              (medley/filter-vals #{:numerical})
-                              (keys))]
-      (combinations numerical-cols 2))))
+    (keys schema)))
 
 ;;; Ensemble section.
 

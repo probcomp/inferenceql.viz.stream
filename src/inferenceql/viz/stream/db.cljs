@@ -21,9 +21,13 @@
                :show-ensemble-section true
                :data-table-size "400px"
                ;;--
+               ;; TODO: add specs for this section.
+               :show-inferences-plot-options false
+               :inferences-col-selection (set (take 3 starting-cols))
+               ;;--
                :show-plot-options false
                :marginal-types #{:1D}
-               :col-selection (set starting-cols)
+               :col-selection (set (take 3 starting-cols))
                ;;--
                :show-ensemble-options false
                :mi-bounds {:min 0 :max 10}

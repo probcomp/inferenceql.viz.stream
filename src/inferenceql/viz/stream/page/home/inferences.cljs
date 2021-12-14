@@ -11,26 +11,14 @@
 (def column-list (get-in config [:transitions :column-ordering]))
 
 (defn plot-options []
-  (let [col-selection @(rf/subscribe [:home-page/col-selection])
-        marginal-types @(rf/subscribe [:home-page/marginal-types])
-        show-plot-options @(rf/subscribe [:home-page/show-plot-options])]
+  (let [col-selection @(rf/subscribe [:home-page/inferences-col-selection])
+        show-plot-options @(rf/subscribe [:home-page/show-inferences-plot-options])]
     (when show-plot-options
       [v-box
        :padding "0px 0px 0px 0px"
        :margin "0px 0px 0px 0px"
        :children [[v-box
                    :children [[gap :size "10px"]
-                              [h-box
-                               :children [[label :label "Marginals:"]
-                                          [gap :size "10px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [selection-list
-                                                   :choices (vec (for [c [:1D :2D]]
-                                                                   {:id c :label (name c)}))
-                                                   :model marginal-types
-                                                   :on-change #(rf/dispatch [:home-page/set-marginal-types %])]]]]
-                              [gap :size "10px"]
                               [h-box
                                :children [[label :label "Columns:"]
                                           [gap :size "16px"]
@@ -40,7 +28,7 @@
                                                    :choices (vec (for [c column-list]
                                                                    {:id c :label (name c)}))
                                                    :model col-selection
-                                                   :on-change #(rf/dispatch [:home-page/select-cols %])]]]]
+                                                   :on-change #(rf/dispatch [:home-page/inferences-select-cols %])]]]]
                               [gap :size "50px"]]]]])))
 
 (defn inferences-section []
@@ -55,7 +43,7 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-plot-options])]]]
+                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-inferences-plot-options])]]]
      [plot-options]
      [gap :size "20px"]
      [inferences-plot iteration]]))

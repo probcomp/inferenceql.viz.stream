@@ -25,6 +25,6 @@
 
 (rf/reg-sub
   :viz/inferences-spec
-  :<- [:home-page/inferences-columns]
+  :<- [:home-page/inferences-col-selection]
   (fn [inferences-columns  _]
     (inferences/spec inferences-columns 3)))

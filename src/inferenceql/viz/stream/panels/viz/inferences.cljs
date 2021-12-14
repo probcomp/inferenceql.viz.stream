@@ -39,6 +39,7 @@
                            "quantitative" {:maxbins 50})
                     :field (name c1),
                     :type c1-type},
+                    ;; TODO: fix ranges.
                     ;;:scale {:domain (get ranges c1)}
                 :y {:bin (case c2-type
                            "nominal" false

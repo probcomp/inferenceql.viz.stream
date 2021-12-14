@@ -1,6 +1,5 @@
 (ns inferenceql.viz.stream.page.home.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.stream.store :refer [schema]]
             [inferenceql.viz.stream.interceptors :refer [event-interceptors]]))
 
 ;; Hide/show sections
@@ -43,10 +42,26 @@
 ;;; Inferences section
 
 (rf/reg-sub
-  :home-page/inferences-columns
+  :home-page/show-inferences-plot-options
   (fn [db _]
-    ;; TODO: make use of which columns are selected.
-    (keys schema)))
+    (get-in db [:home-page :show-inferences-plot-options])))
+
+(rf/reg-event-db
+  :home-page/toggle-inferences-plot-options
+  event-interceptors
+  (fn [db [_]]
+    (update-in db [:home-page :show-inferences-plot-options] not)))
+
+(rf/reg-sub
+  :home-page/inferences-col-selection
+  (fn [db _]
+    (get-in db [:home-page :inferences-col-selection])))
+
+(rf/reg-event-db
+  :home-page/inferences-select-cols
+  event-interceptors
+  (fn [db [_ new-val]]
+    (assoc-in db [:home-page :inferences-col-selection] new-val)))
 
 ;;; Ensemble section.
 

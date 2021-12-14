@@ -73,7 +73,7 @@
                     [gap :size "50px"]
                     [v-box
                      :children [[title
-                                 :level :level3 :label "Column dependencies"
+                                 :level :level3 :label "Pairwise predictive relationships"
                                  :parts {:wrapper {:style {:align-self "center"}}}
                                  :style {:text-align "center"}]
                                 [mi-plot mutual-info iteration]]]]]

@@ -14,7 +14,7 @@
         large-size "1000px"]
     [:<>
      [h-box
-      :children [[title :level :level2 :label "Data Table"]
+      :children [[title :level :level2 :label "Data"]
                  [gap :size "5px"]
                  [info-button
                   :style {:margin-top "8px"}

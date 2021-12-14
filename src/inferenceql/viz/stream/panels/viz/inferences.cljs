@@ -27,23 +27,22 @@
 (defn inference-plot [[c1 c2]]
   (let [c1-type (vega-type schema c1)
         c2-type (vega-type schema c2)]
-    {
-     #_:transform #_[{:filter
-                      {:and
-                       [{:field "IMDB Rating", :valid true}
-                        {:field "Rotten Tomatoes Rating", :valid true}]}}],
-     :mark {:type "rect" :tooltip true}
-     :width {:step 20},
-     :height {:step 20},
+    {:mark {:type "rect" :tooltip true}
+     :width (case c1-type
+              "nominal" {:step 16},
+              "quantitative" 200)
+     :height (case c2-type
+              "nominal" {:step 16},
+              "quantitative" 300),
      :encoding {:x {:bin (case c1-type
                            "nominal" false
-                           "numerical" {:maxbins 50})
+                           "quantitative" {:maxbins 50})
                     :field (name c1),
                     :type c1-type},
                     ;;:scale {:domain (get ranges c1)}
-                :y {:bin (case c1-type
+                :y {:bin (case c2-type
                            "nominal" false
-                           "numerical" {:maxbins 50}),
+                           "quantitative" {:maxbins 50}),
                     :field (name c2),
                     :type c2-type},
                     ;;:scale {:domain (get ranges c2)}
@@ -53,8 +52,7 @@
 
 (defn spec
   [columns num-columns]
-  (let [columns (take 3 columns)
-        column-pairs (for [x columns
+  (let [column-pairs (for [x columns
                            y columns
                            :while (not= x y)]
                        [x y])
@@ -69,8 +67,7 @@
               :config {:countTitle "Count"
                        :axisY {:minExtent 10}
                        :view {:stroke "transparent"}}
-              :resolve {:legend {:color "independent"}
-                        :scale {:color "independent"}}}]
+              :resolve {:scale {:color "independent"}}}]
     (.log js/console (clj->js spec))
     spec))
 

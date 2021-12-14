@@ -73,8 +73,15 @@
         params {:iter iteration}]
     [vega-lite spec options nil data params]))
 
+(defn select-plot
+  [iteration]
+  (let [spec @(rf/subscribe [:viz/select-spec])
+        options {:actions false}
+        data {:rows observed-samples}
+        params {:iter iteration}]
+    [vega-lite spec options nil data params]))
+
 (defn inferences-plot
-  "Reagent component for select-vs-simulate plot."
   [iteration]
   (let [spec @(rf/subscribe [:viz/inferences-spec])
         options {:actions false :renderer "canvas"}

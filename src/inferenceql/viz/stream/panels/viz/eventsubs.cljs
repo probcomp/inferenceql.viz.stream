@@ -24,6 +24,14 @@
       (dashboard/spec observed-samples schema cols-in-view 10 marginal-types 2))))
 
 (rf/reg-sub
+  :viz/select-spec
+  :<- [:home-page/col-selection]
+  ;; TODO: use own col selection.
+  ;;:<- [:home-page/select-plot-col-selection]
+  (fn [col-selection  _]
+    (dashboard/spec observed-samples schema col-selection 10 #{:2D} 3)))
+
+(rf/reg-sub
   :viz/inferences-spec
   :<- [:home-page/inferences-col-selection]
   (fn [inferences-columns  _]

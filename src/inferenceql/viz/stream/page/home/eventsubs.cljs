@@ -51,6 +51,11 @@
   (fn [db [_ new-val]]
     (assoc-in db [:home-page :data-table-size] new-val)))
 
+(rf/reg-sub
+  :home-page/select-plot-col-selection
+  (fn [db _]
+    (get-in db [:home-page :select-plot-col-selection])))
+
 ;;; Inferences section
 
 (rf/reg-sub

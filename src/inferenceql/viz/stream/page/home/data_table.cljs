@@ -1,9 +1,11 @@
 (ns inferenceql.viz.stream.page.home.data-table
   (:require [re-com.core :refer [v-box h-box box gap title info-button
                                  checkbox line hyperlink popover-tooltip
+                                 h-split
                                  horizontal-tabs]]
             [re-frame.core :as rf]
-            [inferenceql.viz.stream.panels.table.views :refer [data-table]]))
+            [inferenceql.viz.stream.panels.table.views :refer [data-table]]
+            [inferenceql.viz.stream.panels.viz.views :refer [select-plot]]))
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])
@@ -42,7 +44,22 @@
      (when show-data-table-section
        [:<>
         [gap :size "5px"]
-        [box :width "1390px"
-         :child [data-table iteration cluster-selected {:height data-table-size}]]
+        [h-split
+         :margin "0px"
+         :style {:border "1px solid lightgrey"
+                 :border-radius "4px"}
+         :parts {:splitter {:style {:background-color "#eee"}}}
+         :split-is-px? true
+         :initial-split "1250px"
+         :splitter-size "10px"
+         :panel-1 [box
+                   :width "1390px"
+                   :child [data-table iteration cluster-selected
+                           {:height data-table-size}]]
+         :panel-2 [box
+                   :style {:margin-top "10px"
+                           :margin-left "40px"}
+                   :child [select-plot iteration]]]
+
         [gap :size "20px"]])]))
 

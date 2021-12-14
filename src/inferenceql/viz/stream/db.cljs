@@ -19,7 +19,8 @@
    :control-panel {:iteration 0}
    :home-page {:show-data-table-section true
                :show-ensemble-section true
-               :data-table-size "400px"
+               :data-table-size "1000px"
+               :select-plot-col-selection (set (take 4 starting-cols))
                ;;--
                ;; TODO: add specs for this section.
                :show-inferences-section true

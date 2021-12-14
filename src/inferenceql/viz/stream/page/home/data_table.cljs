@@ -46,7 +46,7 @@
         [gap :size "5px"]
         [h-split
          :margin "0px"
-         :style {:border "1px solid lightgrey"
+         :style {:border "1px solid #e7e7e7"
                  :border-radius "4px"}
          :parts {:splitter {:style {:background-color "#eee"}}}
          :split-is-px? true

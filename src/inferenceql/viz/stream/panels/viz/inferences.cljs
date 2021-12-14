@@ -22,8 +22,6 @@
                        :nominal "nominal"}]
     (get vega-type-map iql-type)))
 
-
-
 (defn inference-plot [[c1 c2]]
   (let [c1-type (vega-type schema c1)
         c2-type (vega-type schema c2)]
@@ -36,17 +34,16 @@
               "quantitative" 300),
      :encoding {:x {:bin (case c1-type
                            "nominal" false
-                           "quantitative" {:maxbins 50})
+                           "quantitative" {:maxbins 50
+                                           :extent (get ranges c1)})
                     :field (name c1),
-                    :type c1-type},
-                    ;; TODO: fix ranges.
-                    ;;:scale {:domain (get ranges c1)}
+                    :type c1-type}
                 :y {:bin (case c2-type
                            "nominal" false
                            "quantitative" {:maxbins 50}),
+                                           :extent (get ranges c2)
                     :field (name c2),
-                    :type c2-type},
-                    ;;:scale {:domain (get ranges c2)}
+                    :type c2-type}
                 :color {:aggregate "count",
                         :type "quantitative"
                         :legend nil}}}))

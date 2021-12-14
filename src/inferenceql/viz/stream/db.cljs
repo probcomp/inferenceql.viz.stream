@@ -22,6 +22,7 @@
                :data-table-size "400px"
                ;;--
                ;; TODO: add specs for this section.
+               :show-inferences-section true
                :show-inferences-plot-options false
                :inferences-col-selection (set (take 3 starting-cols))
                ;;--

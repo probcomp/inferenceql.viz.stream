@@ -16,6 +16,18 @@
     (update-in db [:home-page :show-data-table-section] not)))
 
 (rf/reg-sub
+  :home-page/show-inferences-section
+  (fn [db _]
+    (get-in db [:home-page :show-inferences-section])))
+
+(rf/reg-event-db
+  :home-page/toggle-show-inferences-section
+  event-interceptors
+  (fn [db [_]]
+    (update-in db [:home-page :show-inferences-section] not)))
+
+
+(rf/reg-sub
   :home-page/show-ensemble-section
   (fn [db _]
     (get-in db [:home-page :show-ensemble-section])))

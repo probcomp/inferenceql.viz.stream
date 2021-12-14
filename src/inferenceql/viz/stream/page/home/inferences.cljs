@@ -32,7 +32,8 @@
                               [gap :size "50px"]]]]])))
 
 (defn inferences-section []
-  (let [iteration @(rf/subscribe [:control/iteration])]
+  (let [iteration @(rf/subscribe [:control/iteration])
+        show-inferences-section @(rf/subscribe [:home-page/show-inferences-section])]
     [:<>
      [h-box
       :children [[title :level :level2 :label "Inferences"]
@@ -43,7 +44,14 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                  :style {:color (when-not show-inferences-section "darkblue")}
+                  :label "hide" :on-click #(rf/dispatch [:home-page/toggle-show-inferences-section])]
+                 [gap :size "20px"]
+                 [hyperlink
+                  :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
                   :label "options" :on-click #(rf/dispatch [:home-page/toggle-inferences-plot-options])]]]
-     [plot-options]
-     [gap :size "20px"]
-     [inferences-plot iteration]]))
+     (when show-inferences-section
+       [:<>
+        [plot-options]
+        [gap :size "20px"]
+        [inferences-plot iteration]])]))

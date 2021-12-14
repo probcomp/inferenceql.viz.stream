@@ -47,7 +47,7 @@
   (let [iteration @(rf/subscribe [:control/iteration])]
     [:<>
      [h-box
-      :children [[title :level :level2 :label "Select vs. Simulate"]
+      :children [[title :level :level2 :label "Observed Data vs. Program Simulations"]
                  [gap :size "5px"]
                  [info-button
                   :style {:margin-top "8px"}

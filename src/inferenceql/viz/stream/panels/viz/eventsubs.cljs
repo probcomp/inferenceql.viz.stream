@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [inferenceql.viz.stream.interceptors :refer [event-interceptors]]
             [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
+            [inferenceql.viz.stream.panels.viz.inferences :as inferences]
             [inferenceql.viz.stream.store :refer [schema]]
             [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples]]))
 
@@ -21,3 +22,9 @@
                            #{:2D}
                            #{:1D})]
       (dashboard/spec observed-samples schema cols-in-view 10 marginal-types 2))))
+
+(rf/reg-sub
+  :viz/inferences-spec
+  :<- [:home-page/inferences-column-pairs]
+  (fn [inferences-column-pairs  _]
+    (inferences/spec inferences-column-pairs 3)))

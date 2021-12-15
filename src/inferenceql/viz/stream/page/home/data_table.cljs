@@ -20,7 +20,7 @@
        :children [[v-box
                    :children [[gap :size "10px"]
                               [h-box
-                               :children [[label :label "Columns:"]
+                               :children [[label :label "Columns to plot:"]
                                           [gap :size "16px"]
                                           [box
                                            :style {:padding-top "3px"}

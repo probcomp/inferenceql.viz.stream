@@ -45,13 +45,6 @@
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
                   :style {:color (when-not show-inferences-section "darkblue")}
-                  :label "hide" :on-click #(rf/dispatch [:home-page/toggle-show-inferences-section])]
-                 [gap :size "20px"]
-                 [hyperlink
-                  :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-inferences-plot-options])]]]
+                  :label "hide" :on-click #(rf/dispatch [:home-page/toggle-show-inferences-section])]]]
      (when show-inferences-section
-       [:<>
-        [plot-options]
-        [gap :size "20px"]
-        [inferences-plot iteration]])]))
+       [inferences-plot iteration])]))

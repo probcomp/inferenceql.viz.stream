@@ -30,18 +30,7 @@
                                                                    {:id c :label (name c)}))
                                                    :model marginal-types
                                                    :on-change #(rf/dispatch [:home-page/set-marginal-types %])]]]]
-                              [gap :size "10px"]
-                              [h-box
-                               :children [[label :label "Columns:"]
-                                          [gap :size "16px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [selection-list
-                                                   :choices (vec (for [c column-list]
-                                                                   {:id c :label (name c)}))
-                                                   :model col-selection
-                                                   :on-change #(rf/dispatch [:home-page/select-cols %])]]]]
-                              [gap :size "50px"]]]]])))
+                              [gap :size "30px"]]]]])))
 
 (defn select-vs-simulate-section []
   (let [iteration @(rf/subscribe [:control/iteration])]

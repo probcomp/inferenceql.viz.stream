@@ -9,7 +9,7 @@
 
 (rf/reg-sub
   :viz/select-vs-simulate-spec
-  :<- [:home-page/col-selection]
+  :<- [:home-page/data-section-col-selection]
   :<- [:home-page/marginal-types]
   (fn [[col-selection marginal-types] _]
       (dashboard/spec observed-samples schema col-selection 10 marginal-types 3 true)))
@@ -31,6 +31,6 @@
 
 (rf/reg-sub
   :viz/inferences-spec
-  :<- [:home-page/inferences-col-selection]
+  :<- [:home-page/data-section-col-selection]
   (fn [inferences-columns  _]
     (inferences/spec inferences-columns 3)))

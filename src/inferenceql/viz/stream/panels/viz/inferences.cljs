@@ -53,20 +53,17 @@
   (let [column-pairs (for [x columns
                            y columns
                            :while (not= x y)]
-                       [x y])
-        _ (.log js/console :check-me-2 column-pairs)
-        spec {:$schema vl5-schema
-              :autosize {:resize true}
-              :columns num-columns
-              :concat (for [pair column-pairs]
-                        (inference-plot pair))
-              :spacing 100
-              :data {:name "rows"}
-              :config {:countTitle "Count"
-                       :axisY {:minExtent 10}
-                       :view {:stroke "transparent"}}
-              :resolve {:scale {:color "independent"}}}]
-    (.log js/console (clj->js spec))
-    spec))
+                       [x y])]
+    {:$schema vl5-schema
+     :autosize {:resize true}
+     :columns num-columns
+     :concat (for [pair column-pairs]
+               (inference-plot pair))
+     :spacing 100
+     :data {:name "rows"}
+     :config {:countTitle "Count"
+              :axisY {:minExtent 10}
+              :view {:stroke "transparent"}}
+     :resolve {:scale {:color "independent"}}}))
 
 

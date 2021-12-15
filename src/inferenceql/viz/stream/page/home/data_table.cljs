@@ -73,24 +73,11 @@
        [:<>
         [plot-options]
         [gap :size "5px"]
-        [h-split
-         :margin "0px"
-         :style {:border "1px solid #e7e7e7"
-                 :border-radius "4px"}
-         :parts {:splitter {:style {:background-color "#eee"}}}
-         :split-is-px? true
-         :initial-split "1250px"
-         :splitter-size "10px"
-         :panel-1 [box
-                   :width "2000px"
-                   :class "smalldot"
-                   :child [data-table iteration cluster-selected
-                           {:height data-table-size
-                            :width "1250px"}]]
-         :panel-2 [box
-                   :style {:margin-top "10px"
-                           :margin-left "40px"}
-                   :child [select-plot iteration]]]
-
+        [box
+         :width "1390px"
+         :child [data-table iteration cluster-selected
+                 {:height data-table-size}]]
+        [gap :size "5px"]
+        [select-plot iteration]
         [gap :size "20px"]])]))
 

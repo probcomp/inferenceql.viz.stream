@@ -20,7 +20,7 @@
    :home-page {;; Data-table section.
                :show-data-table-section true
                :show-ensemble-section true
-               :data-table-size "1000px"
+               :data-table-size "400px"
                :data-section-col-selection (set (take 3 starting-cols))
                :show-data-section-plot-options false
                ;; Inferences section.

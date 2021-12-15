@@ -51,7 +51,8 @@
 
 (defn spec
   [columns num-columns]
-  (let [column-pairs (for [x columns
+  (let [columns (sort columns)
+        column-pairs (for [x columns
                            y columns
                            :while (not= x y)]
                        [x y])]

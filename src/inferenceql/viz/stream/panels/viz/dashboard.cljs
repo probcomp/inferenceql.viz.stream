@@ -570,10 +570,8 @@
 
           ;; Visualize the columns passed in.
           ;; If not specified, visualize columns found in schema.
-          cols (->> (or cols
-                        (keys schema))
+          cols (->> (sort cols)
                     (map keyword)
-                    (take 8) ; Either way we will visualize at most 8 columns.
                     (filter vega-type) ; Only keep the columns that we can determine a vega-type for.
                     (sort))
 

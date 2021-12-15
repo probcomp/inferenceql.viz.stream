@@ -17,22 +17,21 @@
   []
   {:app {:page [:home-page]}
    :control-panel {:iteration 0}
-   :home-page {:show-data-table-section true
+   :home-page {;; Data-table section.
+               :show-data-table-section true
                :show-ensemble-section true
                :data-table-size "1000px"
-               ;; TODO: add specs for this section.
                :data-section-col-selection (set (take 3 starting-cols))
                :show-data-section-plot-options false
-               ;;--
-               ;; TODO: add specs for this section.
+               ;; Inferences section.
                :show-inferences-section true
                :show-inferences-plot-options false
                :inferences-col-selection (set (take 3 starting-cols))
-               ;;--
+               ;; Select vs simulate section.
                :show-plot-options false
                :marginal-types #{:1D}
                :col-selection (set (take 3 starting-cols))
-               ;;--
+               ;; Ensemble section.
                :show-ensemble-options false
                :mi-bounds {:min 0 :max 10}
                :mi-threshold 3}
@@ -57,24 +56,44 @@
 
 ;;; Home-page section.
 
-(s/def ::home-page (s/keys :req-un [::show-data-table-section
+(s/def ::home-page (s/keys :req-un [;; Data-table section.
+                                    ::show-data-table-section
                                     ::show-ensemble-section
                                     ::data-table-size
-                                    ;;--
+                                    ::data-section-col-selection
+                                    ::show-data-section-plot-options
+                                    ;; Inferences section.
+                                    ::show-inferences-section
+                                    ::show-inferences-plot-options
+                                    ::inferences-col-selection
+                                    ;; Select vs simulate section.
                                     ::show-plot-options
                                     ::marginal-types
                                     ::col-selection
-                                    ;;--
+                                    ;; Ensemble section.
                                     ::show-ensemble-options
                                     ::mi-bounds
                                     ::mi-threshold]))
+
+;; Data-table section.
 (s/def ::show-data-table-section boolean?)
 (s/def ::show-ensemble-section boolean?)
 (s/def ::data-table-size string?)
+(s/def ::column-name keyword?)
+(s/def ::data-section-col-selection (s/coll-of ::column-name :kind set?))
+(s/def ::show-data-section-plot-options boolean?)
+
+;; Inferences section.
+(s/def ::show-inferences-section boolean?)
+(s/def ::show-inferences-plot-options boolean?)
+(s/def ::inferences-col-selection (s/coll-of ::column-name :kind set?))
+
+;; Select vs simulate section.
 (s/def ::show-plot-options boolean?)
 (s/def ::marginal-types #(clojure.set/subset? % #{:1D :2D}))
 (s/def ::col-selection (s/coll-of ::column-name :kind set?))
-(s/def ::column-name keyword?)
+
+;; Ensemble section.
 (s/def ::show-ensemble-options boolean?)
 (s/def ::mi-bounds (s/keys :req-un [::min ::max]))
 (s/def ::min number?)

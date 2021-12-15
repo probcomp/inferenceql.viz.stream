@@ -20,7 +20,9 @@
    :home-page {:show-data-table-section true
                :show-ensemble-section true
                :data-table-size "1000px"
-               :select-plot-col-selection (set (take 4 starting-cols))
+               ;; TODO: add specs for this section.
+               :data-section-col-selection (set (take 3 starting-cols))
+               :show-data-section-plot-options false
                ;;--
                ;; TODO: add specs for this section.
                :show-inferences-section true

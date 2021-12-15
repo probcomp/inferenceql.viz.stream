@@ -1,11 +1,35 @@
 (ns inferenceql.viz.stream.page.home.data-table
   (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line hyperlink popover-tooltip
+                                 checkbox line label selection-list hyperlink popover-tooltip
                                  h-split
                                  horizontal-tabs]]
             [re-frame.core :as rf]
+            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]
             [inferenceql.viz.stream.panels.viz.views :refer [select-plot]]))
+
+(def column-list (get-in config [:transitions :column-ordering]))
+
+(defn plot-options []
+  (let [col-selection @(rf/subscribe [:home-page/data-section-col-selection])
+        show-plot-options @(rf/subscribe [:home-page/show-data-section-plot-options])]
+    (when show-plot-options
+      [v-box
+       :padding "0px 0px 0px 0px"
+       :margin "0px 0px 0px 0px"
+       :children [[v-box
+                   :children [[gap :size "10px"]
+                              [h-box
+                               :children [[label :label "Columns:"]
+                                          [gap :size "16px"]
+                                          [box
+                                           :style {:padding-top "3px"}
+                                           :child [selection-list
+                                                   :choices (vec (for [c column-list]
+                                                                   {:id c :label (name c)}))
+                                                   :model col-selection
+                                                   :on-change #(rf/dispatch [:home-page/data-section-select-cols %])]]]]
+                              [gap :size "50px"]]]]])))
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])
@@ -40,9 +64,14 @@
                   :on-click #(rf/dispatch [:home-page/set-data-table-size large-size])
                   :style {:padding "2px 10px"
                           :background-color (when (= data-table-size large-size)
-                                              "whitesmoke")}]]]
+                                              "whitesmoke")}]
+                 [gap :size "20px"]
+                 [hyperlink
+                  :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
+                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-data-section-plot-options])]]]
      (when show-data-table-section
        [:<>
+        [plot-options]
         [gap :size "5px"]
         [h-split
          :margin "0px"

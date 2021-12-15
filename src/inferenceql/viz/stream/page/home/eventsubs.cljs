@@ -51,10 +51,29 @@
   (fn [db [_ new-val]]
     (assoc-in db [:home-page :data-table-size] new-val)))
 
+;;; Data-table section -- select-only plots
+
 (rf/reg-sub
-  :home-page/select-plot-col-selection
+  :home-page/show-data-section-plot-options
   (fn [db _]
-    (get-in db [:home-page :select-plot-col-selection])))
+    (get-in db [:home-page :show-data-section-plot-options])))
+
+(rf/reg-event-db
+  :home-page/toggle-data-section-plot-options
+  event-interceptors
+  (fn [db [_]]
+    (update-in db [:home-page :show-data-section-plot-options] not)))
+
+(rf/reg-sub
+  :home-page/data-section-col-selection
+  (fn [db _]
+    (get-in db [:home-page :data-section-col-selection])))
+
+(rf/reg-event-db
+  :home-page/data-section-select-cols
+  event-interceptors
+  (fn [db [_ new-val]]
+    (assoc-in db [:home-page :data-section-col-selection] new-val)))
 
 ;;; Inferences section
 

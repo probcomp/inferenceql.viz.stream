@@ -25,9 +25,7 @@
 
 (rf/reg-sub
   :viz/select-spec
-  :<- [:home-page/col-selection]
-  ;; TODO: use own col selection.
-  ;;:<- [:home-page/select-plot-col-selection]
+  :<- [:home-page/data-section-col-selection]
   (fn [col-selection  _]
     (dashboard/spec observed-samples schema col-selection 10 #{:2D} 3)))
 

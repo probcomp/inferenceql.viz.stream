@@ -32,7 +32,6 @@
   "Reagent component for select-vs-simulate plot."
   [cluster-selected _click-count iteration]
   (let [spec @(rf/subscribe [:viz/cluster-simulate-spec])
-        cols-in-view @(rf/subscribe [:model-page/cols-in-view])
         xcat-model @(rf/subscribe [:model-page/model])
 
         all-samples (let [;; Merge in the view-cluster assignment information on observed rows.

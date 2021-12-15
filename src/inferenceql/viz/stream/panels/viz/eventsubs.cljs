@@ -12,7 +12,7 @@
   :<- [:home-page/col-selection]
   :<- [:home-page/marginal-types]
   (fn [[col-selection marginal-types] _]
-      (dashboard/spec observed-samples schema col-selection 10 marginal-types 3)))
+      (dashboard/spec observed-samples schema col-selection 10 marginal-types 3 true)))
 
 (rf/reg-sub
   :viz/cluster-simulate-spec
@@ -21,13 +21,13 @@
     (let [marginal-types (if (> (count cols-in-view) 1)
                            #{:2D}
                            #{:1D})]
-      (dashboard/spec observed-samples schema cols-in-view 10 marginal-types 2))))
+      (dashboard/spec observed-samples schema cols-in-view 10 marginal-types 2 true))))
 
 (rf/reg-sub
   :viz/select-spec
   :<- [:home-page/data-section-col-selection]
   (fn [col-selection  _]
-    (dashboard/spec observed-samples schema col-selection 10 #{:2D} 3)))
+    (dashboard/spec observed-samples schema col-selection 10 #{:2D} 3 false)))
 
 (rf/reg-sub
   :viz/inferences-spec

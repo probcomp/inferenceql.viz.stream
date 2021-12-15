@@ -230,7 +230,7 @@
 (defn- scatter-plot
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
-  [col-1 col-2 ranges id-gen]
+  [col-1 col-2 ranges id-gen legend]
   (let [zoom-control-name (str "zoom-control-" (id-gen))] ; Random id so pan/zoom is independent.
     {:width 250
      :height 250
@@ -297,8 +297,10 @@
                         :field "collection" ; Dummy field. Never gets used.
                         :scale {:domain ["observed", "virtual"]
                                 :range [obs-data-color virtual-data-color]}
-                        :legend {:orient "top"
-                                 :title nil}}}}))
+                        :legend (if legend
+                                  {:orient "top"
+                                   :title nil}
+                                  nil)}}}))
 
 (defn- strip-plot-size-helper
   "Returns a vega-lite height/width size.
@@ -312,7 +314,7 @@
 (defn- strip-plot
   "Generates vega-lite spec for a strip plot.
   Useful for comparing quantitative-nominal data."
-  [cols vega-type n-cats samples ranges id-gen]
+  [cols vega-type n-cats samples ranges id-gen legend]
   (let [zoom-control-name (str "zoom-control-" (id-gen)) ; Random id so pan/zoom is independent.
         ;; NOTE: This is a temporary hack to that forces the x-channel in the plot to be "numerical"
         ;; and the y-channel to be "nominal". The rest of the code remains nuetral to the order so that
@@ -390,14 +392,16 @@
                         :field "collection" ; Dummy field. Never gets used.
                         :scale {:domain ["observed", "virtual"]
                                 :range [obs-data-color virtual-data-color]}
-                        :legend {:orient "top"
-                                 :title nil
-                                 :offset 10}}}}))
+                        :legend (if legend
+                                  {:orient "top"
+                                   :title nil
+                                   :offset 10}
+                                  nil)}}}))
 
 (defn- table-bubble-plot
   "Generates vega-lite spec for a table-bubble plot.
   Useful for comparing nominal-nominal data."
-  [cols vega-type n-cats samples]
+  [cols vega-type n-cats samples legend]
   (let [[x-field y-field] cols
         f-sum (filtering-summary cols vega-type n-cats samples)
         x-cats (sort (get-in f-sum [:top-cats x-field]))
@@ -454,9 +458,11 @@
                                         :field "collection" ; Dummy field. Never gets used.
                                         :scale {:domain ["observed", "virtual"]
                                                 :range [obs-data-color virtual-data-color]}
-                                        :legend {:orient "top"
-                                                 :title nil
-                                                 :offset 10}}}}
+                                        :legend (if legend
+                                                  {:orient "top"
+                                                   :title nil
+                                                   :offset 10}
+                                                  nil)}}}
                     {:mark {:type "circle"}
                      :transform [{:filter {:or [{:field "collection" :equal "virtual"}
                                                 {:and [{:field "collection" :equal "observed"}
@@ -494,15 +500,15 @@
        :columns num-columns
        :spacing {:column 100 :row 50}})))
 
-(defn scatter-plot-section [cols ranges id-gen num-columns]
+(defn scatter-plot-section [cols ranges id-gen num-columns legend]
   (when (seq cols)
-    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 ranges id-gen))]
+    (let [specs (for [[col-1 col-2] cols] (scatter-plot col-1 col-2 ranges id-gen legend))]
       {:concat specs
        :columns num-columns
        :spacing {:column 50 :row 50}
        :resolve {:legend {:color "shared"}}})))
 
-(defn bubble-plot-section [cols vega-type n-cats samples num-columns]
+(defn bubble-plot-section [cols vega-type n-cats samples num-columns legend]
   (when (seq cols)
     (let [specs (for [col-pair cols]
                   (let [[col-1 col-2] col-pair
@@ -512,15 +518,15 @@
                                    [col-2 col-1]
                                    [col-1 col-2])]
                     ;; Produce the bubble plot with the more optionful column on the x-dim.
-                    (table-bubble-plot col-pair vega-type n-cats samples)))]
+                    (table-bubble-plot col-pair vega-type n-cats samples legend)))]
       {:concat specs
        :columns num-columns
        :spacing {:column 50 :row 50}})))
 
-(defn strip-plot-section [cols vega-type n-cats samples ranges id-gen num-columns]
+(defn strip-plot-section [cols vega-type n-cats samples ranges id-gen num-columns legend]
   (when (seq cols)
     (let [specs (for [col-pair cols]
-                  (strip-plot col-pair vega-type n-cats samples ranges id-gen))]
+                  (strip-plot col-pair vega-type n-cats samples ranges id-gen legend))]
       {:concat specs
        :columns num-columns
        :spacing {:column 100 :row 50}})))
@@ -564,7 +570,7 @@
   Path to correlation data is optional.
   Category limit is the max number of options to include for categorical variable.
   It can be set to nil for no limit."
-  [samples schema cols category-limit marginal-types num-columns]
+  [samples schema cols category-limit marginal-types num-columns legend]
   (when (and (seq marginal-types) (seq cols))
     (let [vega-type (vega-type-fn schema)
 
@@ -592,19 +598,22 @@
           scatter-plots (scatter-plot-section (get pair-types #{"quantitative"})
                                               ranges
                                               id-generator
-                                              num-columns)
+                                              num-columns
+                                              legend)
           bubble-plots (bubble-plot-section (get pair-types #{"nominal"})
                                             vega-type
                                             category-limit
                                             samples
-                                            num-columns)
+                                            num-columns
+                                            legend)
           strip-plots (strip-plot-section (get pair-types #{"quantitative" "nominal"})
                                           vega-type
                                           category-limit
                                           samples
                                           ranges
                                           id-generator
-                                          num-columns)
+                                          num-columns
+                                          legend)
           sections-1D (remove nil? [histograms-quant histograms-nom])
           sections-2D (remove nil? [scatter-plots strip-plots bubble-plots])
           sections (cond-> []

@@ -126,14 +126,25 @@
                        (some neg? (vals (select-keys row cols)))))
 
          neg-row? (cond
-                    (= allow-neg nil) (neg-check (numerical-columns xcat))
-                    (= allow-neg false) (neg-check (numerical-columns xcat))
-                    (= allow-neg true) (constantly false)
-                    (seq allow-neg) (let [cols-to-check
-                                          (clojure.set/difference
-                                           (set (numerical-columns xcat))
-                                           (set (map keyword allow-neg)))]
-                                      (neg-check cols-to-check)))]
+                    (= allow-neg nil)
+                    (neg-check (numerical-columns xcat))
+
+                    (= allow-neg false)
+                    (neg-check (numerical-columns xcat))
+
+                    (= allow-neg true)
+                    (constantly false)
+
+                    (and (seq? allow-neg)
+                         (empty? allow-neg))
+                    (neg-check (numerical-columns xcat))
+
+                    (seq allow-neg)
+                    (let [cols-to-check
+                          (clojure.set/difference
+                           (set (numerical-columns xcat))
+                           (set (map keyword allow-neg)))]
+                      (neg-check cols-to-check)))]
      (take n (remove neg-row? (repeatedly simulate))))))
 
 

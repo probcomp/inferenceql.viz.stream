@@ -27,11 +27,11 @@
         c2-type (vega-type schema c2)]
     {:mark {:type "rect" :tooltip true}
      :width (case c1-type
-              "nominal" {:step 16},
-              "quantitative" 200)
+              "nominal" {:step 14},
+              "quantitative" 240)
      :height (case c2-type
-              "nominal" {:step 16},
-              "quantitative" 300),
+              "nominal" {:step 14},
+              "quantitative" 240),
      :encoding {:x {:bin (case c1-type
                            "nominal" false
                            "quantitative" {:maxbins 50

@@ -23,7 +23,8 @@
           schema (medley/map-keys name schema)
           ;; Mapping from multi-mix stat-types to vega-lite data-types.
           mapping {:numerical "quantitative"
-                   :nominal "nominal"}]
+                   :nominal "nominal"
+                   :ignore "nominal"}]
       (get mapping (get schema (name col-name))))))
 
 (defn filtering-summary

@@ -19,7 +19,7 @@
 ;;; Schema section.
 
 (s/def ::schema (s/map-of (s/or :str-column-name string? :kw-column-name keyword?)
-                          #{:nominal :numerical}
+                          #{:nominal :numerical :ignore}
                           :conform-keys true))
 (s/def ::js-model-template string?)
 

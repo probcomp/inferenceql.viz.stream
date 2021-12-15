@@ -19,7 +19,8 @@
 (defn vega-type [schema col]
   (let [iql-type (get schema col)
         vega-type-map {:numerical "quantitative"
-                       :nominal "nominal"}]
+                       :nominal "nominal"
+                       :ignore "nominal"}]
     (get vega-type-map iql-type)))
 
 (defn inference-plot [[c1 c2]]

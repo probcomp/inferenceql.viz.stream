@@ -1,6 +1,6 @@
 (ns inferenceql.viz.stream.panels.viz.samples
   "Defs for properly tagging samples for use in vega-lite specs."
-  (:require [inferenceql.viz.stream.store :refer [rows schema samples]]
+  (:require [inferenceql.viz.stream.store :refer [rows samples]]
             [inferenceql.viz.config :refer [config]]))
 
 
@@ -14,7 +14,7 @@
          (concat [0] num-rows-at-iter))))
 
 (defn add-null-columns [row]
-  (let [columns (keys schema)
+  (let [columns (get-in config [:transitions :column-ordering])
         null-kvs (zipmap columns (repeat nil))]
     (merge null-kvs row)))
 

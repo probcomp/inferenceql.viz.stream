@@ -15,7 +15,7 @@ to make spacing for the scrollbar instead of the scrollbar settings for its own 
 also set styles for */
 
 ::-webkit-scrollbar {
-  width: 3px;
+  width: 5px;
 }
 
 body::-webkit-scrollbar {
@@ -66,11 +66,11 @@ div {
 }
 
 #table-container ::-webkit-scrollbar {
-  width: 3px;
+  width: 5px;
 }
 
 #table-container ::-webkit-scrollbar:horizontal {
-  height: 3px;
+  height: 5px;
 }
 
 .ht_master tr td {

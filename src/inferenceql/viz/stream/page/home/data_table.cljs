@@ -53,9 +53,11 @@
          :initial-split "1250px"
          :splitter-size "10px"
          :panel-1 [box
-                   :width "1390px"
+                   :width "2000px"
+                   :class "smalldot"
                    :child [data-table iteration cluster-selected
-                           {:height data-table-size}]]
+                           {:height data-table-size
+                            :width "1250px"}]]
          :panel-2 [box
                    :style {:margin-top "10px"
                            :margin-left "40px"}

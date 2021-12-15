@@ -21,7 +21,7 @@
                                       (rf/dispatch [:model-page/clear-cluster-selection])
                                       (rf/dispatch [:control/set-iteration iter]))]]
                 [gap :size "10px"]
-                [label :label (inc iteration)]]]))
+                [label :label (get-in config [:transitions :num-rows-at-iter iteration])]]]))
 
 (defn iteration-slider-section []
   [box

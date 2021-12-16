@@ -51,10 +51,10 @@
       {:mark {:type "rect" :tooltip true}
        :width (case c1-type
                 "nominal" {:step 20},
-                "quantitative" 240)
+                "quantitative" 400)
        :height (case c2-type
                 "nominal" {:step 20},
-                "quantitative" 240),
+                "quantitative" 400),
        :encoding {:x {:bin (case c1-type
                              "nominal" false
                              "quantitative" {:maxbins 50
@@ -71,18 +71,28 @@
                           :type "quantitative"
                           :legend nil}}})))
 
+(defn make-section [num-columns column-pairs]
+  (when (seq column-pairs)
+    {:concat (for [pair column-pairs]
+               (inference-plot pair))
+     :columns num-columns
+     :spacing {:column 100 :row 50}}))
+
 (defn spec
   [columns num-columns]
   (let [columns (sort columns)
         column-pairs (for [x columns
                            y columns
                            :while (not= x y)]
-                       [x y])]
+                       [x y])
+        pair-groups (group-by #(set (map (fn [col] (vega-type schema col))
+                                         %))
+                              column-pairs)]
     {:$schema vl5-schema
      :autosize {:resize true}
-     :columns num-columns
-     :concat (for [pair column-pairs]
-               (inference-plot pair))
+     :vconcat (remove nil? [(make-section num-columns (get pair-groups #{"quantitative"}))
+                            (make-section num-columns (get pair-groups #{"quantitative" "nominal"}))
+                            (make-section num-columns (get pair-groups #{"nominal"}))])
      :spacing 100
      :data {:name "rows"}
      :config {:countTitle "Count"

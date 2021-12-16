@@ -370,8 +370,7 @@
                     :axis {:titleLimit title-limit}}
                 :x {:field x-field
                     :type x-type
-                    :axis {:grid true :gridDash [2 2]
-                           :orient "top"}
+                    :axis {:grid true :gridDash [2 2]}
                     :scale {:zero false
                             :domain [x-min x-max]}}
                 :row {:field "collection"

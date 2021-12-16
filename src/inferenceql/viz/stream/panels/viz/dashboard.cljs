@@ -370,9 +370,11 @@
                             :domain [x-min x-max]}}
                 :row {:field "collection"
                       :type "nominal"
-                      :header {:title nil
-                               :labelPadding 0
-                               :labelLimit title-limit}}
+                      :header (cond-> {:title nil
+                                       :labelPadding 0
+                                       :labelLimit title-limit}
+                                      ;; If no legend, then no facet labels.
+                                      (not legend) (merge {:labels false}))}
                 :order {:condition {:param "brush-all"
                                     :value 1}
                         :value 0}
@@ -417,9 +419,11 @@
      :resolve {:scale {:size "shared"}}
      :facet {:column {:field "collection"
                       :type "nominal"
-                      :header {:title nil
-                               :labelPadding 0
-                               :labelLimit title-limit}}},
+                      :header (cond-> {:title nil
+                                       :labelPadding 0
+                                       :labelLimit title-limit}
+                                ;; If no legend, then no facet labels.
+                                (not legend) (merge {:labels false}))}}
      :spec {:layer [{:mark {:type "circle"
                             :tooltip {:content "data"}
                             :color unselected-color}
@@ -438,8 +442,7 @@
                                     :scale {:domain y-cats}}
                                 :x {:field x-field
                                     :type "nominal"
-                                    :axis {:orient "top"
-                                           :labelAngle 315
+                                    :axis {:orient "bottom"
                                            :titleLimit title-limit}
                                     :scale {:domain x-cats}}
                                 :size {:aggregate "count"
@@ -475,8 +478,7 @@
                                     :scale {:domain y-cats}}
                                 :x {:field x-field
                                     :type "nominal"
-                                    :axis {:orient "top"
-                                           :labelAngle 315
+                                    :axis {:orient "bottom"
                                            :titleLimit title-limit}
                                     :scale {:domain x-cats}}
                                 :size {:aggregate "count"
@@ -521,7 +523,7 @@
                     (table-bubble-plot col-pair vega-type n-cats samples legend)))]
       {:concat specs
        :columns num-columns
-       :spacing {:column 50 :row 50}})))
+       :spacing {:column 100 :row 50}})))
 
 (defn strip-plot-section [cols vega-type n-cats samples ranges id-gen num-columns legend]
   (when (seq cols)

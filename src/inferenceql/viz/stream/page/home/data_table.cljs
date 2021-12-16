@@ -77,7 +77,7 @@
          :width "1390px"
          :child [data-table iteration cluster-selected
                  {:height data-table-size}]]
-        [gap :size "5px"]
+        [gap :size "15px"]
         [select-plot iteration]
         [gap :size "20px"]])]))
 

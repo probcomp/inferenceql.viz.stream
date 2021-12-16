@@ -76,7 +76,8 @@
     {:concat (for [pair column-pairs]
                (inference-plot n-cats pair))
      :columns num-columns
-     :spacing {:column 100 :row 50}}))
+     :spacing {:column 100 :row 50}
+     :resolve {:scale {:color "independent"}}}))
 
 (defn spec
   [columns n-cats num-columns]

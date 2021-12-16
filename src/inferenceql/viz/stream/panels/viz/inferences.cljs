@@ -8,15 +8,8 @@
             [medley.core :as medley]
             [goog.object]
             [inferenceql.viz.config :refer [config]]
+            [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count]]
             [inferenceql.viz.stream.panels.viz.util :refer [vl5-schema]]))
-
-(def ranges
-  (get-in config [:settings :numerical_ranges]))
-
-(def options-count
-  "Map of nominal column name to number of options"
-  (->> (get-in config [:transitions :options])
-    (medley/map-vals count)))
 
 (defn vega-type [schema col]
   (let [iql-type (get schema col)

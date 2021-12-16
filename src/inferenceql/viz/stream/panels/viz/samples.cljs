@@ -1,8 +1,8 @@
 (ns inferenceql.viz.stream.panels.viz.samples
   "Defs for properly tagging samples for use in vega-lite specs."
-  (:require [inferenceql.viz.stream.store :refer [rows samples]]
+  (:require [medley.core :as medley]
+            [inferenceql.viz.stream.store :refer [rows samples]]
             [inferenceql.viz.config :refer [config]]))
-
 
 ;;; Observed samples.
 
@@ -40,3 +40,14 @@
   (->> (nth samples iteration)
     (map #(assoc % :collection "virtual"
                    :iter 0))))
+
+;;; Various settings and facts about categorical columns.
+
+(def ranges
+  (get-in config [:settings :numerical_ranges]))
+
+(def options-count
+  "Map of nominal column name to number of options"
+  (->> (get-in config [:transitions :options])
+    (medley/map-vals count)))
+

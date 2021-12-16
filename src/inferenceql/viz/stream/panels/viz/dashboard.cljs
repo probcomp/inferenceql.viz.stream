@@ -4,20 +4,12 @@
             [goog.string :refer [format]]
             [vega-embed$vega :as vega]
             [goog.object]
-            [medley.core :as medley]
             [inferenceql.viz.config :refer [config]]
+            [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count]]
             [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary
                                                             obs-data-color virtual-data-color
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
-
-(def ranges
-  (get-in config [:settings :numerical_ranges]))
-
-(def options-count
-  "Map of nominal column name to number of options"
-  (->> (get-in config [:transitions :options])
-       (medley/map-vals count)))
 
 (defn bin-counts
   "Takes a seq of numerical `data` and `binning`. Returns the number of data points in each bin.

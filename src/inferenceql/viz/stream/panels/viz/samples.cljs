@@ -51,3 +51,14 @@
   (->> (get-in config [:transitions :options])
     (medley/map-vals count)))
 
+(def top-options
+  "Map of nominal column name to options for that columns sort by
+  frequency in observed data."
+  (medley/map-kv-vals (fn [col options]
+                        (let [starting-freq (zipmap options (repeat 0))
+                              actual-freqs (-> (map col observed-samples)
+                                               (frequencies))
+                              final-freqs (merge starting-freq actual-freqs)
+                              ordered-pairs (sort-by second > final-freqs)]
+                          (remove nil? (map first ordered-pairs))))
+                      (get-in config [:transitions :options])))

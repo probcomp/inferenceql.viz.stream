@@ -5,7 +5,7 @@
             [vega-embed$vega :as vega]
             [goog.object]
             [inferenceql.viz.config :refer [config]]
-            [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count]]
+            [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count top-options]]
             [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary
                                                             obs-data-color virtual-data-color
                                                             unselected-color vega-type-fn
@@ -327,8 +327,7 @@
         [width height] (map (comp strip-plot-size-helper vega-type) cols-to-draw)
 
         [x-min x-max] (get ranges x-field)
-        f-sum (filtering-summary cols vega-type n-cats samples)
-        y-cats (sort (get-in f-sum [:top-cats y-field]))
+        y-cats (sort (take n-cats (get top-options y-field)))
         title-limit (* (count y-cats) 25)]
     {:resolve {:scale {:x "shared" :y "shared"}}
      :spacing 0
@@ -402,9 +401,8 @@
   Useful for comparing nominal-nominal data."
   [cols vega-type n-cats samples legend]
   (let [[x-field y-field] cols
-        f-sum (filtering-summary cols vega-type n-cats samples)
-        x-cats (sort (get-in f-sum [:top-cats x-field]))
-        y-cats (sort (get-in f-sum [:top-cats y-field]))
+        x-cats (sort (take n-cats (get top-options x-field)))
+        y-cats (sort (take n-cats (get top-options y-field)))
         title-limit (* (count x-cats) 25)]
     {:spacing 0
      :bounds "flush"

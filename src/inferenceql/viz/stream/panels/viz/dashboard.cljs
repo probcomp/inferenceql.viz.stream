@@ -4,6 +4,7 @@
             [goog.string :refer [format]]
             [vega-embed$vega :as vega]
             [goog.object]
+            [medley.core :as medley]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary
                                                             obs-data-color virtual-data-color
@@ -12,6 +13,11 @@
 
 (def ranges
   (get-in config [:settings :numerical_ranges]))
+
+(def options-count
+  "Map of nominal column name to number of options"
+  (->> (get-in config [:transitions :options])
+       (medley/map-vals count)))
 
 (defn bin-counts
   "Takes a seq of numerical `data` and `binning`. Returns the number of data points in each bin.
@@ -514,9 +520,9 @@
   (when (seq cols)
     (let [specs (for [col-pair cols]
                   (let [[col-1 col-2] col-pair
-                        col-1-vals (count (distinct (map #(get % col-1) samples)))
-                        col-2-vals (count (distinct (map #(get % col-2) samples)))
-                        col-pair (if (>= col-1-vals col-2-vals)
+                        ;; We want the column with fewer options to be on the x-axis.
+                        col-pair (if (>= (get options-count col-1)
+                                         (get options-count col-2))
                                    [col-2 col-1]
                                    [col-1 col-2])]
                     ;; Produce the bubble plot with the more optionful column on the x-dim.

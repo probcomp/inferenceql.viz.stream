@@ -53,14 +53,14 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                  :label "small" :on-click #(rf/dispatch [:home-page/set-data-table-size small-size])
+                  :label "small table" :on-click #(rf/dispatch [:home-page/set-data-table-size small-size])
                   :style {:padding "2px 10px"
                           :background-color (when (= data-table-size small-size)
                                               "whitesmoke")}]
                  [gap :size "10px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "6px" :align-self "center"}}}
-                  :label "large"
+                  :label "large table"
                   :on-click #(rf/dispatch [:home-page/set-data-table-size large-size])
                   :style {:padding "2px 10px"
                           :background-color (when (= data-table-size large-size)
@@ -68,7 +68,7 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                  :label "options" :on-click #(rf/dispatch [:home-page/toggle-data-section-plot-options])]]]
+                  :label "columns to plot" :on-click #(rf/dispatch [:home-page/toggle-data-section-plot-options])]]]
      (when show-data-table-section
        [:<>
         [plot-options]

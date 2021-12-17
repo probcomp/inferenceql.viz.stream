@@ -60,13 +60,19 @@
                              "quantitative" {:maxbins 50
                                              :extent (get ranges c1)})
                       :field (name c1),
-                      :type c1-type}
+                      :type c1-type
+                      :scale (case c1-type
+                               "nominal" {}
+                               "quantitative" {:domain (get ranges c1)})}
                   :y {:bin (case c2-type
                              "nominal" false
                              "quantitative" {:maxbins 50}),
                                              :extent (get ranges c2)
                       :field (name c2),
-                      :type c2-type}
+                      :type c2-type
+                      :scale (case c2-type
+                               "nominal" {}
+                               "quantitative" {:domain (get ranges c2)})}
                   :color {:aggregate "count",
                           :type "quantitative"
                           :legend nil}}})))

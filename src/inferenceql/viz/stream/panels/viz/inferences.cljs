@@ -18,6 +18,20 @@
                        :ignore "nominal"}]
     (get vega-type-map iql-type)))
 
+(defn dimensions [c1-type c2-type]
+  (case [c1-type c2-type]
+    ["quantitative" "qauntitative"]
+    {:width 250 :height 250}
+
+    ["quantitative" "nominal"]
+    {:width 400 :height {:step 20}}
+
+    ["nominal" "quantitative"]
+    {:width {:step 20} :height 400}
+
+    ["nominal" "nominal"]
+    {:width {:step 20} :height {:step 20}}))
+
 (defn inference-plot [n-cats [c1 c2]]
   ;; First we determine if we need to swap the x and y columns.
   (let [col-types (map #(vega-type schema %) [c1 c2])
@@ -48,12 +62,8 @@
                                          (let [c2-options (take n-cats (get top-options c2))]
                                            {:filter {:field c2 :oneOf c2-options}}))])]
       {:mark {:type "rect" :tooltip true}
-       :width (case c1-type
-                "nominal" {:step 20},
-                "quantitative" 400)
-       :height (case c2-type
-                "nominal" {:step 20},
-                "quantitative" 400),
+       :width (-> (dimensions c1-type c2-type) :width)
+       :height (-> (dimensions c1-type c2-type) :height)
        :transform filter-section
        :encoding {:x {:bin (case c1-type
                              "nominal" false

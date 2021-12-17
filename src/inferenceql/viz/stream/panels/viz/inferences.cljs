@@ -76,8 +76,8 @@
                                "quantitative" {:domain (get ranges c1)})}
                   :y {:bin (case c2-type
                              "nominal" false
-                             "quantitative" {:maxbins 50}),
-                                             :extent (get ranges c2)
+                             "quantitative" {:maxbins 50
+                                             :extent (get ranges c2)})
                       :field (name c2),
                       :type c2-type
                       :scale (case c2-type

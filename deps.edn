@@ -22,7 +22,7 @@
         hickory/hickory {:mvn/version "0.7.1"}
         ;; This is branch: htella/20211008-fix-mmix-export-simple
         probcomp/inferenceql.inference {:git/url "git@github.com:probcomp/inferenceql.inference.git"
-                                        :sha "2e80b433c7f5afda3eaedc313443b883932778ba"}
+                                        :sha "234dc05593250a2e650f3d7eb627f5b456075007"}
         probcomp/inferenceql.query {:git/url "git@github.com:probcomp/inferenceql.query.git"
                                     :sha "0241ee57e059f618ae55b2ae8822986d778b0d68"}
         ;; This is branch: htella/20211025-for-iql-stream

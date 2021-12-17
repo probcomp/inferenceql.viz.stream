@@ -20,7 +20,7 @@
 
 (defn dimensions [c1-type c2-type]
   (case [c1-type c2-type]
-    ["quantitative" "qauntitative"]
+    ["quantitative" "quantitative"]
     {:width 250 :height 250}
 
     ["quantitative" "nominal"]

@@ -10,27 +10,6 @@
 
 (def column-list (get-in config [:transitions :column-ordering]))
 
-(defn plot-options []
-  (let [col-selection @(rf/subscribe [:home-page/inferences-col-selection])
-        show-plot-options @(rf/subscribe [:home-page/show-inferences-plot-options])]
-    (when show-plot-options
-      [v-box
-       :padding "0px 0px 0px 0px"
-       :margin "0px 0px 0px 0px"
-       :children [[v-box
-                   :children [[gap :size "10px"]
-                              [h-box
-                               :children [[label :label "Columns:"]
-                                          [gap :size "16px"]
-                                          [box
-                                           :style {:padding-top "3px"}
-                                           :child [selection-list
-                                                   :choices (vec (for [c column-list]
-                                                                   {:id c :label (name c)}))
-                                                   :model col-selection
-                                                   :on-change #(rf/dispatch [:home-page/inferences-select-cols %])]]]]
-                              [gap :size "50px"]]]]])))
-
 (defn inferences-section []
   (let [iteration @(rf/subscribe [:control/iteration])
         show-inferences-section @(rf/subscribe [:home-page/show-inferences-section])]

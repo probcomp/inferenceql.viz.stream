@@ -25,12 +25,9 @@
                :show-data-section-plot-options false
                ;; Inferences section.
                :show-inferences-section true
-               :show-inferences-plot-options false
-               :inferences-col-selection (set (take 3 starting-cols))
                ;; Select vs simulate section.
                :show-plot-options false
                :marginal-types #{:1D}
-               :col-selection (set (take 3 starting-cols))
                ;; Ensemble section.
                :show-ensemble-options false
                :mi-bounds {:min 0 :max 10}
@@ -64,12 +61,9 @@
                                     ::show-data-section-plot-options
                                     ;; Inferences section.
                                     ::show-inferences-section
-                                    ::show-inferences-plot-options
-                                    ::inferences-col-selection
                                     ;; Select vs simulate section.
                                     ::show-plot-options
                                     ::marginal-types
-                                    ::col-selection
                                     ;; Ensemble section.
                                     ::show-ensemble-options
                                     ::mi-bounds
@@ -85,13 +79,10 @@
 
 ;; Inferences section.
 (s/def ::show-inferences-section boolean?)
-(s/def ::show-inferences-plot-options boolean?)
-(s/def ::inferences-col-selection (s/coll-of ::column-name :kind set?))
 
 ;; Select vs simulate section.
 (s/def ::show-plot-options boolean?)
 (s/def ::marginal-types #(clojure.set/subset? % #{:1D :2D}))
-(s/def ::col-selection (s/coll-of ::column-name :kind set?))
 
 ;; Ensemble section.
 (s/def ::show-ensemble-options boolean?)

@@ -75,30 +75,6 @@
   (fn [db [_ new-val]]
     (assoc-in db [:home-page :data-section-col-selection] new-val)))
 
-;;; Inferences section
-
-(rf/reg-sub
-  :home-page/show-inferences-plot-options
-  (fn [db _]
-    (get-in db [:home-page :show-inferences-plot-options])))
-
-(rf/reg-event-db
-  :home-page/toggle-inferences-plot-options
-  event-interceptors
-  (fn [db [_]]
-    (update-in db [:home-page :show-inferences-plot-options] not)))
-
-(rf/reg-sub
-  :home-page/inferences-col-selection
-  (fn [db _]
-    (get-in db [:home-page :inferences-col-selection])))
-
-(rf/reg-event-db
-  :home-page/inferences-select-cols
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:home-page :inferences-col-selection] new-val)))
-
 ;;; Ensemble section.
 
 (rf/reg-sub
@@ -142,17 +118,6 @@
     (update-in db [:home-page :show-plot-options] not)))
 
 (rf/reg-sub
-  :home-page/col-selection
-  (fn [db _]
-    (get-in db [:home-page :col-selection])))
-
-(rf/reg-event-db
-  :home-page/select-cols
-  event-interceptors
-  (fn [db [_ new-val]]
-    (assoc-in db [:home-page :col-selection] new-val)))
-
-(rf/reg-sub
   :home-page/marginal-types
   (fn [db _]
     (get-in db [:home-page :marginal-types])))
@@ -162,4 +127,3 @@
   event-interceptors
   (fn [db [_ new-val]]
     (assoc-in db [:home-page :marginal-types] new-val)))
-

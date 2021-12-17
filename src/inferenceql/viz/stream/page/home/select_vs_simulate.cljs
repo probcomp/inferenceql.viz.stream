@@ -11,8 +11,7 @@
 (def column-list (get-in config [:transitions :column-ordering]))
 
 (defn plot-options []
-  (let [col-selection @(rf/subscribe [:home-page/col-selection])
-        marginal-types @(rf/subscribe [:home-page/marginal-types])
+  (let [marginal-types @(rf/subscribe [:home-page/marginal-types])
         show-plot-options @(rf/subscribe [:home-page/show-plot-options])]
     (when show-plot-options
       [v-box

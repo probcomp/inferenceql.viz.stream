@@ -87,12 +87,12 @@
                           :type "quantitative"
                           :legend nil}}})))
 
-(defn make-section [num-columns n-cats column-pairs]
+(defn make-section [num-columns col-space n-cats column-pairs]
   (when (seq column-pairs)
     {:concat (for [pair column-pairs]
                (inference-plot n-cats pair))
      :columns num-columns
-     :spacing {:column 100 :row 50}
+     :spacing {:column col-space :row 50}
      :resolve {:scale {:color "independent"}}}))
 
 (defn spec
@@ -108,12 +108,15 @@
     {:$schema vl5-schema
      :autosize {:resize true}
      :vconcat (remove nil? [(make-section num-columns
+                                          50
                                           n-cats
                                           (get pair-groups #{"quantitative"}))
                             (make-section num-columns
+                                          100
                                           n-cats
                                           (get pair-groups #{"quantitative" "nominal"}))
                             (make-section num-columns
+                                          100
                                           n-cats
                                           (get pair-groups #{"nominal"}))])
      :spacing 100

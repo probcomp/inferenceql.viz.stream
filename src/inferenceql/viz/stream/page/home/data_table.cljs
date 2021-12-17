@@ -10,10 +10,10 @@
 
 (def column-list (get-in config [:transitions :column-ordering]))
 
-(defn plot-options []
-  (let [col-selection @(rf/subscribe [:home-page/data-section-col-selection])
-        show-plot-options @(rf/subscribe [:home-page/show-data-section-plot-options])]
-    (when show-plot-options
+(defn col-selection []
+  (let [col-selection @(rf/subscribe [:home-page/col-selection])
+        show-col-selection @(rf/subscribe [:home-page/show-col-selection])]
+    (when show-col-selection
       [v-box
        :padding "0px 0px 0px 0px"
        :margin "0px 0px 0px 0px"
@@ -28,7 +28,7 @@
                                                    :choices (vec (for [c column-list]
                                                                    {:id c :label (name c)}))
                                                    :model col-selection
-                                                   :on-change #(rf/dispatch [:home-page/data-section-select-cols %])]]]]
+                                                   :on-change #(rf/dispatch [:home-page/select-cols %])]]]]
                               [gap :size "50px"]]]]])))
 
 (defn data-table-section []
@@ -68,10 +68,10 @@
                  [gap :size "20px"]
                  [hyperlink
                   :parts {:wrapper {:style {:margin-top "8px" :align-self "center"}}}
-                  :label "columns to plot" :on-click #(rf/dispatch [:home-page/toggle-data-section-plot-options])]]]
+                  :label "columns to plot" :on-click #(rf/dispatch [:home-page/toggle-col-selection])]]]
      (when show-data-table-section
        [:<>
-        [plot-options]
+        [col-selection]
         [gap :size "5px"]
         [box
          :width "1390px"

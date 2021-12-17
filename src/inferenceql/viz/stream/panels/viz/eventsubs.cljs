@@ -12,7 +12,7 @@
 
 (rf/reg-sub
   :viz/select-vs-simulate-spec
-  :<- [:home-page/data-section-col-selection]
+  :<- [:home-page/col-selection]
   :<- [:home-page/marginal-types]
   (fn [[col-selection marginal-types] _]
       (dashboard/spec observed-samples schema col-selection num-cats marginal-types 3 true)))
@@ -28,12 +28,12 @@
 
 (rf/reg-sub
   :viz/select-spec
-  :<- [:home-page/data-section-col-selection]
+  :<- [:home-page/col-selection]
   (fn [col-selection  _]
     (dashboard/spec observed-samples schema col-selection num-cats #{:2D} 3 false)))
 
 (rf/reg-sub
   :viz/inferences-spec
-  :<- [:home-page/data-section-col-selection]
+  :<- [:home-page/col-selection]
   (fn [inferences-columns  _]
     (inferences/spec inferences-columns num-cats 3)))

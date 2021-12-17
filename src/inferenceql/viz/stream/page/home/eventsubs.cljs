@@ -51,29 +51,27 @@
   (fn [db [_ new-val]]
     (assoc-in db [:home-page :data-table-size] new-val)))
 
-;;; Data-table section -- select-only plots
-
 (rf/reg-sub
-  :home-page/show-data-section-plot-options
+  :home-page/show-col-selection
   (fn [db _]
-    (get-in db [:home-page :show-data-section-plot-options])))
+    (get-in db [:home-page :show-col-selection])))
 
 (rf/reg-event-db
-  :home-page/toggle-data-section-plot-options
+  :home-page/toggle-col-selection
   event-interceptors
   (fn [db [_]]
-    (update-in db [:home-page :show-data-section-plot-options] not)))
+    (update-in db [:home-page :show-col-selection] not)))
 
 (rf/reg-sub
-  :home-page/data-section-col-selection
+  :home-page/col-selection
   (fn [db _]
-    (get-in db [:home-page :data-section-col-selection])))
+    (get-in db [:home-page :col-selection])))
 
 (rf/reg-event-db
-  :home-page/data-section-select-cols
+  :home-page/select-cols
   event-interceptors
   (fn [db [_ new-val]]
-    (assoc-in db [:home-page :data-section-col-selection] new-val)))
+    (assoc-in db [:home-page :col-selection] new-val)))
 
 ;;; Ensemble section.
 

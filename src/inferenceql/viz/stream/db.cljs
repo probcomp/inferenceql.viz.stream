@@ -21,8 +21,8 @@
                :show-data-table-section true
                :show-ensemble-section true
                :data-table-size "400px"
-               :data-section-col-selection (set (take 3 starting-cols))
-               :show-data-section-plot-options false
+               :col-selection (set (take 3 starting-cols))
+               :show-col-selection false
                ;; Inferences section.
                :show-inferences-section true
                ;; Select vs simulate section.
@@ -57,8 +57,8 @@
                                     ::show-data-table-section
                                     ::show-ensemble-section
                                     ::data-table-size
-                                    ::data-section-col-selection
-                                    ::show-data-section-plot-options
+                                    ::col-selection
+                                    ::show-col-selection
                                     ;; Inferences section.
                                     ::show-inferences-section
                                     ;; Select vs simulate section.
@@ -74,8 +74,8 @@
 (s/def ::show-ensemble-section boolean?)
 (s/def ::data-table-size string?)
 (s/def ::column-name keyword?)
-(s/def ::data-section-col-selection (s/coll-of ::column-name :kind set?))
-(s/def ::show-data-section-plot-options boolean?)
+(s/def ::col-selection (s/coll-of ::column-name :kind set?))
+(s/def ::show-col-selection boolean?)
 
 ;; Inferences section.
 (s/def ::show-inferences-section boolean?)

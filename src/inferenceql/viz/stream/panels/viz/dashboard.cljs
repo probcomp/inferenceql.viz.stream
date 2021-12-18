@@ -2,7 +2,6 @@
   "Code related to producing a vega-lite spec for a dashboard."
   (:require [cljs-bean.core :refer [->clj]]
             [vega-embed$vega :as vega]
-            [goog.object]
             [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count top-options]]
             [inferenceql.viz.stream.panels.viz.util :refer [obs-data-color virtual-data-color
                                                             unselected-color vega-type-fn

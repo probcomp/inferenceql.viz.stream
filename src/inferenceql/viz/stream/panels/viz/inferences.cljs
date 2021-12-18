@@ -1,7 +1,6 @@
 (ns inferenceql.viz.stream.panels.viz.inferences
   "Code related to producing a vega-lite spec for the inferences plot."
-  (:require [goog.object]
-            [inferenceql.viz.stream.store :refer [schema]]
+  (:require [inferenceql.viz.stream.store :refer [schema]]
             [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count top-options]]
             [inferenceql.viz.stream.panels.viz.util :refer [vl5-schema]]))
 

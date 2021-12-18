@@ -4,7 +4,6 @@
             [reagent.dom :as rdom]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.events.interceptors :refer [check-and-throw]]
-            [clojure.spec.alpha :as s]
             [inferenceql.viz.stream.config-spec :as config-spec]
             [inferenceql.viz.stream.views :as views]
             [inferenceql.viz.stream.eventsubs]

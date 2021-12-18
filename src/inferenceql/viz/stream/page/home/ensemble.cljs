@@ -1,8 +1,5 @@
 (ns inferenceql.viz.stream.page.home.ensemble
-  (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line hyperlink popover-tooltip
-                                 label slider
-                                 horizontal-tabs]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button hyperlink label slider]]
             [re-frame.core :as rf]
             [goog.string :refer [format]]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [tiny-js-model tiny-js-model-placeholder]]

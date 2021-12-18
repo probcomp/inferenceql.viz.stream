@@ -1,9 +1,6 @@
 (ns inferenceql.viz.stream.page.home.select-vs-simulate
-  (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line hyperlink popover-tooltip
-                                 selection-list
-                                 label
-                                 horizontal-tabs]]
+  (:require [re-com.core :refer [v-box h-box box gap title info-button hyperlink selection-list
+                                 label]]
             [re-frame.core :as rf]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.views :refer [select-vs-simulate-plot]]))

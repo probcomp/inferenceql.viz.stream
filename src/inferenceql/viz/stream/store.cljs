@@ -9,7 +9,6 @@
             [inferenceql.viz.csv :refer [clean-csv-maps]]
             [inferenceql.viz.util :refer [keywordize-kv]]
             [inferenceql.viz.stream.transit :refer [read-transit-string]]
-            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-model sample-xcat]]
             [inferenceql.inference.gpm.crosscat :as xcat]))
 
 ;;; Compiled-in elements from config.

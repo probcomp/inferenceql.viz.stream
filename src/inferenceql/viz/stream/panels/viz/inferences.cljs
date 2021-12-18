@@ -1,13 +1,7 @@
 (ns inferenceql.viz.stream.panels.viz.inferences
   "Code related to producing a vega-lite spec for the inferences plot."
-  (:require [cljs-bean.core :refer [->clj]]
-            [goog.string :refer [format]]
-            [vega-embed$vega :as vega]
-            [clojure.math.combinatorics :refer [combinations]]
+  (:require [goog.object]
             [inferenceql.viz.stream.store :refer [schema]]
-            [medley.core :as medley]
-            [goog.object]
-            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count top-options]]
             [inferenceql.viz.stream.panels.viz.util :refer [vl5-schema]]))
 
@@ -51,35 +45,36 @@
                   (if (>= (get options-count c1)
                           (get options-count c2))
                     [c2 c1]
-                    [c1 c2]))]
-    ;; Now deal with c1-c2 whether they have been reversed or not.
-    (let [c1-type (vega-type schema c1)
-          c2-type (vega-type schema c2)
-          filter-section (remove nil? [(when (= c1-type "nominal")
-                                         (let [c1-options (take n-cats (get top-options c1))]
-                                           {:filter {:field c1 :oneOf c1-options}}))
-                                       (when (= c2-type "nominal")
-                                         (let [c2-options (take n-cats (get top-options c2))]
-                                           {:filter {:field c2 :oneOf c2-options}}))])]
-      {:mark {:type "rect" :tooltip true}
-       :width (-> (dimensions c1-type c2-type) :width)
-       :height (-> (dimensions c1-type c2-type) :height)
-       :transform filter-section
-       :encoding {:x {:bin (case c1-type
-                             "nominal" false
-                             "quantitative" {:maxbins 50
-                                             :extent (get ranges c1)})
-                      :field (name c1),
-                      :type c1-type}
-                  :y {:bin (case c2-type
-                             "nominal" false
-                             "quantitative" {:maxbins 50
-                                             :extent (get ranges c2)})
-                      :field (name c2),
-                      :type c2-type}
-                  :color {:aggregate "count",
-                          :type "quantitative"
-                          :legend nil}}})))
+                    [c1 c2]))
+
+        ;; Now deal with c1-c2 whether they have been reversed or not.
+        c1-type (vega-type schema c1)
+        c2-type (vega-type schema c2)
+        filter-section (remove nil? [(when (= c1-type "nominal")
+                                       (let [c1-options (take n-cats (get top-options c1))]
+                                         {:filter {:field c1 :oneOf c1-options}}))
+                                     (when (= c2-type "nominal")
+                                       (let [c2-options (take n-cats (get top-options c2))]
+                                         {:filter {:field c2 :oneOf c2-options}}))])]
+    {:mark {:type "rect" :tooltip true}
+     :width (-> (dimensions c1-type c2-type) :width)
+     :height (-> (dimensions c1-type c2-type) :height)
+     :transform filter-section
+     :encoding {:x {:bin (case c1-type
+                           "nominal" false
+                           "quantitative" {:maxbins 50
+                                           :extent (get ranges c1)})
+                    :field (name c1),
+                    :type c1-type}
+                :y {:bin (case c2-type
+                           "nominal" false
+                           "quantitative" {:maxbins 50
+                                           :extent (get ranges c2)})
+                    :field (name c2),
+                    :type c2-type}
+                :color {:aggregate "count",
+                        :type "quantitative"
+                        :legend nil}}}))
 
 (defn make-section [num-columns col-space n-cats column-pairs]
   (when (seq column-pairs)

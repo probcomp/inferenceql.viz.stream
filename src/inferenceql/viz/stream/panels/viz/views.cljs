@@ -3,9 +3,8 @@
             [clojure.math.combinatorics :refer [combinations]]
             [inferenceql.viz.panels.viz.views-simple :refer [vega-lite]]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
-            [inferenceql.viz.stream.model.xcat-util :refer [columns-in-view all-row-assignments
-                                                            xcat-view-id-map xcat-cluster-id-map
-                                                            sample-xcat-cluster]]
+            [inferenceql.viz.stream.model.xcat-util :refer [all-row-assignments xcat-view-id-map
+                                                            xcat-cluster-id-map sample-xcat-cluster]]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]))
 

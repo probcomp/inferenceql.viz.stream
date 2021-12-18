@@ -1,8 +1,6 @@
 (ns inferenceql.viz.stream.page.home.data-table
   (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line label selection-list hyperlink popover-tooltip
-                                 h-split
-                                 horizontal-tabs]]
+                                 label selection-list hyperlink]]
             [re-frame.core :as rf]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.table.views :refer [data-table]]

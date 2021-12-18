@@ -1,13 +1,10 @@
 (ns inferenceql.viz.stream.panels.viz.dashboard
   "Code related to producing a vega-lite spec for a dashboard."
   (:require [cljs-bean.core :refer [->clj]]
-            [goog.string :refer [format]]
             [vega-embed$vega :as vega]
             [goog.object]
-            [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.samples :refer [ranges options-count top-options]]
-            [inferenceql.viz.stream.panels.viz.util :refer [filtering-summary
-                                                            obs-data-color virtual-data-color
+            [inferenceql.viz.stream.panels.viz.util :refer [obs-data-color virtual-data-color
                                                             unselected-color vega-type-fn
                                                             vl5-schema]]))
 
@@ -46,24 +43,11 @@
   `selections` is a collection of maps representing data in selected rows and columns.
   `col` is the key within each map in `selections` that is used to extract data for the histogram.
   `vega-type` is a function that takes a column name and returns an vega datatype."
-  [col samples ranges]
+  [col _samples ranges]
   (let [col-type "quantitative"
         max-bins 30
-        points (remove nil? (map col samples))
-        col-min (apply min points)
-        col-max (apply max points)
         bin-config {:extent (get ranges col)
                     :maxbins max-bins}
-        binning (vega-binning bin-config)
-
-        observed-points (map col (filter #(= (:collection %) "observed") samples))
-        virtual-points (map col (filter #(= (:collection %) "virtual") samples))
-        bins-counted (concat (bin-counts observed-points binning)
-                             (bin-counts virtual-points binning))
-
-        y-range-buffer 1
-        max-bin-count (+ y-range-buffer
-                         (apply max bins-counted))
         max-bin-count 800]
     {:resolve {:scale {:x "shared" :y "shared"}}
      :spacing 0
@@ -312,7 +296,7 @@
 (defn- strip-plot
   "Generates vega-lite spec for a strip plot.
   Useful for comparing quantitative-nominal data."
-  [cols vega-type n-cats samples ranges id-gen legend]
+  [cols vega-type n-cats _samples ranges id-gen legend]
   (let [zoom-control-name (str "zoom-control-" (id-gen)) ; Random id so pan/zoom is independent.
         ;; NOTE: This is a temporary hack to that forces the x-channel in the plot to be "numerical"
         ;; and the y-channel to be "nominal". The rest of the code remains nuetral to the order so that
@@ -399,7 +383,7 @@
 (defn- table-bubble-plot
   "Generates vega-lite spec for a table-bubble plot.
   Useful for comparing nominal-nominal data."
-  [cols vega-type n-cats samples legend]
+  [cols _vega-type n-cats _samples legend]
   (let [[x-field y-field] cols
         x-cats (sort (take n-cats (get top-options x-field)))
         y-cats (sort (take n-cats (get top-options y-field)))

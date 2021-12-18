@@ -42,8 +42,9 @@
         columns-in-view (fn [view] (-> view :columns keys))]
     (mapcat columns-in-view views)))
 
-(defn numerical-columns [xcat]
+(defn numerical-columns
   "Returns columns names with type :gaussian in `xcat`."
+  [xcat]
   (let [col-gpms (->> xcat :views vals (map :columns) (apply merge))
         col-types (medley/map-vals :stattype col-gpms)]
     (keys (medley/filter-vals #{:gaussian} col-types))))

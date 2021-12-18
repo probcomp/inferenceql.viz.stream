@@ -1,6 +1,5 @@
 (ns inferenceql.viz.stream.panels.viz.eventsubs
   (:require [re-frame.core :as rf]
-            [inferenceql.viz.stream.interceptors :refer [event-interceptors]]
             [inferenceql.viz.stream.panels.viz.dashboard :as dashboard]
             [inferenceql.viz.stream.panels.viz.inferences :as inferences]
             [inferenceql.viz.stream.store :refer [schema]]

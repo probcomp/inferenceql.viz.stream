@@ -1,7 +1,6 @@
 (ns inferenceql.viz.stream.panels.jsmodel.views
   (:require [clojure.zip :as z]
             [clojure.edn :as edn]
-            [cljstache.core :refer [render]]
             [reagent.core :as r]
             [re-frame.core :as rf]
             [hickory.core]
@@ -12,12 +11,9 @@
             [goog.dom :as gdom]
             ["highlight.js/lib/core" :as yarn-hljs]
             ["highlight.js/lib/languages/javascript" :as yarn-hljs-js]
-            [inferenceql.viz.panels.jsmodel.multimix :as multimix]
             [inferenceql.viz.stream.store :refer [js-programs]]
             [inferenceql.viz.config :refer [config]]
-            [re-com.core :refer [v-box h-box box gap title info-button line hyperlink popover-tooltip]]
-            [medley.core :as medley]
-            [clojure.string :as string]))
+            [re-com.core :refer [v-box h-box box gap title popover-tooltip]]))
 
 ;; We are using the minimal version of highlight.js where
 ;; every language used has to be registered individually.
@@ -174,13 +170,13 @@
 (defn js-code-block
   "Reagent component that display of Javascript code with syntax highlighting.
   Args: `js-code` -- (string) The Javascript source code to display."
-  [model-num js-code cluster-selected]
+  [_model-num _js-code _cluster-selected]
   (let [dom-nodes (r/atom {})]
     (r/create-class
      {:display-name "js-model-code"
 
       :component-did-mount
-      (fn [this]
+      (fn [_]
         (.addEventListener (:code-elem @dom-nodes)
                            "click"
                            (fn [event]
@@ -225,7 +221,7 @@
                                :class "column-chip"
                                :child col])]))])
 
-(defn tiny-js-model-placeholder [num-missing-models]
+(defn tiny-js-model-placeholder [_num-missing-models]
   (let [show-tooltip (r/atom false)]
     (fn [num-missing-models]
       [v-box

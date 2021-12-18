@@ -1,6 +1,5 @@
 (ns inferenceql.viz.stream.page.model.views
-  (:require [re-com.core :refer [v-box h-box box gap title info-button
-                                 checkbox line hyperlink popover-tooltip
+  (:require [re-com.core :refer [v-box h-box box gap title checkbox hyperlink popover-tooltip
                                  horizontal-tabs]]
             [re-frame.core :as rf]
             [inferenceql.viz.stream.panels.jsmodel.views :refer [js-model]]
@@ -82,10 +81,10 @@
      :margin "28px 0px 0px 0px"
      :child [data-table iteration cluster-selected {:height "4000px" :width "2000px"}]]))
 
-(defn model-page [model-num]
+(defn model-page [_model-num]
   (r/create-class
    {:component-did-mount
-    (fn [this]
+    (fn [_]
       (.scrollTo js/window 0 0))
 
     :reagent-render

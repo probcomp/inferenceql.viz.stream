@@ -1,8 +1,6 @@
 (ns inferenceql.viz.stream.panels.control.views
   (:require [re-frame.core :as rf]
-            [re-com.core :refer [v-box h-box box slider label gap
-                                 selection-list radio-button hyperlink]]
-            [goog.string :refer [format]]
+            [re-com.core :refer [h-box box slider label gap]]
             [inferenceql.viz.config :refer [config]]))
 
 (defn iteration-slider []

@@ -26,7 +26,6 @@
   (fn [db [_]]
     (update-in db [:home-page :show-inferences-section] not)))
 
-
 (rf/reg-sub
   :home-page/show-ensemble-section
   (fn [db _]

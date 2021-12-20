@@ -50,7 +50,6 @@
 (s/def ::samples-at-iteration (s/coll-of ::row :kind vector?))
 (s/def ::row (s/map-of keyword? any?))
 
-
 (s/def ::mutual-info (s/coll-of ::mi-at-iteration :kind vector?))
 (s/def ::mi-at-iteration (s/map-of keyword? (s/map-of keyword? number?)))
 

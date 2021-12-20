@@ -69,7 +69,8 @@
                                     ::mi-bounds
                                     ::mi-threshold]))
 
-;; Data-table section.
+;;;  Data-table section.
+
 (s/def ::show-data-table-section boolean?)
 (s/def ::show-ensemble-section boolean?)
 (s/def ::data-table-size string?)
@@ -77,14 +78,17 @@
 (s/def ::col-selection (s/coll-of ::column-name :kind set?))
 (s/def ::show-col-selection boolean?)
 
-;; Inferences section.
+;;; Inferences section.
+
 (s/def ::show-inferences-section boolean?)
 
-;; Select vs simulate section.
+;;; Select vs simulate section.
+
 (s/def ::show-plot-options boolean?)
 (s/def ::marginal-types #(clojure.set/subset? % #{:1D :2D}))
 
-;; Ensemble section.
+;;; Ensemble section.
+
 (s/def ::show-ensemble-options boolean?)
 (s/def ::mi-bounds (s/keys :req-un [::min ::max]))
 (s/def ::min number?)

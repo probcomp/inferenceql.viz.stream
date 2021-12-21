@@ -180,14 +180,18 @@
         (.addEventListener (:code-elem @dom-nodes)
                            "click"
                            (fn [event]
-                             ;; TODO: Add comment.
+                             ;; Handles user clicks on any program element besides the background.
+                             ;; Stores the y-offset of the program element (y-offset calculated
+                             ;; from the start position of the dom-node for the whole program)
+                             ;; in the db.
                              (when (not= (.-target event) (:code-elem @dom-nodes))
                                (let [clicked-node (.-target event)
                                      cluster-node (gdom/getAncestorByClass clicked-node "cluster-clickable")
                                      pos (gstyle/getRelativePosition cluster-node
                                                                      (:code-elem @dom-nodes))]
                                  (rf/dispatch [:model-page/set-cluster-selected-y-offset (.-y pos)])))
-                             ;; TODO: Add comment.
+                             ;; Handles user clicks on the background of the js-program.
+                             ;; De-selects any currently selected cluster.
                              (when (= (.-target event) (:code-elem @dom-nodes))
                                (rf/dispatch [:model-page/clear-cluster-selection])))))
 

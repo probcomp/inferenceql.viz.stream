@@ -168,7 +168,7 @@
   (-> js-code highlight (add-cluster-spans model-num cluster-selected)))
 
 (defn js-code-block
-  "Reagent component that display of Javascript code with syntax highlighting.
+  "Reagent component that displays Javascript code with syntax highlighting.
   Args: `js-code` -- (string) The Javascript source code to display."
   [_model-num _js-code _cluster-selected]
   (let [dom-nodes (r/atom {})]

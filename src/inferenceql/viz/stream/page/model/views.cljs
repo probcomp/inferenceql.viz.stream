@@ -72,7 +72,7 @@
           :style {:padding-top (str y-offset "px")}
           :child [cluster-simulate-plot cluster-selected cluster-selected-click-count iteration]]
          [gap :size "20px"]])
-      [gap :size "30px"])))
+      [gap :size "20px"])))
 
 (defn data-table-section []
   (let [iteration @(rf/subscribe [:control/iteration])

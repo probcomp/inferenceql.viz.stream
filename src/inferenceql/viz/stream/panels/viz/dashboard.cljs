@@ -33,6 +33,8 @@
 
 (defn vega-binning
   "Takes `bin-config` which is a map with bin extents: {:extent [min max]}.
+  There can also be a key in the same map with the maximum number of bins
+  to use: {:maxbins num-bins}.
   Returns vega's preferred binning which is map: {:start x :end y :step z}"
   [bin-config]
   (->clj (vega/bin (clj->js bin-config))))

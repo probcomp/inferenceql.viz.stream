@@ -92,7 +92,7 @@
       [v-box
        :margin "20px 20px"
        :children [[back-link]
-                  [title :level :level2 :label "Ensemble detail"]
+                  [title :level :level2 :label "Ensemble of synthesized probabilistic programs (details)"]
                   [gap :size "10px"]
                   [h-box
                    :children [[program-section model-num]

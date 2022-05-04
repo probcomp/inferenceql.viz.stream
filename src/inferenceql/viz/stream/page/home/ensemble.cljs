@@ -48,7 +48,7 @@
         show-ensemble-section @(rf/subscribe [:home-page/show-ensemble-section])]
     [:<>
      [h-box
-      :children [[title :level :level2 :label "Ensemble"]
+      :children [[title :level :level2 :label "Ensemble of synthesized probabilistic programs"]
                  [gap :size "5px"]
                  [info-button
                   :style {:margin-top "8px"}

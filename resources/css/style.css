@@ -74,10 +74,16 @@ div {
 
 .ht_master tr td {
   font-size: 13px;
+  font-family: Roboto, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
 }
 
 .handsontable th {
   font-size: 13px;
+  font-family: Roboto, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
+}
+
+.handsontable .htDimmed {
+  color: #6e6e6e;
 }
 
 /* --------------- styling for js-model code view --------------- */

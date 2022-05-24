@@ -1,12 +1,40 @@
 (ns inferenceql.viz.stream.panels.viz.views
   (:require [re-frame.core :as rf]
             [clojure.math.combinatorics :refer [combinations]]
-            [inferenceql.viz.panels.viz.views-simple :refer [vega-lite]]
+            [inferenceql.viz.panels.viz.views-simple :as views-simple]
             [inferenceql.viz.stream.panels.viz.circle :refer [circle-viz-spec]]
             [inferenceql.viz.stream.model.xcat-util :refer [all-row-assignments xcat-view-id-map
                                                             xcat-cluster-id-map sample-xcat-cluster]]
             [inferenceql.viz.config :refer [config]]
             [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]))
+
+(def default-vega-options
+  "These are the default vega options for plots in iql.viz.stream. These are mostly styling
+  options."
+  {:renderer "svg"
+   :config {:font "Roboto"
+            :axis {:labelFontSize 13
+                   :labelColor "#666"
+                   :titleFontSize 13
+                   :titleColor "#666"
+                   :titlePadding 5}
+            :legend {:orient "top"
+                     :title nil
+                     :labelFontSize 13
+                     :labelColor "#333"
+                     :offset 50
+                     :padding "8"
+                     :fillColor "#fafafa"}
+            :header {:labelFontSize 13}
+            :headerFacet {:title nil} ; Remove title from faceted plots.
+            :concat {:spacing 50}}})
+
+(defn vega-lite
+  "A wrapper around the iql.viz vega-lite reagent component that applies default-vega-options for
+  iql.viz.stream."
+  [spec opt init-fn data params]
+  (let [new-opt (merge default-vega-options opt)]
+    [views-simple/vega-lite spec new-opt init-fn data params]))
 
 (defn mi-plot
   "Reagent component for circle viz for mutual info."

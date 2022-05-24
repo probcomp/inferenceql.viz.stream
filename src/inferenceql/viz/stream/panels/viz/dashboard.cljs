@@ -423,7 +423,8 @@
                                 :x {:field x-field
                                     :type "nominal"
                                     :axis {:orient "bottom"
-                                           :titleLimit title-limit}
+                                           :titleLimit title-limit
+                                           :labelAngle 89}
                                     :scale {:domain x-cats}}
                                 :size {:aggregate "count"
                                        :type "quantitative"

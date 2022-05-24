@@ -64,6 +64,7 @@
                            "quantitative" {:maxbins 50
                                            :extent (get ranges c1)})
                     :field (name c1),
+                    :axis {:labelAngle 89}
                     :type c1-type}
                 :y {:bin (case c2-type
                            "nominal" false

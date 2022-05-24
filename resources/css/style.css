@@ -92,7 +92,7 @@ div {
   min-width: 650px;
   margin: 0px;
   padding: 8px;
-  font-size: .875rem;
+  font-size: 13px;
   background-color: #f8f8f8;
   border: none;
   border-radius: 0px;
@@ -105,7 +105,7 @@ div {
   background-color: #f8f8f8;
   border: none;
   padding: 0px;
-  font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+  font-family: Roboto Mono, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
 /* Changing the height of re-com tabs component */

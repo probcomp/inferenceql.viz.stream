@@ -114,7 +114,8 @@
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
         cat-max-count 900
-        bin-flag false]
+        bin-flag false
+        y-title-limit (* (count col-vals) 20)]
     {:layer [{:mark {:type "point"
                      :shape "circle"
                      :color unselected-color
@@ -130,7 +131,10 @@
               :encoding {:y {:bin bin-flag
                              :field col
                              :type col-type
-                             :axis {:titleAnchor "start" :titleAlign "right" :titlePadding 1}
+                             :axis {:titleAnchor "start"
+                                    :titleAlign "right"
+                                    :titlePadding 1
+                                    :titleLimit y-title-limit}
                              :scale {:domain col-vals}}
                          :x {:aggregate "count"
                              :type "quantitative"
@@ -179,7 +183,6 @@
               :encoding {:y {:bin bin-flag
                              :field col
                              :type col-type
-                             :axis {:titleAnchor "start" :titleAlign "right" :titlePadding 1}
                              :scale {:domain col-vals}}
                          :x {:aggregate "count"
                              :type "quantitative"
@@ -196,7 +199,6 @@
               :encoding {:y {:bin bin-flag
                              :field col
                              :type col-type
-                             :axis {:titleAnchor "start" :titleAlign "right" :titlePadding 1}
                              :scale {:domain col-vals}}
                          :x {:aggregate "count"
                              :type "quantitative"

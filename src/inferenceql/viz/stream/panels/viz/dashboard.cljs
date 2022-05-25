@@ -55,7 +55,13 @@
      :bounds "flush"
      :facet {:field "collection"
              :type "nominal"
-             :header {:title nil :labelOrient "bottom" :labelPadding 40}}
+             :header {:title nil
+                      :labelOrient "bottom"
+                      :labelPadding 45
+                      :labelFontSize "9"
+                      :labelFontWeight "bold"
+                      :labelColor "#888"
+                      :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}
      :spec {:layer [{:mark {:type "bar"
                             :color unselected-color
                             :tooltip {:content "data"}
@@ -353,7 +359,11 @@
                       :type "nominal"
                       :header (cond-> {:title nil
                                        :labelPadding 0
-                                       :labelLimit title-limit}
+                                       :labelLimit title-limit
+                                       :labelFontSize "9"
+                                       :labelFontWeight "bold"
+                                       :labelColor "#888"
+                                       :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
                                       ;; If no legend, then no facet labels.
                                       (not legend) (merge {:labels false}))}
                 :order {:condition {:param "brush-all"
@@ -388,7 +398,7 @@
   (let [[x-field y-field] cols
         x-cats (sort (take n-cats (get top-options x-field)))
         y-cats (sort (take n-cats (get top-options y-field)))
-        title-limit (* (count x-cats) 25)]
+        title-limit (* (count x-cats) 19)]
     {:spacing 0
      :bounds "flush"
      :transform [;; Filtering for top categories
@@ -401,7 +411,11 @@
                       :type "nominal"
                       :header (cond-> {:title nil
                                        :labelPadding 0
-                                       :labelLimit title-limit}
+                                       :labelLimit title-limit
+                                       :labelFontSize "9"
+                                       :labelFontWeight "bold"
+                                       :labelColor "#888"
+                                       :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
                                 ;; If no legend, then no facet labels.
                                 (not legend) (merge {:labels false}))}}
      :spec {:layer [{:mark {:type "circle"

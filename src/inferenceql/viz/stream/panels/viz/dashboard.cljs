@@ -306,7 +306,7 @@
 
         [x-min x-max] (get ranges x-field)
         y-cats (sort (take n-cats (get top-options y-field)))
-        title-limit (* (count y-cats) 25)
+        title-limit (* (count y-cats) 24)
         spec {:resolve {:scale {:x "shared" :y "shared"}}
               :spacing 0
               :bounds "flush"

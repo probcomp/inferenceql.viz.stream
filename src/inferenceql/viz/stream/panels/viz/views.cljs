@@ -25,8 +25,12 @@
                      :offset 50
                      :padding "8"
                      :fillColor "#fafafa"}
-            :header {:labelFontSize 13}
-            :headerFacet {:title nil} ; Remove title from faceted plots.
+            :header {:title nil
+                     :labelFontSize "9"
+                     :labelFontWeight "bold"
+                     :labelColor "#888"
+                     :labelPadding 0
+                     :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
             :concat {:spacing 50}}})
 
 (defn vega-lite

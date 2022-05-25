@@ -55,13 +55,8 @@
      :bounds "flush"
      :facet {:field "collection"
              :type "nominal"
-             :header {:title nil
-                      :labelOrient "bottom"
-                      :labelPadding 45
-                      :labelFontSize "9"
-                      :labelFontWeight "bold"
-                      :labelColor "#888"
-                      :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}
+             :header {:labelOrient "bottom"
+                      :labelPadding 45}}
      :spec {:layer [{:mark {:type "bar"
                             :color unselected-color
                             :tooltip {:content "data"}
@@ -349,14 +344,7 @@
                              :scale {:zero false
                                      :domain [x-min x-max]}}
                          :row {:field "collection"
-                               :type "nominal"
-                               :header {:title nil
-                                        :labelPadding 0
-                                        :labelLimit title-limit
-                                        :labelFontSize "9"
-                                        :labelFontWeight "bold"
-                                        :labelColor "#888"
-                                        :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}
+                               :type "nominal"}
                          :order {:condition {:param "brush-all"
                                              :value 1}
                                  :value 0}
@@ -401,14 +389,7 @@
               :height {:step 20}
               :resolve {:scale {:size "shared"}}
               :facet {:column {:field "collection"
-                               :type "nominal"
-                               :header {:title nil
-                                        :labelPadding 0
-                                        :labelLimit title-limit
-                                        :labelFontSize "9"
-                                        :labelFontWeight "bold"
-                                        :labelColor "#888"
-                                        :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}}
+                               :type "nominal"}}
               :spec {:layer [{:mark {:type "circle"
                                      :tooltip {:content "data"}
                                      :color unselected-color}

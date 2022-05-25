@@ -30,6 +30,7 @@
                      :labelFontWeight "bold"
                      :labelColor "#888"
                      :labelPadding 0
+                     ;; This shortens header text to just OBS or VIRT depending on the collection.
                      :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
             :concat {:spacing 50}}})
 

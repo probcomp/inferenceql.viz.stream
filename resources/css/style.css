@@ -50,8 +50,9 @@ div {
   display: table;
 }
 
-#vg-tooltip-element.vg-tooltip.custom-theme table {
-  font-size: .75rem;
+#vg-tooltip-element.visible table {
+  font-family: Roboto, 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
+  font-size: 13px;
 }
 
 /* --------------- styling for handsontables --------------- */

@@ -378,7 +378,8 @@
   (let [[x-field y-field] cols
         x-cats (sort (take n-cats (get top-options x-field)))
         y-cats (sort (take n-cats (get top-options y-field)))
-        title-limit (* (count x-cats) 19)
+        x-title-limit (* (count x-cats) 19)
+        y-title-limit (* (count y-cats) 22)
         spec {:spacing 0
               :bounds "flush"
               :transform [;; Filtering for top categories
@@ -403,12 +404,13 @@
                               :encoding {:y {:field y-field
                                              :type "nominal"
                                              :axis {:titleOrient "left"
+                                                    :titleLimit y-title-limit
                                                     :titleAnchor "center"}
                                              :scale {:domain y-cats}}
                                          :x {:field x-field
                                              :type "nominal"
                                              :axis {:orient "bottom"
-                                                    :titleLimit title-limit
+                                                    :titleLimit x-title-limit
                                                     :labelAngle 89}
                                              :scale {:domain x-cats}}
                                          :size {:aggregate "count"
@@ -434,13 +436,9 @@
                                                                 "datum[view] == cluster"]}]}}]
                               :encoding {:y {:field y-field
                                              :type "nominal"
-                                             :axis {:titleOrient "left"
-                                                    :titleAnchor "center"}
                                              :scale {:domain y-cats}}
                                          :x {:field x-field
                                              :type "nominal"
-                                             :axis {:orient "bottom"
-                                                    :titleLimit title-limit}
                                              :scale {:domain x-cats}}
                                          :size {:aggregate "count"
                                                 :type "quantitative"

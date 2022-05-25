@@ -193,7 +193,6 @@
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "virtual"}
                                           "cluster != null"]}}]
-
               :encoding {:y {:bin bin-flag
                              :field col
                              :type col-type

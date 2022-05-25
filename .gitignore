@@ -6,6 +6,14 @@
 
 /figwheel-target/
 
-resources/
+resources/css/handsontable.full.css
+
+resources/config.edn
+resources/ignored.csv
+resources/js-program-transitions.js
+resources/mutual-info.js
+resources/schema.edn
+resources/transitions.js
+resources/transitions-samples.js
 temp-resources/
 

@@ -49,32 +49,33 @@
         ;; Now deal with c1-c2 whether they have been reversed or not.
         c1-type (vega-type schema c1)
         c2-type (vega-type schema c2)
-        filter-section (remove nil? [(when (= c1-type "nominal")
-                                       (let [c1-options (take n-cats (get top-options c1))]
-                                         {:filter {:field c1 :oneOf c1-options}}))
-                                     (when (= c2-type "nominal")
-                                       (let [c2-options (take n-cats (get top-options c2))]
-                                         {:filter {:field c2 :oneOf c2-options}}))])]
-    {:mark {:type "rect" :tooltip true}
-     :width (-> (dimensions c1-type c2-type) :width)
-     :height (-> (dimensions c1-type c2-type) :height)
-     :transform filter-section
-     :encoding {:x {:bin (case c1-type
-                           "nominal" false
-                           "quantitative" {:maxbins 50
-                                           :extent (get ranges c1)})
-                    :field (name c1),
-                    :axis {:labelAngle 89}
-                    :type c1-type}
-                :y {:bin (case c2-type
-                           "nominal" false
-                           "quantitative" {:maxbins 50
-                                           :extent (get ranges c2)})
-                    :field (name c2),
-                    :type c2-type}
-                :color {:aggregate "count",
-                        :type "quantitative"
-                        :legend nil}}}))
+        spec {:mark {:type "rect" :tooltip true}
+              :width (-> (dimensions c1-type c2-type) :width)
+              :height (-> (dimensions c1-type c2-type) :height)
+              :transform []
+              :encoding {:x {:bin (case c1-type
+                                    "nominal" false
+                                    "quantitative" {:maxbins 50
+                                                    :extent (get ranges c1)})
+                             :field (name c1),
+                             :type c1-type
+                             :axis {:labelAngle 89}}
+                         :y {:bin (case c2-type
+                                    "nominal" false
+                                    "quantitative" {:maxbins 50
+                                                    :extent (get ranges c2)})
+                             :field (name c2),
+                             :type c2-type}
+                         :color {:aggregate "count",
+                                 :type "quantitative"
+                                 :legend nil}}}]
+    (let [c1-options (take n-cats (get top-options c1))
+          c2-options (take n-cats (get top-options c2))]
+      (cond-> spec
+        (= c1-type "nominal") (update-in [:transform] conj {:filter {:field c1 :oneOf c1-options}})
+        (= c1-type "nominal") (assoc-in [:encoding :x :axis :titleLimit] (* (count c1-options) 19))
+        (= c2-type "nominal") (update-in [:transform] conj {:filter {:field c2 :oneOf c2-options}})
+        (= c2-type "nominal") (assoc-in [:encoding :y :axis :titleLimit] (* (count c2-options) 22))))))
 
 (defn make-section [num-columns col-space n-cats column-pairs]
   (when (seq column-pairs)

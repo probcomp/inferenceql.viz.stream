@@ -12,7 +12,6 @@
              {:name "radius", :value 100}
              {:name "extent", :value extent}
              {:name "rotate", :value rotate}
-             {:name "textSize", :value 12}
              {:name "textOffset", :value 2}
              {:name "layout", :value "cluster"}
              {:name "colorIn", :value "firebrick"}
@@ -79,22 +78,11 @@
                               :dx {:signal "textOffset * (datum.leftside ? -1 : 1)"},
                               :angle {:signal "datum.leftside ? datum.angle - 180 : datum.angle"},
                               :align {:signal "datum.leftside ? 'right' : 'left'"},
-                              :fontSize {:signal "textSize"},
                               :fontWeight [{:test "indata('selected', 'source-id', datum.id)",
                                             :value "bold"}
                                            {:test "indata('selected', 'target-id', datum.id)",
                                             :value "bold"}
-                                           {:value nil}],
-                              :fill [{:test "datum.id === active", :value "black"}
-                                     {:test "indata('selected', 'source-id', datum.id)",
-                                      :signal "colorIn"}
-                                     {:test "indata('selected', 'target-id', datum.id)",
-                                      :signal "colorOut"}
-                                     {:test "datum.status == 'infected'",
-                                      :value "orange"}
-                                     {:test "datum.status == 'source'",
-                                      :value "red"}
-                                     {:value "black"}]}}}
+                                           {:value nil}]}}}
            {:type "group",
             :from {:facet {:name "path", :data "dependencies", :field "treepath"}},
             :signals [{:name "edgeClicked",

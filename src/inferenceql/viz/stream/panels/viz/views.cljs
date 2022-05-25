@@ -9,10 +9,16 @@
             [inferenceql.viz.stream.panels.viz.samples :refer [observed-samples virtual-samples]]))
 
 (def default-vega-options
-  "These are the default vega options for plots in iql.viz.stream. These are mostly styling
-  options."
+  "These are the default vega options for plots in iql.viz.stream.
+  These options are passed to the vega-embed library function. They can apply to vega and vega-lite
+  visualizations, however vega does not use all the options."
   {:renderer "svg"
-   :config {:font "Roboto"
+   :config {;; Sets the default font in vega-lite visualizations.
+            :font "Roboto"
+            ;; Sets the default styling for text marks in our circle-viz (vega).
+            :text {:font "Roboto"
+                   :fontSize 13
+                   :fill "#333"}
             :axis {:labelFontSize 13
                    :labelColor "#666"
                    :titleFontSize 13
@@ -30,7 +36,8 @@
                      :labelFontWeight "bold"
                      :labelColor "#888"
                      :labelPadding 0
-                     ;; This shortens header text to just OBS or VIRT depending on the collection.
+                     ;; This shortens headers in faceted plots to just OBS or VIRT depending on
+                     ;; the collection: observed or virtual.
                      :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
             :concat {:spacing 50}}})
 

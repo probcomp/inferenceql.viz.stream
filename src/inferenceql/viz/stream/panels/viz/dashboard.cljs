@@ -89,9 +89,7 @@
                                     :scale {:domain [0, max-bin-count]}}
                                 :color {:field "collection"
                                         :scale {:domain ["observed", "virtual"]
-                                                :range [obs-data-color virtual-data-color]}
-                                        :legend {:orient "top"
-                                                 :title nil}}}}
+                                                :range [obs-data-color virtual-data-color]}}}}
                     {:transform [{:filter {:or [{:field "collection" :equal "virtual"}
                                                 "datum[view] == cluster"]}}]
                      :mark {:type "bar"
@@ -105,9 +103,7 @@
                                     :scale {:domain [0, max-bin-count]}}
                                 :color {:field "collection"
                                         :scale {:domain ["observed", "virtual"]
-                                                :range [obs-data-color virtual-data-color]}
-                                        :legend {:orient "top"
-                                                 :title nil}}}}]}}))
+                                                :range [obs-data-color virtual-data-color]}}}}]}}))
 
 (defn histogram-nom
   "Generates a vega-lite spec for a histogram.
@@ -173,10 +169,7 @@
                                               :value unselected-color}]
                                  :field "collection" ; Dummy field. Never gets used.
                                  :scale {:domain ["observed", "virtual"]
-                                         :range [obs-data-color virtual-data-color]}
-                                 :legend {:orient "top"
-                                          :title nil
-                                          :offset 10}}}}
+                                         :range [obs-data-color virtual-data-color]}}}}
              ;; Observed data ticks.
              {:mark {:type "point"
                      :shape "stroke"
@@ -220,76 +213,76 @@
   "Generates vega-lite spec for a scatter plot.
   Useful for comparing quatitative-quantitative data."
   [col-1 col-2 ranges id-gen legend]
-  (let [zoom-control-name (str "zoom-control-" (id-gen))] ; Random id so pan/zoom is independent.
-    {:width 250
-     :height 250
-     :mark {:type "point"
-            :tooltip {:content "data"}
-            :filled true
-            :clip true
-            :size {:expr "splomPointSize"}}
-     :params [{:name zoom-control-name
-               :bind "scales"
-               :select {:type "interval"
-                        :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                        :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                        :clear "dblclick[event.shiftKey]"
-                        :zoom "wheel![event.shiftKey]"}}
-              {:name :brush-all
-               :select {:type "interval"
-                        :on "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
-                        :translate "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
-                        :clear "dblclick[!event.shiftKey]"
-                        :zoom "wheel![!event.shiftKey]"}}]
-     :encoding {:x {:field col-1
-                    :type "quantitative"
-                    :scale {:domain (get ranges col-1)}
-                    :axis {:title col-1}}
-                :y {:field col-2
-                    :type "quantitative"
-                    :scale {:domain (get ranges col-2)}
-                    :axis {:minExtent 40
-                           :title col-2}}
-                :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                  "cluster != null"
-                                                  "datum[view] == cluster"]}
-                                     :value 10}
-                                    {:test {:and [{:field "collection" :equal "observed"}
-                                                  {:param "brush-all"}
-                                                  "cluster == null"]}
-                                     :value 2}
-                                    ;; Show the virtual data colored even
-                                    ;; when a particular cluster is selected.
-                                    {:test {:and [{:field "collection" :equal "virtual"}
-                                                  {:param "brush-all"}]}
-                                     :value 1}
-                                    {:test "true"
-                                     :value 0}]
-                        :value 0}
-                :opacity {:field "collection"
-                          :scale {:domain ["observed", "virtual"]
-                                  :range [{:expr "splomAlphaObserved"} {:expr "splomAlphaVirtual"}]}
-                          :legend nil}
-                :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                  "cluster != null"
-                                                  "datum[view] == cluster"]}
-                                     :value obs-data-color}
-                                    {:test {:and [{:field "collection" :equal "observed"}
-                                                  {:param "brush-all"}
-                                                  "cluster == null"]}
-                                     :value obs-data-color}
-                                    {:test {:and [{:field "collection" :equal "virtual"}
-                                                  {:param "brush-all"}]}
-                                     :value virtual-data-color}
-                                    {:test "true"
-                                     :value unselected-color}]
-                        :field "collection" ; Dummy field. Never gets used.
-                        :scale {:domain ["observed", "virtual"]
-                                :range [obs-data-color virtual-data-color]}
-                        :legend (if legend
-                                  {:orient "top"
-                                   :title nil}
-                                  nil)}}}))
+  (let [zoom-control-name (str "zoom-control-" (id-gen)) ; Random id so pan/zoom is independent.
+        spec {:width 250
+              :height 250
+              :mark {:type "point"
+                     :tooltip {:content "data"}
+                     :filled true
+                     :clip true
+                     :size {:expr "splomPointSize"}}
+              :params [{:name zoom-control-name
+                        :bind "scales"
+                        :select {:type "interval"
+                                 :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                                 :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                                 :clear "dblclick[event.shiftKey]"
+                                 :zoom "wheel![event.shiftKey]"}}
+                       {:name :brush-all
+                        :select {:type "interval"
+                                 :on "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
+                                 :translate "[mousedown[!event.shiftKey], window:mouseup] > window:mousemove"
+                                 :clear "dblclick[!event.shiftKey]"
+                                 :zoom "wheel![!event.shiftKey]"}}]
+              :encoding {:x {:field col-1
+                             :type "quantitative"
+                             :scale {:domain (get ranges col-1)}
+                             :axis {:title col-1}}
+                         :y {:field col-2
+                             :type "quantitative"
+                             :scale {:domain (get ranges col-2)}
+                             :axis {:minExtent 40
+                                    :title col-2}}
+                         :order {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                           "cluster != null"
+                                                           "datum[view] == cluster"]}
+                                              :value 10}
+                                             {:test {:and [{:field "collection" :equal "observed"}
+                                                           {:param "brush-all"}
+                                                           "cluster == null"]}
+                                              :value 2}
+                                             ;; Show the virtual data colored even
+                                             ;; when a particular cluster is selected.
+                                             {:test {:and [{:field "collection" :equal "virtual"}
+                                                           {:param "brush-all"}]}
+                                              :value 1}
+                                             {:test "true"
+                                              :value 0}]
+                                 :value 0}
+                         :opacity {:field "collection"
+                                   :scale {:domain ["observed", "virtual"]
+                                           :range [{:expr "splomAlphaObserved"} {:expr "splomAlphaVirtual"}]}
+                                   :legend nil}
+                         :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                           "cluster != null"
+                                                           "datum[view] == cluster"]}
+                                              :value obs-data-color}
+                                             {:test {:and [{:field "collection" :equal "observed"}
+                                                           {:param "brush-all"}
+                                                           "cluster == null"]}
+                                              :value obs-data-color}
+                                             {:test {:and [{:field "collection" :equal "virtual"}
+                                                           {:param "brush-all"}]}
+                                              :value virtual-data-color}
+                                             {:test "true"
+                                              :value unselected-color}]
+                                 :field "collection" ; Dummy field. Never gets used.
+                                 :scale {:domain ["observed", "virtual"]
+                                         :range [obs-data-color virtual-data-color]}}}}]
+    (if legend
+      spec
+      ;; Remove legend.
+      (assoc-in spec [:encoding :color :legend] nil))))
 
 (defn- strip-plot-size-helper
   "Returns a vega-lite height/width size.
@@ -319,77 +312,77 @@
 
         [x-min x-max] (get ranges x-field)
         y-cats (sort (take n-cats (get top-options y-field)))
-        title-limit (* (count y-cats) 25)]
-    {:resolve {:scale {:x "shared" :y "shared"}}
-     :spacing 0
-     :bounds "flush"
-     :transform [;; Filtering for top categories
-                 {:filter {:field y-field :oneOf y-cats}}]
-     :width width
-     :height height
-     :mark {:type "tick"
-            :tooltip {:content "data"}
-            :color unselected-color}
-     :params [{:name zoom-control-name
-               :bind "scales"
-               :select {:type "interval"
-                        :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                        :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
-                        :clear "dblclick[event.shiftKey]"
-                        :encodings [quant-dimension]
-                        :zoom "wheel![event.shiftKey]"}}
-              {:name "brush-all"
-               :select  {:type "point"
-                         :nearest true
-                         :toggle "true"
-                         :on "click[!event.shiftKey]"
-                         :resolve "union"
-                         :fields [y-field "collection"]
-                         :clear "dblclick[!event.shiftKey]"}}]
-     :encoding {:y {:field y-field
-                    :type y-type
-                    :scale {:domain y-cats}
-                    :axis {:titleLimit title-limit}}
-                :x {:field x-field
-                    :type x-type
-                    :axis {:grid true :gridDash [2 2]}
-                    :scale {:zero false
-                            :domain [x-min x-max]}}
-                :row {:field "collection"
-                      :type "nominal"
-                      :header (cond-> {:title nil
-                                       :labelPadding 0
-                                       :labelLimit title-limit
-                                       :labelFontSize "9"
-                                       :labelFontWeight "bold"
-                                       :labelColor "#888"
-                                       :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
-                                      ;; If no legend, then no facet labels.
-                                      (not legend) (merge {:labels false}))}
-                :order {:condition {:param "brush-all"
-                                    :value 1}
-                        :value 0}
-                :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                  "cluster != null"
-                                                  "datum[view] == cluster"]}
-                                     :value obs-data-color}
-                                    {:test {:and [{:field "collection" :equal "observed"}
-                                                  {:param "brush-all"}
-                                                  "cluster == null"]}
-                                     :value obs-data-color}
-                                    {:test {:and [{:field "collection" :equal "virtual"}
-                                                  {:param "brush-all"}]}
-                                     :value virtual-data-color}
-                                    {:test "true"
-                                     :value unselected-color}]
-                        :field "collection" ; Dummy field. Never gets used.
-                        :scale {:domain ["observed", "virtual"]
-                                :range [obs-data-color virtual-data-color]}
-                        :legend (if legend
-                                  {:orient "top"
-                                   :title nil
-                                   :offset 10}
-                                  nil)}}}))
+        title-limit (* (count y-cats) 25)
+        spec {:resolve {:scale {:x "shared" :y "shared"}}
+              :spacing 0
+              :bounds "flush"
+              :transform [;; Filtering for top categories
+                          {:filter {:field y-field :oneOf y-cats}}]
+              :width width
+              :height height
+              :mark {:type "tick"
+                     :tooltip {:content "data"}
+                     :color unselected-color}
+              :params [{:name zoom-control-name
+                        :bind "scales"
+                        :select {:type "interval"
+                                 :on "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                                 :translate "[mousedown[event.shiftKey], window:mouseup] > window:mousemove"
+                                 :clear "dblclick[event.shiftKey]"
+                                 :encodings [quant-dimension]
+                                 :zoom "wheel![event.shiftKey]"}}
+                       {:name "brush-all"
+                        :select  {:type "point"
+                                  :nearest true
+                                  :toggle "true"
+                                  :on "click[!event.shiftKey]"
+                                  :resolve "union"
+                                  :fields [y-field "collection"]
+                                  :clear "dblclick[!event.shiftKey]"}}]
+              :encoding {:y {:field y-field
+                             :type y-type
+                             :scale {:domain y-cats}
+                             :axis {:titleLimit title-limit}}
+                         :x {:field x-field
+                             :type x-type
+                             :axis {:grid true :gridDash [2 2]}
+                             :scale {:zero false
+                                     :domain [x-min x-max]}}
+                         :row {:field "collection"
+                               :type "nominal"
+                               :header {:title nil
+                                        :labelPadding 0
+                                        :labelLimit title-limit
+                                        :labelFontSize "9"
+                                        :labelFontWeight "bold"
+                                        :labelColor "#888"
+                                        :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}
+                         :order {:condition {:param "brush-all"
+                                             :value 1}
+                                 :value 0}
+                         :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                           "cluster != null"
+                                                           "datum[view] == cluster"]}
+                                              :value obs-data-color}
+                                             {:test {:and [{:field "collection" :equal "observed"}
+                                                           {:param "brush-all"}
+                                                           "cluster == null"]}
+                                              :value obs-data-color}
+                                             {:test {:and [{:field "collection" :equal "virtual"}
+                                                           {:param "brush-all"}]}
+                                              :value virtual-data-color}
+                                             {:test "true"
+                                              :value unselected-color}]
+                                 :field "collection" ; Dummy field. Never gets used.
+                                 :scale {:domain ["observed", "virtual"]
+                                         :range [obs-data-color virtual-data-color]}}}}]
+    (if legend
+      spec
+      (-> spec
+          ;; Remove legend.
+          (assoc-in [:encoding :color :legend] nil)
+          ;; Remove facet labels.
+          (assoc-in [:encoding :row :header :labels] false)))))
 
 (defn- table-bubble-plot
   "Generates vega-lite spec for a table-bubble plot.
@@ -398,90 +391,90 @@
   (let [[x-field y-field] cols
         x-cats (sort (take n-cats (get top-options x-field)))
         y-cats (sort (take n-cats (get top-options y-field)))
-        title-limit (* (count x-cats) 19)]
-    {:spacing 0
-     :bounds "flush"
-     :transform [;; Filtering for top categories
-                 {:filter {:field x-field :oneOf x-cats}}
-                 {:filter {:field y-field :oneOf y-cats}}]
-     :width {:step 20}
-     :height {:step 20}
-     :resolve {:scale {:size "shared"}}
-     :facet {:column {:field "collection"
-                      :type "nominal"
-                      :header (cond-> {:title nil
-                                       :labelPadding 0
-                                       :labelLimit title-limit
-                                       :labelFontSize "9"
-                                       :labelFontWeight "bold"
-                                       :labelColor "#888"
-                                       :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}
-                                ;; If no legend, then no facet labels.
-                                (not legend) (merge {:labels false}))}}
-     :spec {:layer [{:mark {:type "circle"
-                            :tooltip {:content "data"}
-                            :color unselected-color}
-                     :params [{:name "brush-all"
-                               :select {:type "point"
-                                        :nearest true
-                                        :toggle "true"
-                                        :on "click[!event.shiftKey]"
-                                        :resolve "union"
-                                        :fields [y-field x-field "collection"]
-                                        :clear "dblclick[!event.shiftKey]"}}]
-                     :encoding {:y {:field y-field
-                                    :type "nominal"
-                                    :axis {:titleOrient "left"
-                                           :titleAnchor "center"}
-                                    :scale {:domain y-cats}}
-                                :x {:field x-field
-                                    :type "nominal"
-                                    :axis {:orient "bottom"
-                                           :titleLimit title-limit
-                                           :labelAngle 89}
-                                    :scale {:domain x-cats}}
-                                :size {:aggregate "count"
-                                       :type "quantitative"
-                                       :legend nil}
-                                :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
-                                                                  {:param "brush-all"}
-                                                                  "cluster == null"]}
-                                                     :value obs-data-color}
-                                                    {:test {:and [{:field "collection" :equal "virtual"}
-                                                                  {:param "brush-all"}
-                                                                  "cluster == null"]}
-                                                     :value virtual-data-color}
-                                                    {:test "true"
-                                                     :value unselected-color}]
-                                        :field "collection" ; Dummy field. Never gets used.
-                                        :scale {:domain ["observed", "virtual"]
-                                                :range [obs-data-color virtual-data-color]}
-                                        :legend (if legend
-                                                  {:orient "top"
-                                                   :title nil
-                                                   :offset 10}
-                                                  nil)}}}
-                    {:mark {:type "circle"}
-                     :transform [{:filter {:or [{:field "collection" :equal "virtual"}
-                                                {:and [{:field "collection" :equal "observed"}
-                                                       "cluster != null"
-                                                       "datum[view] == cluster"]}]}}]
-                     :encoding {:y {:field y-field
-                                    :type "nominal"
-                                    :axis {:titleOrient "left"
-                                           :titleAnchor "center"}
-                                    :scale {:domain y-cats}}
-                                :x {:field x-field
-                                    :type "nominal"
-                                    :axis {:orient "bottom"
-                                           :titleLimit title-limit}
-                                    :scale {:domain x-cats}}
-                                :size {:aggregate "count"
-                                       :type "quantitative"
-                                       :legend nil}
-                                :color {:field "collection"
-                                        :scale {:domain ["observed", "virtual"]
-                                                :range [obs-data-color virtual-data-color]}}}}]}}))
+        title-limit (* (count x-cats) 19)
+        spec {:spacing 0
+              :bounds "flush"
+              :transform [;; Filtering for top categories
+                          {:filter {:field x-field :oneOf x-cats}}
+                          {:filter {:field y-field :oneOf y-cats}}]
+              :width {:step 20}
+              :height {:step 20}
+              :resolve {:scale {:size "shared"}}
+              :facet {:column {:field "collection"
+                               :type "nominal"
+                               :header {:title nil
+                                        :labelPadding 0
+                                        :labelLimit title-limit
+                                        :labelFontSize "9"
+                                        :labelFontWeight "bold"
+                                        :labelColor "#888"
+                                        :labelExpr "({'observed': 'OBS', 'virtual': 'VIRT'})[datum.label]"}}}
+              :spec {:layer [{:mark {:type "circle"
+                                     :tooltip {:content "data"}
+                                     :color unselected-color}
+                              :params [{:name "brush-all"
+                                        :select {:type "point"
+                                                 :nearest true
+                                                 :toggle "true"
+                                                 :on "click[!event.shiftKey]"
+                                                 :resolve "union"
+                                                 :fields [y-field x-field "collection"]
+                                                 :clear "dblclick[!event.shiftKey]"}}]
+                              :encoding {:y {:field y-field
+                                             :type "nominal"
+                                             :axis {:titleOrient "left"
+                                                    :titleAnchor "center"}
+                                             :scale {:domain y-cats}}
+                                         :x {:field x-field
+                                             :type "nominal"
+                                             :axis {:orient "bottom"
+                                                    :titleLimit title-limit
+                                                    :labelAngle 89}
+                                             :scale {:domain x-cats}}
+                                         :size {:aggregate "count"
+                                                :type "quantitative"
+                                                :legend nil}
+                                         :color {:condition [{:test {:and [{:field "collection" :equal "observed"}
+                                                                           {:param "brush-all"}
+                                                                           "cluster == null"]}
+                                                              :value obs-data-color}
+                                                             {:test {:and [{:field "collection" :equal "virtual"}
+                                                                           {:param "brush-all"}
+                                                                           "cluster == null"]}
+                                                              :value virtual-data-color}
+                                                             {:test "true"
+                                                              :value unselected-color}]
+                                                 :field "collection" ; Dummy field. Never gets used.
+                                                 :scale {:domain ["observed", "virtual"]
+                                                         :range [obs-data-color virtual-data-color]}}}}
+                             {:mark {:type "circle"}
+                              :transform [{:filter {:or [{:field "collection" :equal "virtual"}
+                                                         {:and [{:field "collection" :equal "observed"}
+                                                                "cluster != null"
+                                                                "datum[view] == cluster"]}]}}]
+                              :encoding {:y {:field y-field
+                                             :type "nominal"
+                                             :axis {:titleOrient "left"
+                                                    :titleAnchor "center"}
+                                             :scale {:domain y-cats}}
+                                         :x {:field x-field
+                                             :type "nominal"
+                                             :axis {:orient "bottom"
+                                                    :titleLimit title-limit}
+                                             :scale {:domain x-cats}}
+                                         :size {:aggregate "count"
+                                                :type "quantitative"
+                                                :legend nil}
+                                         :color {:field "collection"
+                                                 :scale {:domain ["observed", "virtual"]
+                                                         :range [obs-data-color virtual-data-color]}}}}]}}]
+    (if legend
+      spec
+      (-> spec
+          ;; Remove legend.
+          (assoc-in [:spec :layer 0 :encoding :color :legend] nil)
+          ;; Remove facet labels.
+          (assoc-in [:facet :column :header :labels] false)))))
 
 (defn histogram-quant-section [cols samples ranges num-columns]
   (when (seq cols)

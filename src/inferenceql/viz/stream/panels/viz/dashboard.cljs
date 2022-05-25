@@ -114,7 +114,6 @@
                    (concat (remove nil? col-vals) [nil])
                    col-vals)
         cat-max-count 900
-        bin-flag false
         y-title-limit (* (count col-vals) 20)]
     {:layer [{:mark {:type "point"
                      :shape "circle"
@@ -128,7 +127,7 @@
                                  :on "click[!event.shiftKey]"
                                  :fields [col "collection"]
                                  :clear "dblclick[!event.shiftKey]"}}]
-              :encoding {:y {:bin bin-flag
+              :encoding {:y {:bin false
                              :field col
                              :type col-type
                              :axis {:titleAnchor "start"
@@ -180,7 +179,7 @@
               :transform [{:filter {:and [{:field "collection" :equal "observed"}
                                           "cluster != null"
                                           "datum[view] == cluster"]}}]
-              :encoding {:y {:bin bin-flag
+              :encoding {:y {:bin false
                              :field col
                              :type col-type
                              :scale {:domain col-vals}}
@@ -196,7 +195,7 @@
                      :opacity 0.8}
               :transform [{:filter {:and [{:field "collection" :equal "virtual"}
                                           "cluster != null"]}}]
-              :encoding {:y {:bin bin-flag
+              :encoding {:y {:bin false
                              :field col
                              :type col-type
                              :scale {:domain col-vals}}
